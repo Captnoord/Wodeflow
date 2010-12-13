@@ -16,7 +16,8 @@ struct discHdr
 
 	/* Padding */
 	u32 game_idx;
-	u8 unused1[10];
+	u32 game_part;
+	u8 unused1[6];
 
 	/* Magic word */
 	u32 magic;
@@ -27,12 +28,15 @@ struct discHdr
 	/* Game title */
 	char title[64];
 
+#if 0
 	/* Encryption/Hashing */
 	u8 encryption;
 	u8 h3_verify;
 
 	/* Padding */
 	u8 unused3[30];
+#endif
+
 } ATTRIBUTE_PACKED;
 
 #ifdef __cplusplus

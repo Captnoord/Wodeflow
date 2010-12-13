@@ -55,9 +55,10 @@ CCoverFlow::CCover::CCover(void)
 	targetScale = Vector3D(1.f, 1.f, 1.f);
 }
 
-CCoverFlow::CItem::CItem(const char *itemId, unsigned long game_idx, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type) :
+CCoverFlow::CItem::CItem(const char *itemId, unsigned long game_idx, unsigned long game_part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type) :
 	id(itemId),
 	game_idx(game_idx),
+	game_part(game_part),
 	title(itemTitle),
 	picPath(itemPic),
 	boxPicPath(itemBoxPic),
@@ -597,11 +598,11 @@ void CCoverFlow::reserve(u32 capacity)
 	m_items.reserve(capacity);
 }
 
-void CCoverFlow::addItem(const char *id, unsigned long game_idx, const wchar_t *title, const char *picPath, const char *boxPicPath, int playcount, int type)
+void CCoverFlow::addItem(const char *id, unsigned long game_idx, unsigned long game_part, const wchar_t *title, const char *picPath, const char *boxPicPath, int playcount, int type)
 {
 	if (!m_covers.empty())
 		return;
-	m_items.push_back(CCoverFlow::CItem(id, game_idx, title, picPath, boxPicPath, playcount, type));
+	m_items.push_back(CCoverFlow::CItem(id, game_idx, game_part, title, picPath, boxPicPath, playcount, type));
 }
 
 // Draws a plane in the Z-Buffer only.
@@ -1360,6 +1361,13 @@ unsigned long CCoverFlow::getIdx(void) const
 	if (m_covers.empty() || m_items.empty())
 		return -1;
 	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].game_idx;
+}
+
+unsigned long CCoverFlow::getPart(void) const
+{
+	if (m_covers.empty() || m_items.empty())
+		return -1;
+	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].game_part;
 }
 
 int CCoverFlow::getType(void) const

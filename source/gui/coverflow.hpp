@@ -26,7 +26,7 @@ public:
 	// Cover list management
 	void clear(void);
 	void reserve(u32 capacity);
-	void addItem(const char *id, unsigned long idx, const wchar_t *title, const char *picPath, const char *boxPicPath, int playcount, int type);
+	void addItem(const char *id, unsigned long idx, unsigned long part, const wchar_t *title, const char *picPath, const char *boxPicPath, int playcount, int type);
 	bool empty(void) const { return m_items.empty(); }
 	// 
 	bool start(const char *id = 0);
@@ -99,6 +99,7 @@ public:
 	// 
 	std::string getId(void) const;
 	unsigned long getIdx(void) const;
+	unsigned long getPart(void) const;
 	int getType(void) const;
 	std::string getNextId(void) const;
 	unsigned long getNextIdx(void) const;
@@ -161,6 +162,7 @@ private:
 	{
 		std::string id;
 		unsigned long game_idx;
+		unsigned long game_part;
 		wstringEx title;
 		std::string picPath;
 		std::string boxPicPath;
@@ -171,7 +173,7 @@ private:
 		volatile bool boxTexture;
 		volatile enum TexState state;
 		// 
-		CItem(const char *itemId, unsigned long idx, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
+		CItem(const char *itemId, unsigned long idx, unsigned long part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
 		bool operator<(const CItem &i) const;
 	};
 	struct CCover

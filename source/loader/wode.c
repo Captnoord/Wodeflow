@@ -9,10 +9,11 @@
 #include "disc.h"
 #include "wode.h"
 #include "gecko.h"
+#include "logger.h"
 
 #define MAX_FAVORITES 8
 
-#define WODE_MAGIC_DVDx			(0xFF574800)		/* 0xFF,WO0 -> Used for D0 reads (DVDx) */ 
+//#define WODE_MAGIC_DVDx			(0xFF574800)		/* 0xFF,WO0 -> Used for D0 reads (DVDx) */ 
 #define WODE_MAGIC_IOS			(0xFF5748E8)		/* 0xFF,WOD -> Used for A8 reads (IOS, cIOS) */
 #define WODE_EXIT_REMOTE		(0xFF000000)
 #define WODE_GET_NUM_PARTS		(0x10000000)
@@ -52,19 +53,22 @@
 
 // Without DVDx
 #define WODE_LAUNCH_GAME_PART(P)		(0x81000000 |  ((P & 0xFF) 	 << 16))
-#define WODE_LAUNCH_GAME_ISO(P)			(0x82000000 |  ((P & 0xFFFF) <<  8))
+//#define WODE_LAUNCH_GAME_ISO(P)			(0x82000000 |  ((P & 0xFFFF) <<  8))
+#define WODE_LAUNCH_GAME_ISO(P)			(0x82000000 |  ((P & 0xFFFF) <<  11))
+//#define WODE_LAUNCH_GAME_ISO(P)			(0x82000000 |  ((P >> 5) << 16) | (((P & 0x1F) << 3) << 8))
 
 // With DVDx
-#define WODE_LAUNCH_GAME_PART_DVDx(P)		(0x81000000 |  ((P & 0xFF) 	 << 16))
-#define WODE_LAUNCH_GAME_ISO_DVDx(P)			(0x82000000 |  ((P >> 5) << 16) | (((P & 0x1F) << 3) << 8))
+//#define WODE_LAUNCH_GAME_PART_DVDx(P)		(0x81000000 |  ((P & 0xFF) 	 << 16))
+//#define WODE_LAUNCH_GAME_ISO_DVDx(P)			(0x82000000 |  ((P >> 5) << 16) | (((P & 0x1F) << 3) << 8))
 
-// #define DEBUG_WODE
+//#define DEBUG_WODE
+//#define gprintf log_printf
 
 static u8 dvdbuffer[0x8000] ATTRIBUTE_ALIGN (32);    // One Sector
 
 static const char di_fs[] ATTRIBUTE_ALIGN(32) = "/dev/di";
 
-int use_dvdx = 0;
+int use_dvdx = 1;
 int is_wii_disc = 0;
 dvdcmdblk cmdblk;
 
@@ -76,11 +80,11 @@ int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 		memset(buf, 0, len);
 		
 #ifdef DEBUG_WODE		
-		gprintf("Sending DI command @ offset: 0x%08x, len: %d", offset, len);
+		gprintf("Sending DI command @ offset: 0x%08x, len: %d\n", offset, len);
 #endif		
 		int ret = DI_ReadDVD(buf, nlen, offset >> 11);
 		if (ret < 0) {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 			gprintf("failed: %d\n", ret);
 #endif
 			return ret;
@@ -96,21 +100,24 @@ int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 }
 
 //--------------------------------------------------------------------------
-int DVDx_InitDVD() 
+int DVDx_InitDVD()
 {
+	DI_UseCache(false);
+	DI_LoadDVDX(false);
+	
 	DI_Init();
 	DI_Mount();
 	while(DI_GetStatus() & DVD_INIT);
 	return (DI_GetStatus() & DVD_READY) != 0 ? 0 : -1;
 }
 
-int InitDVD() 
+int InitDVD()
 {
 	if (use_dvdx) {
 		return DVDx_InitDVD();
 	}
 #ifdef DEBUG_WODE		
-	gprintf("DVD init...");
+	gprintf("DVD init...\n");
 #endif
 	DVD_Init();
 #ifdef DEBUG_WODE		
@@ -132,7 +139,7 @@ int OpenWode( void )
 	gprintf("Send DI command (WODE_MAGIC)\n");
 #endif
 
-	int ret = DVDW_Read(dvdbuffer, 0x20, use_dvdx ? WODE_MAGIC_DVDx : WODE_MAGIC_IOS);
+	int ret = DVDW_Read(dvdbuffer, 0x20, WODE_MAGIC_IOS);
 	if (ret != 0) {
 		return -2;
 	}
@@ -163,7 +170,7 @@ unsigned long GetJoystick( void )
 	if(DVDW_ReadPrio (&cmdblk, dvdbuffer, 0x20 , WODE_GET_JSTICK, 2) != 0){
 		return -1;
 	}
-	return *((unsigned long*)dvdbuffer); 
+	return *((unsigned long*)dvdbuffer);
 }
 */
 
@@ -430,13 +437,13 @@ int LaunchISO(unsigned long Partition, unsigned long Iso)
 	gprintf("Mounting iso %d on partition %d\n", Iso, Partition);
 	gprintf("Send DI command (WODE_LAUNCH_GAME_PART(%d))\n", Partition);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, use_dvdx ? WODE_LAUNCH_GAME_PART_DVDx(Partition) : WODE_LAUNCH_GAME_PART(Partition)) != 0){
+	if(DVDW_Read(dvdbuffer, 0x20,WODE_LAUNCH_GAME_PART(Partition)) != 0){
 		return -1;
 	}
 #ifdef DEBUG_WODE		
 	gprintf("Send DI command (WODE_LAUNCH_GAME_ISO(%d))\n", Iso);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, use_dvdx ? WODE_LAUNCH_GAME_ISO_DVDx(Iso) : WODE_LAUNCH_GAME_ISO(Iso)) != 0){
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_LAUNCH_GAME_ISO(Iso)) != 0) {
 		return -2;
 	}
 	return 0;
@@ -473,7 +480,7 @@ unsigned long GetSelectedISO( void )
 int GetTotalISOs( void )
 {
 	PartitionInfo_t PartitionInfo;
-	unsigned long i;	
+	unsigned long i;
 	unsigned long NumPartitions = GetNumPartitions( );
 	int TotalISOs = 0;
 	

@@ -126,7 +126,9 @@ void CMenu::_game(bool launch)
 	{
 		string id(m_cf.getId());
 		unsigned long idx = m_cf.getIdx();
+		unsigned long part = m_cf.getPart();
 		int type = m_cf.getType();
+		
 		
 		if (!first)
 			WPAD_ScanPads();
@@ -195,7 +197,7 @@ void CMenu::_game(bool launch)
 				_hideGame();
 				m_cf.clear();
 				m_vid.waitMessage(m_waitMessage);
-				_launchGame(id, idx);
+				_launchGame(id, idx, part);
 				launch = false;
 				WPAD_SetVRes(0, m_vid.width() + m_cur.width(), m_vid.height() + m_cur.height());	// b/c IOS reload
 				_showGame();
@@ -253,9 +255,9 @@ void CMenu::_game(bool launch)
 	_hideGame();
 }
 
-void CMenu::_launchGame(const string &id, unsigned long idx)
+void CMenu::_launchGame(const string &id, unsigned long idx, unsigned long part)
 {
-	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx);
+	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
 
 	bool vipatch = m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERAL", "vipatch", false));
@@ -459,7 +461,7 @@ extern "C" {
 	s32 __Disc_FindPartition(u64 *outbuf);
 }
 
-static void _extractBnr(SmartBuf &bnr, u32 &size, const string &gameId, unsigned long idx)
+static void _extractBnr(SmartBuf &bnr, u32 &size, const string &gameId, unsigned long idx, unsigned long part)
 {
 	u32 discfilecount = 0;
 	u8 found = 0;
@@ -470,7 +472,7 @@ static void _extractBnr(SmartBuf &bnr, u32 &size, const string &gameId, unsigned
 
 	bnr.release();
 
-	int ret = WBFS_OpenDisc((u8 *) gameId.c_str(), idx);
+	int ret = WBFS_OpenDisc((u8 *) gameId.c_str(), idx, part);
 	if (ret != 0) { 
 		gprintf("Opening disc failed: %d\n", ret);
 		goto out;
@@ -569,7 +571,7 @@ SmartBuf uncompressLZ77(u32 &size, const u8 *inputBuf, u32 inputLength)
 	return buffer;
 }
 
-void CMenu::_loadGameSound(const std::string &id, unsigned long idx)
+void CMenu::_loadGameSound(const std::string &id, unsigned long idx, unsigned long part)
 {
 	SmartBuf bnr;
 	const u8 *soundBin;
@@ -582,7 +584,7 @@ void CMenu::_loadGameSound(const std::string &id, unsigned long idx)
 	u32 soundChunkSize;
 	SmartBuf uncompressed;
 
-	_extractBnr(bnr, bnrSize, id, idx);
+	_extractBnr(bnr, bnrSize, id, idx, part);
 	if (!bnr)
 		return;
 	const IMETHeader &imetHdr = *(IMETHeader *)bnr.get();
@@ -636,22 +638,24 @@ int CMenu::_loadGameSoundThrd(CMenu *m)
 {
 	string prevId;
 	string id;
-	unsigned long idx;
+	unsigned long idx, part;
 
 	LWP_MutexLock(m->m_gameSndMutex);
 	id = m->m_gameSoundId;
 	idx = m->m_gameSoundIdx;
+	part = m->m_gameSoundPart;
 	m->m_gameSoundId.clear();
 	m->m_gameSoundIdx = -1;
 	LWP_MutexUnlock(m->m_gameSndMutex);
 	while (id != prevId && !id.empty())
 	{
 		prevId = id;
-		m->_loadGameSound(id, idx);
+		m->_loadGameSound(id, idx, part);
 		LWP_MutexLock(m->m_gameSndMutex);
 		id = m->m_gameSoundId;
 		m->m_gameSoundId.clear();
 		m->m_gameSoundIdx = -1;
+		m->m_gameSoundPart = -1;
 		LWP_MutexUnlock(m->m_gameSndMutex);
 	}
 	m->m_gameSoundThread = 0;
@@ -665,6 +669,7 @@ void CMenu::_playGameSound(void)
 	LWP_MutexLock(m_gameSndMutex);
 	m_gameSoundId = m_cf.getId();
 	m_gameSoundIdx = m_cf.getIdx();
+	m_gameSoundPart = m_cf.getPart();
 	
 	LWP_MutexUnlock(m_gameSndMutex);
 	m_cf.stopPicLoader();

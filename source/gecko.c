@@ -12,7 +12,7 @@ bool textVideoInit = false;
 //using the gprintf from crediar because it is smaller than mine
 void gprintf( const char *str, ... )
 {
-	if (!(geckoinit))return;
+	if (!(geckoinit)) return;
 
 	char astr[4096];
 
@@ -28,7 +28,7 @@ void gprintf( const char *str, ... )
 
 void gsenddata(const u8 *data, int length, const char *filename)
 {
-	if (!(geckoinit))return;
+	if (!(geckoinit)) return;
 	
 	// First, send a "\x1b[2B]" line (this will tell geckoreader that binary data is comming up next)
 	const char *binary_data = "\x1b[2B]\n";
@@ -41,10 +41,9 @@ void gsenddata(const u8 *data, int length, const char *filename)
 	usb_sendbuffer_safe(1, (u8 *) &length, 4);
 	usb_sendbuffer_safe(1, (u8 *) &filenamelength, 1);
 	usb_sendbuffer_safe(1, data, length);
+
 	if (filename != NULL)
-	{
 		usb_sendbuffer_safe(1, filename, strlen(filename));
-	}
 }
 
 char ascii(char s) {

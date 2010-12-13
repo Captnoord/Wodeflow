@@ -39,24 +39,22 @@ INCLUDES	:=	source \
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-
-# DBGFLAGS = -g -O2
-DBGFLAGS = -Os
-CFLAGS	 = $(DBGFLAGS) -Wall $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
-CXXFLAGS = $(DBGFLAGS) -Wall -Wextra -Wno-multichar $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
-
-LDFLAGS	 = $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size -T../rvl.ld
+CFLAGS	 =	-g -Os -Wall -Wno-char-subscripts -fno-strict-aliasing $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+CXXFLAGS =	-g -Os -Wall -Wno-char-subscripts -Wextra -Wno-multichar $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+ 
+LDFLAGS	 =	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size -T../rvl.ld
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:= -ldi -ltremor -lfreetype -lwiiuse -lbte -lasnd -lpng -lz -logc -lm -lmad -lfat
+LIBS	:= -ldi -lvorbisidec -lfreetype -lwiiuse -lbte -lasnd -lpng -lz -logc -lm -lmad -lfat
+
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(CURDIR)
+LIBDIRS	:=	$(CURDIR)/portlibs
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

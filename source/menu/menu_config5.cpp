@@ -65,9 +65,10 @@ void CMenu::_showConfig5(void)
 			m_btnMgr.show(m_config5LblUser[i]);
 	// 
 	char defaultPartition[255];
-	memset((char *) &defaultPartition, 0, 255);
+	u32 defaultPartitionLen;
+	memset((char *) defaultPartition, 0, 255);
 	u32 defaultPartitionNr = WBFS_GetDefaultPartition();
-	WBFS_GetPartitionName(defaultPartitionNr, (char *) &defaultPartition);
+	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
 	
 	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
 	m_btnMgr.setText(m_config5LblPartition, m_cfg.getString(" GENERAL", "partition", defaultPartition));
@@ -129,6 +130,7 @@ int CMenu::_config5(void)
 		if ((padsState & WPAD_BUTTON_A) != 0)
 		{
 			char buf[32];
+			u32 buflen;
 			memset((char *) &buf, 0, 32);
 
 			m_btnMgr.click();
@@ -138,7 +140,7 @@ int CMenu::_config5(void)
 			{
 				currentPartition = loopNum(currentPartition + 1, amountOfPartitions);
 				gprintf("Next item: %d\n", currentPartition);
-				WBFS_GetPartitionName(currentPartition, (char *) &buf);
+				WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
 				gprintf("Which is: %s\n", buf);
 				m_cfg.setString(" GENERAL", "partition", buf);
 				_showConfig5();
@@ -147,7 +149,7 @@ int CMenu::_config5(void)
 			{
 				currentPartition = loopNum(currentPartition - 1, amountOfPartitions);
 				gprintf("Next item: %d\n", currentPartition);
-				WBFS_GetPartitionName(currentPartition, (char *) &buf);
+				WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
 				gprintf("Which is: %s\n", buf);
 				m_cfg.setString(" GENERAL", "partition", buf);
 				_showConfig5();

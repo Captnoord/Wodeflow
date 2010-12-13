@@ -13,7 +13,7 @@ class CColor;
 class Vector3D;
 
 class Config
-{
+{ 
 public:
 	Config(void);
 	void clear(void) { m_domains.clear(); }

@@ -17,6 +17,7 @@
 #include "disc.h"
 
 #include "wode.h"
+#include "logger.h"
 
 unsigned long partition_idx = -1;
 void *discHeaders = NULL;
@@ -67,60 +68,97 @@ s32 WBFS_OpenNamed(char *partition)
 {
 	unsigned long i;
 	PartitionInfo_t t;
-	for (i = 0; i < GetNumPartitions(); i++) {
+	
+	for (i = 1; i < GetNumPartitions(); i++) {
 		if (GetPartitionInfo(i, &t) == 0 && memcmp(t.name, partition, strlen(t.name)) == 0) {
 			partition_idx = i;
 			return 0;
 		}
-	}
+	}	
+
 	return -1;
 }
 
-
-s32 WBFS_GetCount(u32 *count)
+s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 {
-	/* No device open */
-	if (partition_idx == -1)
-		return -1;
-
-	/* Get list length */
-	int idx, ret, cnt = GetNumISOs(partition_idx);
-
-	discHeaders = malloc(cnt * sizeof(struct discHdr));
-	memset(discHeaders, 0, cnt * sizeof(struct discHdr));
-
+	int idx, ret, cnt;
 	int amount = 0;
-
+	char partname[255];
+	u32 partnamelen = 0;
+	
+	/* No device open */
+	if (part == -1)
+		return -1;
+		
+	/* simply don't list ram1 */
+	WBFS_GetPartitionName(part, (char*)partname, &partnamelen);
+	partname[partnamelen] = '\0';
+	if (!strncmp("ram1", partname, 4))
+		return 0;
+	
+	/* Get list length */
+	cnt = GetNumISOs( part );
+	
+	//log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
+	
 	// Get all discHdrs
 	for (idx = 0; idx < cnt; idx++) {
-		struct discHdr *ptr = &((struct discHdr *)discHeaders)[amount];
+		struct discHdr *ptr = &((struct discHdr *)discHeaders)[(*index)++];
 
 		// Get header
 		ISOInfo_t iso;
-		ret = GetISOInfo(partition_idx, idx, &iso);
+		ret = GetISOInfo(part, idx, &iso);
 		if (ret != 0)
 			return ret;
 
-		if (iso.iso_type == TYPE_GC && iso.header[6] != 0)  // Skip this game, since it's a multi-disc game
-			continue;										 // and this disc isn't the first one
+		if (iso.iso_type == TYPE_GC && iso.header[6] != 0)	// Skip this game, since it's a multi-disc game
+			continue;										// and this disc isn't the first one
 			
-		if (iso.iso_type == TYPE_UNKNOWN)	// Filter unknown iso types
+		if (iso.iso_type == TYPE_UNKNOWN)					// Filter unknown iso types
 			continue;
 
 		memset(ptr, 0, sizeof(struct discHdr));
 		memcpy(ptr->id, iso.header, 6);
+		
 		strncpy(ptr->title, iso.name, sizeof(ptr->title) - 1);
 		ptr->game_idx = idx;
+		ptr->game_part = part;
 		ptr->magic = iso.iso_type == TYPE_GC ? GC_MAGIC : WII_MAGIC;
+		
+		//log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
 		
 		amount++;
 	}
 	
-	discHeaders = realloc(discHeaders, amount * sizeof(struct discHdr));
 	*count = amount;
 
 	return 0;
 }
+
+s32 WBFS_GetCount(u32 *count)
+{
+	u32 i = 0;
+	u32 temp_count = 0;
+	u32 part_count = GetNumPartitions();
+	u32 index = 0;
+	
+	int total_iso_count = GetTotalISOs();
+	
+	discHeaders = malloc( total_iso_count * sizeof(struct discHdr));
+	memset(discHeaders, 0, total_iso_count * sizeof(struct discHdr));
+	
+	*count = 0;
+	for (i = 0; i < part_count; i++)
+	{
+		WBFS_GetCountEx(&temp_count, i, &index);
+		*count += temp_count;
+	}
+	
+	discHeaders = realloc(discHeaders, (*count) * sizeof(struct discHdr));
+	
+	return 0;
+}
+
 
 s32 WBFS_GetHeaders(void *outbuf, u32 cnt, u32 len)
 {
@@ -198,14 +236,14 @@ s32 WBFS_DiskSpace(f32 *used, f32 *free)
 	return -1;
 }
 
-s32 WBFS_OpenDisc(u8 *gameId, unsigned long game_idx)
+s32 WBFS_OpenDisc(u8 *gameId, unsigned long game_idx, unsigned long part)
 {
 	/* No device open */
-	if (partition_idx == -1)
+	if (part == -1)
 		return -1;
 
 	/* Open disc */
-	return LaunchISO(partition_idx, game_idx);
+	return LaunchISO(part, game_idx);
 }
 
 void WBFS_CloseDisc()
@@ -253,9 +291,10 @@ unsigned long WBFS_GetPartitionCount() {
 	return GetNumPartitions();
 }
 
-s32 WBFS_GetPartitionName(u32 index, char *buf) {
+s32 WBFS_GetPartitionName(u32 index, char *buf, u32* len) {
 	PartitionInfo_t t;
 	if (GetPartitionInfo(index, &t) == 0) {
+		(*len) = strlen(t.name);
 		strncpy(buf, t.name, strlen(t.name));
 		return 0;
 	}

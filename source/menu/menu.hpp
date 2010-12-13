@@ -313,6 +313,7 @@ private:
 	SSoundEffect m_gameSoundTmp;
 	std::string m_gameSoundId;
 	unsigned long m_gameSoundIdx;
+	unsigned long m_gameSoundPart;
 	lwp_t m_gameSoundThread;
 	mutex_t m_gameSndMutex;
 	u8 m_bnrSndVol;
@@ -469,7 +470,7 @@ private:
 	void _gameSettings(void);
 	void _mainLoopCommon(const WPADData *wd, bool withCF = false, bool blockReboot = false, bool adjusting = false);
 	// 
-	void _launchGame(const std::string &id, unsigned long idx);
+	void _launchGame(const std::string &id, unsigned long idx, unsigned long part);
 	bool _networkFix(void);
 	void _setAA(int aa);
 	void _loadCFCfg(void);
@@ -518,7 +519,7 @@ private:
 	void _stopSounds(void);
 	// 
 	void _playGameSound(void);
-	void _loadGameSound(const std::string &id, unsigned long idx);
+	void _loadGameSound(const std::string &id, unsigned long idx, unsigned long part);
 	void _waitForGameSoundExtract(void);
 	static int _loadGameSoundThrd(CMenu *m);
 	// 

@@ -23,14 +23,14 @@ s32 WBFS_DiskSpace(f32 *, f32 *);
 s32 WBFS_OpenPart(u32 part_idx, char *partition);
 s32 WBFS_OpenNamed(char *partition);
 
-s32 WBFS_OpenDisc(u8 *, unsigned long game_idx);
+s32 WBFS_OpenDisc(u8 *, unsigned long game_idx, unsigned long game_part);
 void WBFS_CloseDisc();
 
 bool WBFS_Close();
 
 unsigned long WBFS_GetCurrentPartition();
 unsigned long WBFS_GetPartitionCount();
-s32 WBFS_GetPartitionName(u32, char *);
+s32 WBFS_GetPartitionName(u32, char *, u32*);
 u32 WBFS_GetDefaultPartition();
 
 bool WBFS_IsReadOnly(void);

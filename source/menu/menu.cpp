@@ -851,7 +851,7 @@ void CMenu::_initCF(void)
 			if (w.empty())
 				w = titles.getWString("TITLES", id.substr(0, 4), string(m_gameList[i].title, sizeof m_gameList[0].title));
 			int playcount = m_cfg.getInt(id, "playcount", 0);
-			m_cf.addItem(id.c_str(), m_gameList[i].game_idx, w.c_str(), sfmt("%s/%s.png", m_picDir.c_str(), id.c_str()).c_str(), sfmt("%s/%s.png", m_boxPicDir.c_str(), id.c_str()).c_str(), playcount, m_gameList[i].magic == GC_MAGIC ? TYPE_GC : TYPE_WII);
+			m_cf.addItem(id.c_str(), m_gameList[i].game_idx, m_gameList[i].game_part, w.c_str(), sfmt("%s/%s.png", m_picDir.c_str(), id.c_str()).c_str(), sfmt("%s/%s.png", m_boxPicDir.c_str(), id.c_str()).c_str(), playcount, m_gameList[i].magic == GC_MAGIC ? TYPE_GC : TYPE_WII);
 		}
 	}
 	m_cf.setBoxMode(m_cfg.getBool(" GENERAL", "box_mode", true));
@@ -1092,8 +1092,9 @@ bool CMenu::_loadGameList(void)
 	u32 count;
 
 	char defaultPartition[255];
+	u32 defaultPartitionLen;
 	u32 defaultPartitionNr = WBFS_GetDefaultPartition();
-	WBFS_GetPartitionName(defaultPartitionNr, (char *) &defaultPartition);
+	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
 
 	ret = WBFS_OpenNamed((char *) m_cfg.getString(" GENERAL", "partition", defaultPartition).c_str());
 	if (ret < 0)
