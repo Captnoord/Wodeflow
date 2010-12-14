@@ -25,7 +25,11 @@ SOURCES		:=	source \
 				source/memory \
 				source/menu \
 				source/music \
-				source/network
+				source/network \
+				source/libs/libfat \
+				source/libs/libntfs \
+				source/libs/libwbfs
+
 DATA		:=	data  
 INCLUDES	:=	source \
 				source/cheats \
@@ -34,7 +38,12 @@ INCLUDES	:=	source \
 				source/memory \
 				source/menu \
 				source/music \
-				source/network
+				source/network \
+				source/libs \
+				source/libs/libfat \
+				source/libs/libntfs \
+				source/libs/libwbfs
+
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -47,7 +56,7 @@ LDFLAGS	 =	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:= -ldi -lvorbisidec -lfreetype -lwiiuse -lbte -lasnd -lpng -lz -logc -lm -lmad -lfat
+LIBS	:= -ldi -lvorbisidec -lfreetype -lwiiuse -lbte -lasnd -lpng -lz -logc -lm -lmad
 
 
 #---------------------------------------------------------------------------------
