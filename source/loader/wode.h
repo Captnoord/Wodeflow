@@ -59,9 +59,9 @@ typedef struct
 #define FAV_OK	  		2
 
 /* ISO Types */
-#define TYPE_WII		1
 #define TYPE_GC			1
-#define TYPE_WBFS		2
+#define TYPE_WII		2
+#define TYPE_WBFS		3
 #define TYPE_UNKNOWN	4
 
 #define WII_MAGIC	0x5D1C9EA3
