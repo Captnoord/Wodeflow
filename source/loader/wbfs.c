@@ -29,9 +29,8 @@ s32 WBFS_Init()
 	/* Try to mount device */
 	ret = OpenWode();
 
-	if (ret == 0) {
+	if (ret == 0)
 		goto out;
-	}
 		
 	/* Sleep 1 second */
 	sleep(1);
@@ -90,16 +89,18 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 	if (part == -1)
 		return -1;
 		
+	ret = 0;
+		
 	/* simply don't list ram1 */
 	WBFS_GetPartitionName(part, (char*)partname, &partnamelen);
 	partname[partnamelen] = '\0';
-	if (!strncmp("ram1", partname, 4))
+	if (!strncmp("ram", partname, 3))
 		return 0;
 	
 	/* Get list length */
 	cnt = GetNumISOs( part );
 	
-	//log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
+	log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
 	
 	// Get all discHdrs
 	for (idx = 0; idx < cnt; idx++) {
@@ -109,7 +110,7 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 		ISOInfo_t iso;
 		ret = GetISOInfo(part, idx, &iso);
 		if (ret != 0)
-			return ret;
+			goto exit;
 
 		if (iso.iso_type == TYPE_GC && iso.header[6] != 0)	// Skip this game, since it's a multi-disc game
 			continue;										// and this disc isn't the first one
@@ -125,20 +126,22 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 		ptr->game_part = part;
 		ptr->magic = iso.iso_type == TYPE_GC ? GC_MAGIC : WII_MAGIC;
 		
-		//log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
+		log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
 		
 		amount++;
 	}
 	
+exit:
+	
 	*count = amount;
 
-	return 0;
+	return ret;
 }
 
 s32 WBFS_GetCount(u32 *count)
 {
 	u32 i = 0;
-	u32 temp_count = 0;
+	u32 temp_count;
 	u32 part_count = GetNumPartitions();
 	u32 index = 0;
 	
@@ -150,9 +153,12 @@ s32 WBFS_GetCount(u32 *count)
 	*count = 0;
 	for (i = 0; i < part_count; i++)
 	{
+		temp_count = 0;
 		WBFS_GetCountEx(&temp_count, i, &index);
 		*count += temp_count;
 	}
+	
+	*count = index;
 	
 	discHeaders = realloc(discHeaders, (*count) * sizeof(struct discHdr));
 	
@@ -162,9 +168,8 @@ s32 WBFS_GetCount(u32 *count)
 
 s32 WBFS_GetHeaders(void *outbuf, u32 cnt, u32 len)
 {
-	if (discHeaders == NULL) {
+	if (discHeaders == NULL)
 		return -1;
-	}
 	
 	memcpy(outbuf, discHeaders, cnt * len);
 	free(discHeaders);

@@ -1,6 +1,7 @@
 #include <ogcsys.h>
 #include <locale.h>
-#include <fat.h>
+//#include <fat.h>
+#include "libfat/fat.h"
 #include <ogc/usbstorage.h>
 
 #include "sdhc.h"

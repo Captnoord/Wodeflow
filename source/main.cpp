@@ -13,10 +13,6 @@
 
 extern int use_dvdx;
 
-extern "C"
-{
-    extern void __exception_setreload(int t);
-}
 
 extern const u8 wait_png[];
 extern const u8 wait_disc_png[];
@@ -33,7 +29,6 @@ extern "C" {
 int old_main()
 {
 	geckoinit = InitGecko();
-//	__exception_setreload(5);
 	use_dvdx = 1;
 	
 	InitDVD();
