@@ -1102,16 +1102,19 @@ bool CMenu::_loadGameList(void)
 		error(wfmt(_fmt("wbfs2", L"Can't open wode : %i"), ret));
 		return false;
 	}
+	
 	ret = WBFS_GetCount(&count);
 	if (ret < 0)
 	{
 		error(wfmt(_fmt("wbfs3", L"WODE_GetCount failed : %i"), ret));
 		return false;
 	}
+	
 	len = count * sizeof m_gameList[0];
 	buffer = smartAnyAlloc(len);
 	if (!buffer)
 		return false;
+		
 	memset(buffer.get(), 0, len);
 	ret = WBFS_GetHeaders((discHdr *)buffer.get(), count, sizeof (struct discHdr));
 

@@ -100,7 +100,7 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 	/* Get list length */
 	cnt = GetNumISOs( part );
 	
-	log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
+//	log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
 	
 	// Get all discHdrs
 	for (idx = 0; idx < cnt; idx++) {
@@ -126,7 +126,7 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 		ptr->game_part = part;
 		ptr->magic = iso.iso_type == TYPE_GC ? GC_MAGIC : WII_MAGIC;
 		
-		log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
+//		log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
 		
 		amount++;
 	}
