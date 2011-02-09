@@ -158,10 +158,6 @@ s32 WBFS_GetCount(u32 *count)
 		*count += temp_count;
 	}
 	
-	*count = index;
-	
-	discHeaders = realloc(discHeaders, (*count) * sizeof(struct discHdr));
-	
 	return 0;
 }
 
