@@ -1123,7 +1123,7 @@ bool CMenu::_loadGameList(void)
 	m_gameList.clear();
 	m_gameList.reserve(count);
 	discHdr *b = (discHdr *)buffer.get();
-	for (u32 i = 0; i < count-1; i++)
+	for (u32 i = 0; i < count; i++)
 		if (memcmp(b[i].id, "__CFG_", sizeof b[i].id) != 0)	// Because of uLoader
 		
 			/* hack... to make sure we don't see that empty box...
