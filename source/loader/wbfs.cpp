@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <sdcard/wiisd_io.h>
 #include <string.h>
+#include <vector>
 
 #include "wbfs.h"
 #include "wdvd.h"
@@ -68,12 +69,17 @@ s32 WBFS_OpenNamed(char *partition)
 	unsigned long i;
 	PartitionInfo_t t;
 	
+	if (!strncmp("all", partition, 3)) {
+		partition_idx = 0xFFFF; // enum of all... bleh...
+		return 0;
+	}
+	
 	for (i = 1; i < GetNumPartitions(); i++) {
 		if (GetPartitionInfo(i, &t) == 0 && memcmp(t.name, partition, strlen(t.name)) == 0) {
 			partition_idx = i;
 			return 0;
 		}
-	}	
+	}
 
 	return -1;
 }
@@ -104,6 +110,7 @@ s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
 	
 	// Get all discHdrs
 	for (idx = 0; idx < cnt; idx++) {
+
 		struct discHdr *ptr = &((struct discHdr *)discHeaders)[(*index)++];
 
 		// Get header
@@ -196,6 +203,92 @@ s32 WBFS_GetHeaders(void *outbuf, u32 cnt, u32 len)
 	}
 	return 0;
 */
+}
+
+s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part, int & index)
+{
+	int idx, ret, cnt;
+	char partname[255];
+	u32 partnamelen = 0;
+	
+	/* simply don't list "ram*" */
+	WBFS_GetPartitionName(part, (char*)partname, &partnamelen);
+	partname[partnamelen] = '\0';
+	if (!strncmp("ram", partname, 3))
+		return 0;
+	
+	/* Get list length */
+	cnt = GetNumISOs( part );
+	
+	//log_printf("part: %u [%s] contains: %u iso's\n", part, partname, cnt);
+	
+	// Get all discHdrs
+	for (idx = 0; idx < cnt; idx++) {
+
+		// Get header
+		ISOInfo_t iso;
+		ret = GetISOInfo(part, idx, &iso);
+		if (ret != 0)
+			return ret;
+
+		if (iso.iso_type == TYPE_GC && iso.header[6] != 0)	// Skip this game, since it's a multi-disc game
+			continue;										// and this disc isn't the first one
+
+		if (iso.iso_type == TYPE_UNKNOWN)					// Filter unknown iso types
+			continue;
+
+		struct discHdr disc;
+		//struct discHdr *ptr = &game_list[index++];
+		//struct discHdr *ptr = &disc;
+
+		//memset(ptr, 0, sizeof(struct discHdr));
+		memcpy(disc.id, iso.header, 6);
+		
+		strncpy(disc.title, iso.name, sizeof(disc.title) - 1);
+		disc.game_idx = idx;
+		disc.game_part = part;
+		disc.magic = iso.iso_type == TYPE_GC ? GC_MAGIC : WII_MAGIC;
+		game_list.push_back(disc);
+
+		//log_printf("\t[%u] iso: %u part: %u name:%s type:%u\n", (*index), idx, part, iso.name, iso.iso_type);
+	}
+	
+	return 0;
+}
+
+s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
+{
+	int total_iso_count;
+	int part_count = GetNumPartitions();
+	int index = 0;
+	int i;
+	
+	game_list.clear();
+	
+	/* list all iso's */
+	if (partition_idx == 0xFFFF) {
+	
+		total_iso_count = GetTotalISOs();
+	
+		//game_list.resize(total_iso_count);
+		game_list.reserve(total_iso_count);
+	
+		for (i = 0; i < part_count; i++)
+			WBFS_populate_game_list_ex(game_list, i, index);
+			
+	} else if (partition_idx >= 0){ /* list one partition */
+	
+		total_iso_count = GetNumISOs(partition_idx);
+		
+		//game_list.resize(total_iso_count);
+		game_list.reserve(total_iso_count);
+		
+		WBFS_populate_game_list_ex(game_list, partition_idx, index);
+	}
+	
+	/* this will possible re-introduce the missing last game bug */
+	//game_list.resize(index);
+	return 0;
 }
 
 s32 WBFS_CheckGame(u8 *discid)

@@ -88,7 +88,7 @@ int CMenu::_config5(void)
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;
 
-	s32 amountOfPartitions = WBFS_GetPartitionCount();
+	s32 amountOfPartitions = WBFS_GetPartitionCount() + 1;
 	s32 currentPartition = WBFS_GetCurrentPartition();
 //	s32 bCurrentPartition = currentPartition;
 
@@ -127,6 +127,8 @@ int CMenu::_config5(void)
 			m_btnMgr.click(m_configBtnPageP);
 			break;
 		}
+		
+		/* button event... */
 		if ((padsState & WPAD_BUTTON_A) != 0)
 		{
 			char buf[32];
@@ -136,21 +138,34 @@ int CMenu::_config5(void)
 			m_btnMgr.click();
 			if (m_btnMgr.selected() == m_configBtnBack)
 				break;
+			
+			/* next partition */
 			else if (m_btnMgr.selected() == m_config5BtnPartitionP)
 			{
 				currentPartition = loopNum(currentPartition + 1, amountOfPartitions);
-				gprintf("Next item: %d\n", currentPartition);
-				WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
-				gprintf("Which is: %s\n", buf);
+				
+				if (currentPartition != (amountOfPartitions-1)) {
+					gprintf("Next item: %d\n", currentPartition);
+					WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
+					gprintf("Which is: %s\n", buf);
+				} else {
+					sprintf(buf, "all");
+				}
 				m_cfg.setString(" GENERAL", "partition", buf);
 				_showConfig5();
 			}
+			/* prev partition */
 			else if (m_btnMgr.selected() == m_config5BtnPartitionM)
 			{
 				currentPartition = loopNum(currentPartition - 1, amountOfPartitions);
-				gprintf("Next item: %d\n", currentPartition);
-				WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
-				gprintf("Which is: %s\n", buf);
+				if (currentPartition != (amountOfPartitions-1)) {
+				
+					gprintf("Next item: %d\n", currentPartition);
+					WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
+					gprintf("Which is: %s\n", buf);
+				} else {
+					sprintf(buf, "all");
+				}
 				m_cfg.setString(" GENERAL", "partition", buf);
 				_showConfig5();
 			}

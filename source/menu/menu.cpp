@@ -1087,9 +1087,9 @@ const wstringEx CMenu::_fmt(const char *key, const wchar_t *def)
 bool CMenu::_loadGameList(void)
 {
 	s32 ret;
-	u32 len;
-	SmartBuf buffer;
-	u32 count;
+	//u32 len;
+	//SmartBuf buffer;
+	//u32 count;
 
 	char defaultPartition[255];
 	u32 defaultPartitionLen;
@@ -1102,7 +1102,9 @@ bool CMenu::_loadGameList(void)
 		error(wfmt(_fmt("wbfs2", L"Can't open wode : %i"), ret));
 		return false;
 	}
-	
+
+/* this method is slow.. as we do 3x a alloc 2x a free and 3x a copy or something like that bleh.. */
+#if 0
 	ret = WBFS_GetCount(&count);
 	if (ret < 0)
 	{
@@ -1134,6 +1136,17 @@ bool CMenu::_loadGameList(void)
 			 */
 			if (b[i].id[0] != 0)
 				m_gameList.push_back(b[i]);
+#else
+
+	ret = WBFS_populate_game_list( m_gameList );
+	if (ret < 0)
+	{
+		error(wfmt(_fmt("wbfs3", L"unable to populate game list, something went wrong : %i"), ret));
+		return false;
+	}
+
+#endif
+
 	return true;
 }
 

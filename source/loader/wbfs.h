@@ -1,10 +1,6 @@
 #ifndef _WBFS_H_
 #define _WBFS_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern char wbfs_fs_drive[16];
 
 typedef void (*progress_callback_t)(int status,int total,void *user_data);
@@ -28,6 +24,14 @@ void WBFS_CloseDisc();
 
 bool WBFS_Close();
 
+/**
+ * populate the game list with disc's
+ *
+ * @param[in][out] game_list vector list of game disc structures
+ * @return returns zero when successful and non zero when unsuccessful
+ */
+s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list);
+
 unsigned long WBFS_GetCurrentPartition();
 unsigned long WBFS_GetPartitionCount();
 s32 WBFS_GetPartitionName(u32, char *, u32*);
@@ -35,9 +39,5 @@ u32 WBFS_GetDefaultPartition();
 
 bool WBFS_IsReadOnly(void);
 f32 WBFS_EstimeGameSize(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
