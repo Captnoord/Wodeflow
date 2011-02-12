@@ -90,7 +90,7 @@ int CMenu::_config5(void)
 
 	s32 amountOfPartitions = WBFS_GetPartitionCount() + 1;
 	s32 currentPartition = WBFS_GetCurrentPartition();
-//	s32 bCurrentPartition = currentPartition;
+	s32 bCurrentPartition = currentPartition;
 
 	gprintf("Current Partition: %d\n", currentPartition);
 	gprintf("Amount of partitions: %d\n", amountOfPartitions);
@@ -177,11 +177,11 @@ int CMenu::_config5(void)
 		}
 		_mainLoopCommon(wd);
 	}
-//	if (bCurrentPartition != currentPartition)
-//	{
+	if (bCurrentPartition != currentPartition)
+	{
 		gprintf("Switching partition to %s\n", m_cfg.getString(" GENERAL", "partition").c_str());
 		_loadGameList();
-//	}
+	}
 	
 	_hideConfig5();
 	return nextPage;
