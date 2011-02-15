@@ -211,6 +211,10 @@ s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part
 	char partname[255];
 	u32 partnamelen = 0;
 	
+	/* No device open */
+	if (part == -1)
+		return -1;
+	
 	/* simply don't list "ram*" */
 	WBFS_GetPartitionName(part, (char*)partname, &partnamelen);
 	partname[partnamelen] = '\0';
