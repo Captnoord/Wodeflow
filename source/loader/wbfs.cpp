@@ -205,7 +205,7 @@ s32 WBFS_GetHeaders(void *outbuf, u32 cnt, u32 len)
 */
 }
 
-s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part, int & index)
+s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part)
 {
 	int idx, ret, cnt;
 	char partname[255];
@@ -238,10 +238,6 @@ s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part
 			continue;
 
 		struct discHdr disc;
-		//struct discHdr *ptr = &game_list[index++];
-		//struct discHdr *ptr = &disc;
-
-		//memset(ptr, 0, sizeof(struct discHdr));
 		memcpy(disc.id, iso.header, 6);
 		
 		strncpy(disc.title, iso.name, sizeof(disc.title) - 1);
@@ -260,7 +256,6 @@ s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
 {
 	int total_iso_count;
 	int part_count = GetNumPartitions();
-	int index = 0;
 	int i;
 	
 	game_list.clear();
@@ -270,24 +265,24 @@ s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
 	
 		total_iso_count = GetTotalISOs();
 	
-		//game_list.resize(total_iso_count);
 		game_list.reserve(total_iso_count);
 	
 		for (i = 0; i < part_count; i++)
-			WBFS_populate_game_list_ex(game_list, i, index);
+			WBFS_populate_game_list_ex(game_list, i);
 			
 	} else if (partition_idx >= 0){ /* list one partition */
 	
 		total_iso_count = GetNumISOs(partition_idx);
 		
-		//game_list.resize(total_iso_count);
 		game_list.reserve(total_iso_count);
 		
-		WBFS_populate_game_list_ex(game_list, partition_idx, index);
+		WBFS_populate_game_list_ex(game_list, partition_idx);
 	}
 	
-	/* this will possible re-introduce the missing last game bug */
-	//game_list.resize(index);
+	/**
+	 * @note I don't shrink the game_list buffer to the correct size. I don't do that because it
+	 * 		 the std::vector only has a resize function which does someting else.
+	 */
 	return 0;
 }
 
