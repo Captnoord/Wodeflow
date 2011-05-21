@@ -69,7 +69,7 @@ void app_loadgameconfig(char *discid)
 
 	if (gameconf == NULL)
 	{
-		gameconf = malloc(65536);
+		gameconf = malloc(0x10000); /* allocate 64 kb for the gameconfig */
 		if (gameconf == NULL)
 		{
 			return;
@@ -120,6 +120,7 @@ void app_loadgameconfig(char *discid)
 			//TODO for oggzee
 			//print_status("Error reading gameconfig.txt");
 			//wait(4);
+            free(tempgameconf);
 			return;
 		}
 		tempgameconfsize = filesize;

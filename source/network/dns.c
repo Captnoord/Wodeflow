@@ -75,15 +75,16 @@ u32 getipbynamecached(char *domain)
 	if(newnode == NULL) {
 		return ip;
 	}
-		
+	
+    u32 domain_len = strlen(domain);
 	newnode->ip = ip;
-	newnode->domain = malloc(strlen(domain)+1);
+	newnode->domain = malloc(domain_len+1);
 	if(newnode->domain == NULL)
 	{
 		free(newnode);
 		return ip;
 	}
-	strcpy(newnode->domain, domain);
+	strncpy(newnode->domain, domain, domain_len);
 	
 	newnode->nextnode = firstdnsentry;
 	firstdnsentry = newnode;

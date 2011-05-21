@@ -493,10 +493,10 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 	}
 	if (!b.font.font)
 		return;
+
 	b.font.font->reset();
 	CColor txtColor(b.textColor.r, b.textColor.g, b.textColor.b, (u8)((int)b.textColor.a * (int)alpha / 0xFF));
-	b.font.font->setXScale(scaleX);
-	b.font.font->setYScale(scaleY);
+    b.font.font->setScale(scaleX, scaleY);    
 	b.font.font->drawText(0, 0, b.text.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
 }
 
@@ -542,8 +542,8 @@ void CButtonsMgr::_drawLbl(CButtonsMgr::SLabel &b)
 		return;
 	b.font.font->reset();
 	b.text.setColor(CColor(b.textColor.r, b.textColor.g, b.textColor.b, (u8)((int)b.textColor.a * (int)alpha / 0xFF)));
-	b.font.font->setXScale(scaleX);
-	b.font.font->setYScale(scaleY);
+	b.font.font->setScale(scaleX, scaleY);
+
 	posX = b.pos.x;
 	posY = b.pos.y;
 	if ((b.textStyle & FTGX_JUSTIFY_CENTER) == 0)

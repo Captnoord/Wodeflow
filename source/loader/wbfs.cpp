@@ -84,7 +84,7 @@ s32 WBFS_OpenNamed(char *partition)
 	return -1;
 }
 
-s32 WBFS_GetCountEx(u32 *count, u32 part, u32 * index)
+s32 WBFS_GetCountEx(u32 *count, s32 part, u32 * index)
 {
 	int idx, ret, cnt;
 	int amount = 0;
@@ -318,6 +318,7 @@ s32 WBFS_RemoveGame(u8 *discid)
 	return -1;
 }
 
+#if 0
 s32 WBFS_DiskSpace(f32 *used, f32 *free)
 {
 	/* No device open */
@@ -328,6 +329,7 @@ s32 WBFS_DiskSpace(f32 *used, f32 *free)
 
 	return -1;
 }
+#endif
 
 s32 WBFS_OpenDisc(u8 *gameId, unsigned long game_idx, unsigned long part)
 {

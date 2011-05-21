@@ -178,9 +178,10 @@ struct block downloadfile(u8 *buffer, u32 bufferSize, const char *url, bool (*f)
 		return emptyblock;
 	
 	//Form a nice request header to send to the webserver
-	char* headerformat = "GET %s HTTP/1.0\r\nHost: %s\r\nUser-Agent: WodeFlow 1.0\r\n\r\n";;
-	char header[strlen(headerformat) + strlen(domain) + strlen(path)];
-	sprintf(header, headerformat, path, domain);
+	char* headerformat = "GET %s HTTP/1.0\r\nHost: %s\r\nUser-Agent: WodeFlow 1.1 r12\r\n\r\n";
+    size_t header_len = strlen(headerformat) + strlen(domain) + strlen(path);
+	char header[header_len];
+	snprintf(header, header_len, headerformat, path, domain);
 
 	//Do the request and get the response
 	send_message(connection, header);

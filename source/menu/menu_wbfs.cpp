@@ -54,9 +54,9 @@ void CMenu::_showWBFS(CMenu::WBFS_OP op)
 static void slotLight(bool state)
 {
 	if (state)
-		*(u32 *)0xCD0000C0 |= 0x20;        
+		*(u32 *)0xCD0000C0 |= 0x20;
 	else
-		*(u32 *)0xCD0000C0 &= ~0x20;        
+		*(u32 *)0xCD0000C0 &= ~0x20;
 }
 
 void CMenu::_addDiscProgress(int status, int total, void *user_data)

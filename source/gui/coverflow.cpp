@@ -1123,8 +1123,8 @@ void CCoverFlow::_drawTitle(int i, bool mirror, bool rectangle)
 	}
 	m_covers[i].title.setColor(color);
 	m_font.font->reset();
-	m_font.font->setXScale(0.005f);
-	m_font.font->setYScale(mirror ? 0.005f : -0.005f);
+    m_font.font->setScale(0.005f, mirror ? 0.005f : -0.005f);
+
 	GX_ClearVtxDesc();
 	GX_SetNumTevStages(1);
 	GX_SetNumChans(1);

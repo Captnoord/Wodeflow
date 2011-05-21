@@ -229,6 +229,7 @@ class FreeTypeGX {
 
 		uint8_t textureFormat;		/**< Defined texture format of the target EFB. */
 		uint8_t positionFormat;		/**< Defined position format of the texture. */
+
 		std::map<wchar_t, ftgxCharData> fontData; /**< Map which holds the glyph data structures for the corresponding characters. */
 
 		static uint16_t adjustTextureWidth(uint16_t textureWidth, uint8_t textureFormat);
@@ -267,6 +268,9 @@ class FreeTypeGX {
 		
 		float getXScale(void) const { return xScale; }
 		float getYScale(void) const { return yScale; }
+        
+        void setScale(float x_scale, float y_scale) { xScale = x_scale; yScale = y_scale; }
+
 		void setXScale(float f) { xScale = f; }
 		void setYScale(float f) { yScale = f; }
 		float getX(void) const { return xPos; }

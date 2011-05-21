@@ -8,11 +8,12 @@
 
 void log_printf( const char *str, ... )
 {
-//	if (log_fd == NULL) return;
 	FILE * log_fd;
 	log_fd = fopen("sd:/log.txt", "a");
 	if (!log_fd)
 		log_fd = fopen("sd:/log.txt", "a");
+
+    if (log_fd == NULL) return;
 	
 	va_list ap;
 	va_start(ap,str);

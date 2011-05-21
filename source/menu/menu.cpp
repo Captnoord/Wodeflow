@@ -1087,11 +1087,7 @@ const wstringEx CMenu::_fmt(const char *key, const wchar_t *def)
 bool CMenu::_loadGameList(void)
 {
 	s32 ret;
-	//u32 len;
-	//SmartBuf buffer;
-	//u32 count;
-
-	char defaultPartition[255];
+	char defaultPartition[64];
 	u32 defaultPartitionLen;
 	u32 defaultPartitionNr = WBFS_GetDefaultPartition();
 	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
@@ -1103,50 +1099,12 @@ bool CMenu::_loadGameList(void)
 		return false;
 	}
 
-/* this method is slow.. as we do 3x a alloc 2x a free and 3x a copy or something like that bleh.. */
-#if 0
-	ret = WBFS_GetCount(&count);
-	if (ret < 0)
-	{
-		error(wfmt(_fmt("wbfs3", L"WODE_GetCount failed : %i"), ret));
-		return false;
-	}
-	
-	len = count * sizeof m_gameList[0];
-	buffer = smartAnyAlloc(len);
-	if (!buffer)
-		return false;
-		
-	memset(buffer.get(), 0, len);
-	ret = WBFS_GetHeaders((discHdr *)buffer.get(), count, sizeof (struct discHdr));
-
-	if (ret < 0)
-	{
-		error(wfmt(_fmt("wbfs4", L"WBFS_GetHeaders failed : %i"), ret));
-		return false;
-	}
-	m_gameList.clear();
-	m_gameList.reserve(count);
-	discHdr *b = (discHdr *)buffer.get();
-	for (u32 i = 0; i < count; i++)
-		if (memcmp(b[i].id, "__CFG_", sizeof b[i].id) != 0)	// Because of uLoader
-		
-			/* hack... to make sure we don't see that empty box...
-			 * as I don't know how to fix it properly atm... (lack of time).
-			 */
-			if (b[i].id[0] != 0)
-				m_gameList.push_back(b[i]);
-#else
-
 	ret = WBFS_populate_game_list( m_gameList );
 	if (ret < 0)
 	{
 		error(wfmt(_fmt("wbfs3", L"unable to populate game list, something went wrong : %i"), ret));
 		return false;
 	}
-
-#endif
-
 	return true;
 }
 
