@@ -3,16 +3,9 @@
 #include "loader/wbfs.h"
 
 #include <wiiuse/wpad.h>
+#include "lockMutex.hpp"
 
 using namespace std;
-
-class LockMutex
-{
-	mutex_t &m_mutex;
-public:
-	LockMutex(mutex_t &m) : m_mutex(m) { LWP_MutexLock(m_mutex); }
-	~LockMutex(void) { LWP_MutexUnlock(m_mutex); }
-};
 
 void CMenu::_hideWBFS(bool instant)
 {

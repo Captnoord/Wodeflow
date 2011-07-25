@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "gecko.h"
+
 /* init-globals */
 bool geckoinit = false;
 bool textVideoInit = false;
@@ -9,8 +11,9 @@ bool textVideoInit = false;
 #ifndef NO_DEBUG
 #include <stdarg.h>
 
+
 //using the gprintf from crediar because it is smaller than mine
-void gprintf( const char *str, ... )
+void _gprintf( const char *str, ... )
 {
 	if (!(geckoinit)) return;
 

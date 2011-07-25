@@ -83,7 +83,7 @@ int CMenu::_config5(void)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
+	u32 btn = 0;
 	int nextPage = 0;
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;

@@ -1,17 +1,11 @@
 
 #include "mem2alloc.hpp"
+#include "lockMutex.hpp"
 
 #include <ogc/system.h>
 #include <algorithm>
 #include <string.h>
 
-class LockMutex
-{
-	mutex_t &m_mutex;
-public:
-	LockMutex(mutex_t &m) : m_mutex(m) { LWP_MutexLock(m_mutex); }
-	~LockMutex(void) { LWP_MutexUnlock(m_mutex); }
-};
 
 void CMEM2Alloc::init(unsigned int size)
 {

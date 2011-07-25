@@ -1,5 +1,6 @@
 
 #include "menu.hpp"
+
 #include "loader/sys.h"
 #include "loader/wbfs.h"
 #include "http.h"
@@ -9,6 +10,8 @@
 #include <wiiuse/wpad.h>
 
 #include "gecko.h"
+
+#include "lockMutex.hpp"
 
 #define TAG_GAME_ID		"gameid"
 #define TAG_LOC			"loc"
@@ -30,14 +33,6 @@ static const char FMT_PIC_URL[] = "http://wiitdb.com/wiitdb/artwork/cover/{loc}/
 "|http://www.muntrue.nl/covers/ALL/160/225/boxart/{gameid6}.png";//
 //"|http://wiitdb.com/wiitdb/artwork/cover/{loc}/{gameid4}.png"
 //"|http://wiitdb.com/wiitdb/artwork/cover/EN/{gameid4}.png";
-
-class LockMutex
-{
-	mutex_t &m_mutex;
-public:
-	LockMutex(mutex_t &m) : m_mutex(m) { LWP_MutexLock(m_mutex); }
-	~LockMutex(void) { LWP_MutexUnlock(m_mutex); }
-};
 
 static string countryCode(const string &gameId)
 {
