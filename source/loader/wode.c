@@ -63,7 +63,7 @@
 //#define WODE_LAUNCH_GAME_PART_DVDx(P)		(0x81000000 |  ((P & 0xFF) 	 << 16))
 //#define WODE_LAUNCH_GAME_ISO_DVDx(P)			(0x82000000 |  ((P >> 5) << 16) | (((P & 0x1F) << 3) << 8))
 
-//#define DEBUG_WODE
+#define DEBUG_WODE
 //#define gprintf log_printf
 
 static u8 dvdbuffer[0x8000] ATTRIBUTE_ALIGN (32);    // One Sector

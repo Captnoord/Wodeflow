@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="cheats">
+      <UniqueIdentifier>{e1ae4a17-9748-4415-85fd-8792a059aebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{69c0e817-2659-4e72-9bce-bde01599d5a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{c051cde9-3ac1-40e0-80a0-e1ca039ef736}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="loader">
+      <UniqueIdentifier>{6cc73777-7084-44b0-8654-f0526f8ea4d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{9dc6190a-5501-499f-adf2-a45ab4eae1cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="menu">
+      <UniqueIdentifier>{a1ad9d4f-e3e0-4635-aa91-5798d9b1f042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="music">
+      <UniqueIdentifier>{25307c35-9d4b-4f89-b1a1-695b222e5c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{dbec7742-59d7-4eb9-86cb-c41fa1fcde2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{83805445-8cc8-4469-aea5-cf5800260f7f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\data\background.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\btnnext.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\btnnexts.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\btnprev.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\btnprevs.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\butfont.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\cffont.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\click.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\dvdskin.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\dvdskin_black.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\dvdskin_red.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\error.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\fbi.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\flatloading.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\hover.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\loading.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\data\nopic.c">
+      <Filter>data</Filter>
+    </ClCompile>
+    <ClCompile Include="source\config.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\wstringEx.cpp" />
+    <ClCompile Include="source\logger.cpp" />
+    <ClCompile Include="source\gecko.cpp" />
+    <ClCompile Include="source\network\http.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="source\network\dns.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="source\music\sound.cpp">
+      <Filter>music</Filter>
+    </ClCompile>
+    <ClCompile Include="source\music\oggplayer.cpp">
+      <Filter>music</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config_adv.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config_game.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config2.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config3.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config4.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_config5.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_configsnd.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_download.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_error.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_game.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_main.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_wbfs.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_about.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_cftheme.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menu\menu_code.cpp">
+      <Filter>menu</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\objalloc.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\smartalloc.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\mem2.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\mem2alloc.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\disc.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\fs.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\fst.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\multidol.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\patchcode.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\sdhc.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\sys.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\videopatch.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\wbfs.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\wdvd.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\wip.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\wode.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\wodefs.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\loader\apploader.c">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\cursor.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\FreeTypeGX.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\Metaphrasis.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\pngu.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\text.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\texture.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\video.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\boxmesh.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gui\coverflow.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cheats\gct.cpp">
+      <Filter>cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cheats\cheat.cpp">
+      <Filter>cheats</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\gecko.h" />
+    <ClInclude Include="source\logger.h" />
+    <ClInclude Include="source\svnrev.h" />
+    <ClInclude Include="source\config.h" />
+    <ClInclude Include="source\wstringEx.h" />
+    <ClInclude Include="source\vector.h" />
+    <ClInclude Include="source\network\http.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="source\network\dns.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="source\music\sound.h">
+      <Filter>music</Filter>
+    </ClInclude>
+    <ClInclude Include="source\music\oggplayer.h">
+      <Filter>music</Filter>
+    </ClInclude>
+    <ClInclude Include="source\menu\menu.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\mem2alloc.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\objalloc.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\smartptr.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="source\memory\mem2.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\codehandler.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\codehandleronly.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\disc.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\fs.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\fst.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\multidol.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\patchcode.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\sdhc.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\sys.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\utils.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\videopatch.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\wbfs.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\wdvd.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\wip.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\wode.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\wodefs.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\loader\apploader.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\coverflow.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\cursor.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\FreeTypeGX.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\Metaphrasis.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\png.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\pngconf.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\pngu.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\text.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\texture.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\video.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gui\boxmesh.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cheats\gct.h">
+      <Filter>cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cheats\cheat.h">
+      <Filter>cheats</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="source\loader\patchhook.S">
+      <Filter>loader</Filter>
+    </None>
+  </ItemGroup>
+</Project>

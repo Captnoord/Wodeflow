@@ -87,7 +87,7 @@ int old_main()
 				usleep(100 * 1000);
 			//} while (WDVD_GetCoverStatus(&status) != 0 || (status & 2) == 0);
             
-            status = 2;
+				status = 2;
             } while (0);
 			if ((status & 2) == 0) return -2;
 			

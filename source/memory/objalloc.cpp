@@ -31,9 +31,10 @@ void CObjAlloc::cleanup(void)
 
 CObjAlloc *CObjAlloc::create(void *(*a)(u32), u32 objSize, u32 numObj)
 {
-	CObjAlloc *p = (CObjAlloc *)a(sizeof (CObjAlloc) - sizeof p->m_data + (objSize + sizeof (*p->m_firstFree)) * numObj);
+	CObjAlloc *p = (CObjAlloc *)a(sizeof (CObjAlloc) - sizeof(p->m_data) + (objSize + sizeof (*p->m_firstFree)) * numObj);
 	if (p == 0)
 		return 0;
+		
 	LWP_MutexInit(&p->m_mutex, 0);
 	p->m_objSize = objSize;
 	p->m_maxNumObj = numObj;

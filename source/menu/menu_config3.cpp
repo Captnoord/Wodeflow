@@ -67,7 +67,9 @@ void CMenu::_showConfig3(void)
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
 	m_btnMgr.setText(m_config3LblTVWidthVal, wfmt(L"%i", 640 * 640 / max(1, m_cfg.getInt(" GENERAL", "tv_width", 640))));
+
 	m_btnMgr.setText(m_config3LblTVHeightVal, wfmt(L"%i", 480 * 480 / max(1, m_cfg.getInt(" GENERAL", "tv_height", 480))));
+	
 	m_btnMgr.setText(m_config3LblTVXVal, wfmt(L"%i", -m_cfg.getInt(" GENERAL", "tv_x", 0)));
 	m_btnMgr.setText(m_config3LblTVYVal, wfmt(L"%i", m_cfg.getInt(" GENERAL", "tv_y", 0)));
 }
@@ -198,8 +200,8 @@ void CMenu::_initConfig3Menu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfig3(void)
 {
-	m_btnMgr.setText(m_config3LblTVWidth, _t("cfgc2", L"Adjust TV width"));
-	m_btnMgr.setText(m_config3LblTVHeight, _t("cfgc3", L"Adjust TV height"));
-	m_btnMgr.setText(m_config3LblTVX, _t("cfgc6", L"Horizontal offset"));
-	m_btnMgr.setText(m_config3LblTVY, _t("cfgc7", L"Vertical offset"));
+	m_btnMgr.setText(m_config3LblTVWidth, 	_t("cfgc2", L"Adjust TV width"));
+	m_btnMgr.setText(m_config3LblTVHeight, 	_t("cfgc3", L"Adjust TV height"));
+	m_btnMgr.setText(m_config3LblTVX, 		_t("cfgc6", L"Horizontal offset"));
+	m_btnMgr.setText(m_config3LblTVY, 		_t("cfgc7", L"Vertical offset"));
 }

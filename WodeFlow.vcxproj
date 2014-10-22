@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DevKitPro|Win32">
+      <Configuration>DevKitPro</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}</ProjectGuid>
+    <RootNamespace>WodeFlow</RootNamespace>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make clean &amp;&amp; make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">make clean</NMakeCleanCommandLine>
+    <NMakeOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName).elf</NMakeOutput>
+    <NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\devkitPro\libogc\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
+    <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'" />
+    <NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">make clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">make clean &amp;&amp; make -r 2&gt;&amp;1 | sed -e 's/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">make -r 2&gt;&amp;1 | sed -e 's/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeBuildCommandLine>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">C:\devkitPro\libogc\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\dev\wodeflow_dev\trunk\wodeflow\source\libs\libfat;D:\dev\wodeflow_dev\trunk\wodeflow\source\libs\;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\tremor;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\pngu;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\freetype;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include;D:\dev\wodeflow_dev\trunk\wodeflow\source\;D:\dev\wodeflow_dev\trunk\wodeflow\source\cheats;D:\dev\wodeflow_dev\trunk\wodeflow\source\data;D:\dev\wodeflow_dev\trunk\wodeflow\source\gui;D:\dev\wodeflow_dev\trunk\wodeflow\source\loader;D:\dev\wodeflow_dev\trunk\wodeflow\source\menu;D:\dev\wodeflow_dev\trunk\wodeflow\source\music;D:\dev\wodeflow_dev\trunk\wodeflow\source\network;D:\dev\wodeflow_dev\trunk\wodeflow\source\memory;C:\devkitPro\devkitPPC\powerpc-eabi\include;C:\devkitPro\devkitPPC\lib\gcc\powerpc-eabi\4.6.3\include;C:\devkitPro\devkitPPC\include;C:\devkitPro\insight\include;C:\devkitPro\libogc\include</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\cheats\cheat.cpp" />
+    <ClCompile Include="source\cheats\gct.cpp" />
+    <ClCompile Include="source\data\background.c" />
+    <ClCompile Include="source\data\btnnext.c" />
+    <ClCompile Include="source\data\btnnexts.c" />
+    <ClCompile Include="source\data\btnprev.c" />
+    <ClCompile Include="source\data\btnprevs.c" />
+    <ClCompile Include="source\data\butfont.c" />
+    <ClCompile Include="source\data\cffont.c" />
+    <ClCompile Include="source\data\click.c" />
+    <ClCompile Include="source\data\dvdskin.c" />
+    <ClCompile Include="source\data\dvdskin_black.c" />
+    <ClCompile Include="source\data\dvdskin_red.c" />
+    <ClCompile Include="source\data\error.c" />
+    <ClCompile Include="source\data\fbi.c" />
+    <ClCompile Include="source\data\flatloading.c" />
+    <ClCompile Include="source\data\hover.c" />
+    <ClCompile Include="source\data\loading.c" />
+    <ClCompile Include="source\data\nopic.c" />
+    <ClCompile Include="source\gecko.cpp" />
+    <ClCompile Include="source\config.cpp" />
+    <ClCompile Include="source\gui\boxmesh.cpp" />
+    <ClCompile Include="source\gui\coverflow.cpp" />
+    <ClCompile Include="source\gui\cursor.cpp" />
+    <ClCompile Include="source\gui\FreeTypeGX.cpp" />
+    <ClCompile Include="source\gui\gui.cpp" />
+    <ClCompile Include="source\gui\Metaphrasis.cpp" />
+    <ClCompile Include="source\gui\pngu.cpp" />
+    <ClCompile Include="source\gui\text.cpp" />
+    <ClCompile Include="source\gui\texture.cpp" />
+    <ClCompile Include="source\gui\video.cpp" />
+    <ClCompile Include="source\loader\apploader.c" />
+    <ClCompile Include="source\loader\disc.c" />
+    <ClCompile Include="source\loader\fs.c" />
+    <ClCompile Include="source\loader\fst.c" />
+    <ClCompile Include="source\loader\multidol.c" />
+    <ClCompile Include="source\loader\patchcode.c" />
+    <ClCompile Include="source\loader\sdhc.c" />
+    <ClCompile Include="source\loader\sys.c" />
+    <ClCompile Include="source\loader\videopatch.c" />
+    <ClCompile Include="source\loader\wbfs.cpp" />
+    <ClCompile Include="source\loader\wdvd.c" />
+    <ClCompile Include="source\loader\wip.c" />
+    <ClCompile Include="source\loader\wode.c" />
+    <ClCompile Include="source\loader\wodefs.c" />
+    <ClCompile Include="source\logger.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\memory\mem2.cpp" />
+    <ClCompile Include="source\memory\mem2alloc.cpp" />
+    <ClCompile Include="source\memory\objalloc.cpp" />
+    <ClCompile Include="source\memory\smartalloc.cpp" />
+    <ClCompile Include="source\menu\menu.cpp" />
+    <ClCompile Include="source\menu\menu_about.cpp" />
+    <ClCompile Include="source\menu\menu_cftheme.cpp" />
+    <ClCompile Include="source\menu\menu_code.cpp" />
+    <ClCompile Include="source\menu\menu_config.cpp" />
+    <ClCompile Include="source\menu\menu_config2.cpp" />
+    <ClCompile Include="source\menu\menu_config3.cpp" />
+    <ClCompile Include="source\menu\menu_config4.cpp" />
+    <ClCompile Include="source\menu\menu_config5.cpp" />
+    <ClCompile Include="source\menu\menu_configsnd.cpp" />
+    <ClCompile Include="source\menu\menu_config_adv.cpp" />
+    <ClCompile Include="source\menu\menu_config_game.cpp" />
+    <ClCompile Include="source\menu\menu_download.cpp" />
+    <ClCompile Include="source\menu\menu_error.cpp" />
+    <ClCompile Include="source\menu\menu_game.cpp" />
+    <ClCompile Include="source\menu\menu_main.cpp" />
+    <ClCompile Include="source\menu\menu_wbfs.cpp" />
+    <ClCompile Include="source\music\oggplayer.cpp" />
+    <ClCompile Include="source\music\sound.cpp" />
+    <ClCompile Include="source\network\dns.cpp" />
+    <ClCompile Include="source\network\http.cpp" />
+    <ClCompile Include="source\wstringEx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\cheats\cheat.h" />
+    <ClInclude Include="source\cheats\gct.h" />
+    <ClInclude Include="source\config.h" />
+    <ClInclude Include="source\gecko.h" />
+    <ClInclude Include="source\gui\boxmesh.h" />
+    <ClInclude Include="source\gui\coverflow.h" />
+    <ClInclude Include="source\gui\cursor.h" />
+    <ClInclude Include="source\gui\FreeTypeGX.h" />
+    <ClInclude Include="source\gui\gui.h" />
+    <ClInclude Include="source\gui\Metaphrasis.h" />
+    <ClInclude Include="source\gui\png.h" />
+    <ClInclude Include="source\gui\pngconf.h" />
+    <ClInclude Include="source\gui\pngu.h" />
+    <ClInclude Include="source\gui\text.h" />
+    <ClInclude Include="source\gui\texture.h" />
+    <ClInclude Include="source\gui\video.h" />
+    <ClInclude Include="source\loader\apploader.h" />
+    <ClInclude Include="source\loader\codehandler.h" />
+    <ClInclude Include="source\loader\codehandleronly.h" />
+    <ClInclude Include="source\loader\disc.h" />
+    <ClInclude Include="source\loader\fs.h" />
+    <ClInclude Include="source\loader\fst.h" />
+    <ClInclude Include="source\loader\multidol.h" />
+    <ClInclude Include="source\loader\patchcode.h" />
+    <ClInclude Include="source\loader\sdhc.h" />
+    <ClInclude Include="source\loader\sys.h" />
+    <ClInclude Include="source\loader\utils.h" />
+    <ClInclude Include="source\loader\videopatch.h" />
+    <ClInclude Include="source\loader\wbfs.h" />
+    <ClInclude Include="source\loader\wdvd.h" />
+    <ClInclude Include="source\loader\wip.h" />
+    <ClInclude Include="source\loader\wode.h" />
+    <ClInclude Include="source\loader\wodefs.h" />
+    <ClInclude Include="source\logger.h" />
+    <ClInclude Include="source\memory\mem2.h" />
+    <ClInclude Include="source\memory\mem2alloc.h" />
+    <ClInclude Include="source\memory\objalloc.h" />
+    <ClInclude Include="source\memory\smartptr.h" />
+    <ClInclude Include="source\menu\menu.h" />
+    <ClInclude Include="source\music\oggplayer.h" />
+    <ClInclude Include="source\music\sound.h" />
+    <ClInclude Include="source\network\dns.h" />
+    <ClInclude Include="source\network\http.h" />
+    <ClInclude Include="source\svnrev.h" />
+    <ClInclude Include="source\vector.h" />
+    <ClInclude Include="source\wstringEx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="source\loader\patchhook.S" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

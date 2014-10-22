@@ -1,8 +1,8 @@
 
 #include <fstream>
 
-#include "config.hpp"
-#include "text.hpp"
+#include "config.h"
+#include "text.h"
 
 using namespace std;
 

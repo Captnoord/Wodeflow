@@ -48,10 +48,18 @@ INCLUDES	:=	source \
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-CFLAGS	 =	-g -std=gnu99 -Os -Wall -Wextra -Wno-char-subscripts -fno-strict-aliasing $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
-CXXFLAGS =	-g -Os -Wall -Wno-char-subscripts -Wextra -Wno-multichar $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+# -Wno-char-subscripts
+# -Wno-char-subscripts
+#-Wno-multichar
+#-Wno-multichar
+#-fno-strict-aliasing
+
+#std=gnu++0x
+#std=c++0x
+CFLAGS	 =	-g -std=c++11 -Os -Wall -Wextra $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+CXXFLAGS =	-g -std=c++11 -Os -Wall -Wextra $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
  
-LDFLAGS	 =	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size -T../rvl.ld
+LDFLAGS	 =	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size	-T../rvl.ld
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project

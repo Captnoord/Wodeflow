@@ -77,18 +77,21 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
 	lwp_t thread = 0;
 	static discHdr header ATTRIBUTE_ALIGN(32);
 	bool done = false;
 	bool out = false;
+	
 	struct AutoLight { AutoLight(void) { } ~AutoLight(void) { slotLight(false); } } aw;
+	
 	string cfPos = m_cf.getNextId();
 
 	WPAD_Rumble(WPAD_CHAN_0, 0);
 	if (WBFS_Open() < 0)
 		return false;
+		
 	_showWBFS(op);
+	
 	switch (op)
 	{
 		case CMenu::WO_ADD_GAME:
@@ -107,9 +110,11 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		u32 btn = _btnRepeat(wd->btns_h);
+		
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0 && !m_thrdWorking)
 			break;
+			
 		if (wd->ir.valid)
 			m_btnMgr.mouse(wd->ir.x - m_cur.width() / 2, wd->ir.y - m_cur.height() / 2);
 		else if ((padsState & WPAD_BUTTON_UP) != 0)
@@ -161,7 +166,6 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 						LWP_CreateThread(&thread, (void *(*)(void *))CMenu::_gameInstaller, (void *)this, 0, 8 * 1024, 64);
 						break;
 					case CMenu::WO_REMOVE_GAME:
-						WBFS_RemoveGame((u8 *)m_cf.getId().c_str());
 						m_btnMgr.show(m_wbfsPBar);
 						m_btnMgr.setProgress(m_wbfsPBar, 0.f, true);
 						m_btnMgr.setProgress(m_wbfsPBar, 1.f);

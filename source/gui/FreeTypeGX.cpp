@@ -214,7 +214,8 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode) {
 			textureWidth = adjustTextureWidth(glyphBitmap->width, this->textureFormat);
 			textureHeight = adjustTextureHeight(glyphBitmap->rows, this->textureFormat);
 
-			this->fontData[charCode] = (ftgxCharData){
+			/*this->fontData[charCode] = (ftgxCharData) {
+			
 				this->ftSlot->advance.x >> 6,
 				gIndex,
 				textureWidth,
@@ -224,6 +225,20 @@ ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode) {
 				textureHeight - this->ftSlot->bitmap_top,
 				NULL
 			};
+			*/
+			
+			ftgxCharData henk = {
+				uint16_t(this->ftSlot->advance.x >> 6),
+				uint16_t(gIndex),
+				uint16_t(textureWidth),
+				uint16_t(textureHeight),
+				uint16_t(this->ftSlot->bitmap_top),
+				uint16_t(this->ftSlot->bitmap_top),
+				uint16_t(textureHeight - this->ftSlot->bitmap_top),
+				NULL};
+			
+			this->fontData[charCode] = henk;
+			
 			this->loadGlyphData(glyphBitmap, &this->fontData[charCode]);
 			
 			return &this->fontData[charCode];

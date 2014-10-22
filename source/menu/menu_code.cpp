@@ -39,7 +39,7 @@ bool CMenu::_code(char code[4], bool erase)
 	wchar_t codeLbl[] = L"_ _ _ _";
 
 	WPAD_Rumble(WPAD_CHAN_0, 0);
-	memset(code, 0, sizeof code);
+	memset(code, 0, sizeof(code));
 	m_btnMgr.setText(m_codeLblTitle, codeLbl);
 	_showCode();
 	if (erase)
@@ -63,8 +63,8 @@ bool CMenu::_code(char code[4], bool erase)
 			m_btnMgr.click();
 			if (m_btnMgr.selected() == m_codeBtnErase)
 			{
-				memset(code, 0, sizeof code);
-				n = sizeof code;
+				memset(code, 0, sizeof(code));
+				n = sizeof(code);
 				break;
 			}
 			if (m_btnMgr.selected() == m_codeBtnBack)
@@ -79,12 +79,12 @@ bool CMenu::_code(char code[4], bool erase)
 						break;
 					}
 		}
-		if (n >= sizeof code)
+		if (n >= sizeof(code))
 			break;
 		_mainLoopCommon(wd);
 	}
 	_hideCode();
-	return n == sizeof code;
+	return n == sizeof(code);
 }
 
 void CMenu::_initCodeMenu(CMenu::SThemeData &theme)

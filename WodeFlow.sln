@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WodeFlow", "WodeFlow.vcxproj", "{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		DevKitPro|Win32 = DevKitPro|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.Debug|Win32.Build.0 = Debug|Win32
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.DevKitPro|Win32.ActiveCfg = DevKitPro|Win32
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.DevKitPro|Win32.Build.0 = DevKitPro|Win32
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.Release|Win32.ActiveCfg = Release|Win32
+		{D7AA41BF-AE05-413C-AFD5-8F4C11B58121}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

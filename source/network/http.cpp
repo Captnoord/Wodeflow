@@ -92,12 +92,12 @@ static struct block read_message(s32 connection, struct block buffer, bool (*f)(
 		if (!hdr && offset >= sizeof tmpHdr)
 		{
 			hdr = true;
-			memcpy(tmpHdr, buffer.data, sizeof tmpHdr - 1);
-			tmpHdr[sizeof tmpHdr - 1] = 0;
+			memcpy(tmpHdr, buffer.data, sizeof(tmpHdr) - 1);
+			tmpHdr[sizeof(tmpHdr) - 1] = 0;
 			const char *p = strstr(tmpHdr, "Content-Length:");
 			if (p != 0)
 			{
-				p += sizeof "Content-Length:";
+				p += strlen("Content-Length:");
 				fileSize = strtol(p, 0, 10);
 			}
 		}

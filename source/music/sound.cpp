@@ -1,5 +1,5 @@
 
-#include "sound.hpp"
+#include "sound.h"
 #include <math.h>
 #include <asndlib.h>
 #include <fstream>

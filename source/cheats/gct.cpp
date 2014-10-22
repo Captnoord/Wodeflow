@@ -9,6 +9,8 @@ Some minor changes: IsCodeEx new
  * nIxx
  */
 
+#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -343,8 +345,8 @@ bool GCTCheats::IsCode(const std::string& str) {
 	// accept strings longer than 17 in case there is a comment on the same line as the code
 		char part1[9];
 		char part2[9];
-		snprintf(part1,sizeof(part1),"%c%c%c%c%c%c%c%c",str[0],str[1],str[2],str[3],str[4],str[5],str[6],str[7]);
-		snprintf(part1,sizeof(part2),"%c%c%c%c%c%c%c%c",str[9],str[10],str[11],str[12],str[13],str[14],str[15],str[16]);
+		sprintf(part1,"%c%c%c%c%c%c%c%c",str[0],str[1],str[2],str[3],str[4],str[5],str[6],str[7]);
+		sprintf(part2,"%c%c%c%c%c%c%c%c",str[9],str[10],str[11],str[12],str[13],str[14],str[15],str[16]);
 		if ((strtok(part1,"0123456789ABCDEFabcdef") == NULL) && (strtok(part2,"0123456789ABCDEFabcdef") == NULL)) {
 			return true;
 		}

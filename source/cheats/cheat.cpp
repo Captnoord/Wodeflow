@@ -60,7 +60,7 @@ void CMenu::_CheatSettings()
 	if (txtavailable)
 		m_btnMgr.setText(m_cheatLblTitle,wfmt(L"%s",m_cheatfile.getGameName().c_str()));
 	else 
-		m_btnMgr.setText(m_cheatLblTitle,L"");
+		m_btnMgr.setText(m_cheatLblTitle, L"");
 	
 	while (true)
 	{
