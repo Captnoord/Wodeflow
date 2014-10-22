@@ -12,9 +12,6 @@ s32 WBFS_Format(u32, u32);
 s32 WBFS_GetCount(u32 *);
 s32 WBFS_GetHeaders(void *, u32, u32);
 s32 WBFS_CheckGame(u8 *);
-s32 WBFS_AddGame(progress_callback_t spinner, void *spinner_data);
-s32 WBFS_RemoveGame(u8 *);
-//s32 WBFS_DiskSpace(f32 *, f32 *);
 
 s32 WBFS_OpenPart(u32 part_idx, char *partition);
 s32 WBFS_OpenNamed(char *partition);
@@ -38,6 +35,5 @@ s32 WBFS_GetPartitionName(u32, char *, u32*);
 u32 WBFS_GetDefaultPartition();
 
 bool WBFS_IsReadOnly(void);
-f32 WBFS_EstimeGameSize(void);
 
 #endif

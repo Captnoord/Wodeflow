@@ -226,18 +226,27 @@ bool SFont::fromFile(const char *filename, u32 size, u32 lspacing)
 	dataSize = 0;
 	lineSpacing = lspacing;
 	file = fopen(filename, "rb");
+	
 	if (file == NULL)
 		return false;
+		
 	fseek(file, 0, SEEK_END);
 	fileSize = ftell(file);
 	fseek(file, 0, SEEK_SET);
+	
 	if (fileSize == 0)
+	{
+		fclose(file);
 		return false;
+	}
+	
 	data = smartMem2Alloc(fileSize);	// Use MEM2 because of big chinese fonts
 	if (!!data)
 		fread(data.get(), 1, fileSize, file);
+	
 	fclose(file);
 	file = NULL;
+	
 	if (!data)
 		return false;
 	dataSize = fileSize;

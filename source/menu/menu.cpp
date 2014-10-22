@@ -90,16 +90,16 @@ void CMenu::init(bool fromHBC)
 	m_noHBC = !fromHBC;
 	m_waitMessage.fromPNG(wait_png);
 
-	if (Fat_USBAvailable() && m_cfg.load(sfmt("usb:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
-	{
-		gprintf("Config on usb found\n");
-		bool dataOnUSB = m_cfg.getBool(" GENERAL", "data_on_usb", true);
-		drive = dataOnUSB ? "usb" : "sd";
-	}
-	else if (Fat_SDAvailable() && m_cfg.load(sfmt("sd:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
+	if (Fat_USBAvailable() && m_cfg.load(sfmt("sd:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
 	{
 		gprintf("Config on sd found\n");
 		bool dataOnUSB = m_cfg.getBool(" GENERAL", "data_on_usb", false);
+		drive = dataOnUSB ? "usb" : "sd";
+	}
+	else if (Fat_SDAvailable() && m_cfg.load(sfmt("usb:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
+	{
+		gprintf("Config on usb found\n");
+		bool dataOnUSB = m_cfg.getBool(" GENERAL", "data_on_usb", true);
 		drive = dataOnUSB ? "usb" : "sd";
 	}
 	else

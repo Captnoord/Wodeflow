@@ -11,6 +11,8 @@
 #include "gecko.h"
 #include "logger.h"
 
+
+
 #define MAX_FAVORITES 8
 
 //#define WODE_MAGIC_DVDx			(0xFF574800)		/* 0xFF,WO0 -> Used for D0 reads (DVDx) */ 
@@ -72,6 +74,9 @@ int use_dvdx = 1;
 int is_wii_disc = 0;
 dvdcmdblk cmdblk;
 
+#define WODE_EMULATED
+#ifndef WODE_EMULATED
+
 int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 {
 	if (use_dvdx) {
@@ -79,7 +84,7 @@ int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 		
 		memset(buf, 0, len);
 		
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 		gprintf("Sending DI command @ offset: 0x%08x, len: %d\n", offset, len);
 #endif		
 		int ret = DI_ReadDVD(buf, nlen, offset >> 11);
@@ -89,7 +94,8 @@ int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 #endif
 			return ret;
 		}
-#ifdef DEBUG_WODE		
+        
+#ifdef DEBUG_WODE
 		gprintf("Buffer:");
 		ghexdump(buf, len);
 #endif
@@ -102,27 +108,33 @@ int DVDW_Read(void *buf, uint32_t len, uint32_t offset)
 //--------------------------------------------------------------------------
 int DVDx_InitDVD()
 {
+    int i = 100;
 	DI_UseCache(false);
 	DI_LoadDVDX(false);
 	
 	DI_Init();
 	DI_Mount();
-	while(DI_GetStatus() & DVD_INIT);
+	
+	while(DI_GetStatus() & DVD_INIT && i--)
+        usleep(100);
+
 	return (DI_GetStatus() & DVD_READY) != 0 ? 0 : -1;
 }
 
 int InitDVD()
 {
-	if (use_dvdx) {
+	if (use_dvdx)
 		return DVDx_InitDVD();
-	}
-#ifdef DEBUG_WODE		
+    
+#ifdef DEBUG_WODE
 	gprintf("DVD init...\n");
 #endif
 	DVD_Init();
-#ifdef DEBUG_WODE		
+
+#ifdef DEBUG_WODE
 	gprintf("done\n");
 #endif
+
 	return 0;
 }
 
@@ -135,14 +147,13 @@ void DeinitDVD()
 
 int OpenWode( void )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_MAGIC)\n");
 #endif
 
 	int ret = DVDW_Read(dvdbuffer, 0x20, WODE_MAGIC_IOS);
-	if (ret != 0) {
+	if (ret != 0)
 		return -2;
-	}
 
 	if(	dvdbuffer[0] == 'W' &&
 		dvdbuffer[1] == 'O' &&
@@ -154,13 +165,15 @@ int OpenWode( void )
 
 int CloseWode( void )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_EXIT_REMOTE)\n");
 #endif
+
 	DVDW_Read(dvdbuffer, 0x20, WODE_EXIT_REMOTE);
-	if (use_dvdx) {
+
+	if (use_dvdx)
 		DI_Close();
-	}
+
 	return 0;
 }
 /*
@@ -176,36 +189,39 @@ unsigned long GetJoystick( void )
 
 unsigned long GetNumPartitions( void )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_NUM_PARTS)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_PARTS) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_PARTS) != 0)
 		return -1;
-	}
+
 	unsigned long *ptr = (unsigned long *) dvdbuffer;
 	return *ptr;
 }
 
 unsigned long GetNumISOs(unsigned long partition_idx)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_NUM_ISOS(%d))\n", partition_idx);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_ISOS(partition_idx)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_ISOS(partition_idx)) != 0)
 		return -1;
-	}
+
 	unsigned long *ptr = (unsigned long *) dvdbuffer;
 	return *ptr;
 }
 
 int GetPartitionInfo(unsigned long partition_idx, PartitionInfo_t* PartitionInfo)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_PART(%d))\n", partition_idx);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x80, WODE_GET_PART(partition_idx)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x80, WODE_GET_PART(partition_idx)) != 0)
 		return -1;
-	}
+
 	memcpy(PartitionInfo->name,dvdbuffer,64);
 	PartitionInfo->NumISOs 			= *((unsigned long*)&dvdbuffer[64]);
 	PartitionInfo->partition_type 	= *((unsigned long*)&dvdbuffer[68]);
@@ -216,22 +232,23 @@ int GetPartitionInfo(unsigned long partition_idx, PartitionInfo_t* PartitionInfo
 int GetISOInfo(unsigned long partition_idx, unsigned long iso_idx, ISOInfo_t * ISOInfo)
 {
 	if (use_dvdx) {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 		gprintf("Send DI command (WODE_GET_ISO_A(%d))\n", partition_idx);
 #endif
-		if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_ISO_A(partition_idx)) != 0){
+
+		if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_ISO_A(partition_idx)) != 0)
 			return -1;
-		}
-#ifdef DEBUG_WODE		
+
+#ifdef DEBUG_WODE
 		gprintf("Send DI command (WODE_GET_ISO_B(%d))\n", iso_idx);
 #endif
-		if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_ISO_B(iso_idx)) != 0){
+
+		if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_ISO_B(iso_idx)) != 0)
 			return -1;
-		}
+
 	} else {
-		if (DVDW_Read(dvdbuffer, 0x80, WODE_GET_ISO(partition_idx, iso_idx)) != 0) {
+		if (DVDW_Read(dvdbuffer, 0x80, WODE_GET_ISO(partition_idx, iso_idx)) != 0)
 			return -1;
-		}
 	}
 	memcpy(ISOInfo->name,dvdbuffer,64);
 	ISOInfo->iso_type 		= *((unsigned long*)&dvdbuffer[64]);
@@ -242,12 +259,13 @@ int GetISOInfo(unsigned long partition_idx, unsigned long iso_idx, ISOInfo_t * I
 
 unsigned long GotoFlatMode( void )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GOTO_FLAT_MODE)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GOTO_FLAT_MODE) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GOTO_FLAT_MODE) != 0)
 		return -1;
-	}
+
 	CloseWode();
 	return 0;
 }
@@ -259,12 +277,12 @@ unsigned long GetMaxFavorites( void )
 
 int GetFavoriteInfo(unsigned long index, FavoriteInfo_t * favoriteInfo)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_FAVORITE_INFO(%d))\n", index);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x80, WODE_GET_FAVORITE_INFO(index)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x80, WODE_GET_FAVORITE_INFO(index)) != 0)
 		return -1;
-	}
 
 	favoriteInfo->state     = *((unsigned long*)&dvdbuffer[0]);
 	favoriteInfo->partition = *((unsigned long*)&dvdbuffer[4]);
@@ -279,50 +297,52 @@ int GetFavoriteInfo(unsigned long index, FavoriteInfo_t * favoriteInfo)
 
 int EraseFavorite(unsigned long idx)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_ERASE_FAVORITE(%d))\n", idx);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_ERASE_FAVORITE(idx)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_ERASE_FAVORITE(idx)) != 0)
 		return -1;
-	}
+
 	return 0;
 }
 
 int GetNumFavorites( void )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_NUM_FAVORITES)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_FAVORITES) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_NUM_FAVORITES) != 0)
 		return -1;
-	}
+
 	unsigned long *ptr = (unsigned long *) dvdbuffer;
 	return *ptr;
 }
 
 int InsertFavorite(unsigned long IsoIndex, unsigned long favorite_idx)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_SET_FAVORITE_FAVE(%d))\n", favorite_idx);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_FAVE(favorite_idx)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_FAVE(favorite_idx)) != 0)
 		return -1;
-	}
 
 	/* 256 partitions should be enough */
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_SET_FAVORITE_PART(%d))\n", favorite_idx);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_PART(favorite_idx)) != 0){
-		return -2;
-	}
 
-#ifdef DEBUG_WODE		
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_PART(favorite_idx)) != 0)
+		return -2;
+
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_SET_FAVORITE_ISO(%d))\n", IsoIndex);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_ISO(IsoIndex)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_FAVORITE_ISO(IsoIndex)) != 0)
 		return -3;
-	}
 
 	return 0;	
 }
@@ -389,12 +409,12 @@ unsigned long SaveSettings( void )
 
 int GetSettings( s_user_settings * settings )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_SETTINGS)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_SETTINGS) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_SETTINGS) != 0)
 		return -1;
-	}
 
 	settings->s_region_hack		= dvdbuffer[0];
 	settings->s_update_blocker	= dvdbuffer[1];
@@ -407,12 +427,12 @@ int GetSettings( s_user_settings * settings )
 
 int GetVersions( device_versions * versions )
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_VERSIONS)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_VERSIONS) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_VERSIONS) != 0)
 		return -1;
-	}
 
 	versions->loader_version   = dvdbuffer[0];
 	versions->loader_version <<= 8;
@@ -433,42 +453,47 @@ int GetVersions( device_versions * versions )
 
 int LaunchISO(unsigned long Partition, unsigned long Iso)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Mounting iso %d on partition %d\n", Iso, Partition);
 	gprintf("Send DI command (WODE_LAUNCH_GAME_PART(%d))\n", Partition);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20,WODE_LAUNCH_GAME_PART(Partition)) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20,WODE_LAUNCH_GAME_PART(Partition)) != 0)
 		return -1;
-	}
-#ifdef DEBUG_WODE		
+
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_LAUNCH_GAME_ISO(%d))\n", Iso);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_LAUNCH_GAME_ISO(Iso)) != 0) {
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_LAUNCH_GAME_ISO(Iso)) != 0)
 		return -2;
-	}
+
 	return 0;
 }
 
 int SetAutoBoot(unsigned long autoboot)
 {
-#ifdef DEBUG_WODE		
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_GET_SETTINGS)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_SETTINGS) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_GET_SETTINGS) != 0)
 		return -1;
-	}
-#ifdef DEBUG_WODE		
+
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_SET_RELOAD_HACK(%d))\n", autoboot);
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_RELOAD_HACK(autoboot)) != 0){	//23
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_SET_RELOAD_HACK(autoboot)) != 0)	//23
 		return -2;
-	}
-#ifdef DEBUG_WODE		
+
+#ifdef DEBUG_WODE
 	gprintf("Send DI command (WODE_WRITE_SETTINGS)\n");
 #endif
-	if(DVDW_Read(dvdbuffer, 0x20, WODE_WRITE_SETTINGS) != 0){
+
+	if(DVDW_Read(dvdbuffer, 0x20, WODE_WRITE_SETTINGS) != 0)
 		return -3;
-	}	
+
 	return 0;
 }
 
@@ -491,3 +516,127 @@ int GetTotalISOs( void )
 	}
 	return TotalISOs;
 }
+
+#else
+
+int InitDVD()
+{
+    return 0;
+}
+
+int OpenWode( void )
+{
+    return 1;
+}
+
+int CloseWode( void )
+{
+    return 0;
+}
+
+unsigned long GetNumPartitions( void )
+{
+    return 1;
+}
+
+unsigned long GetNumISOs(unsigned long partition_idx)
+{
+    return 10;
+}
+
+int GetPartitionInfo(unsigned long partition_idx, PartitionInfo_t* PartitionInfo)
+{
+// add more info
+
+    //memcpy(PartitionInfo->name,dvdbuffer,64);
+    //memcpy(PartitionInfo->name,"dev",64);
+    sprintf(PartitionInfo->name, "dev%u", partition_idx);
+	PartitionInfo->NumISOs 			= 10;
+	//PartitionInfo->partition_type 	= *((unsigned long*)&dvdbuffer[68]);
+	PartitionInfo->partition_mode 	= pm_read_write;
+    
+    return 0;
+}
+
+int GetISOInfo(unsigned long partition_idx, unsigned long iso_idx, ISOInfo_t * ISOInfo)
+{
+// add more info
+
+//char name[64];
+	//unsigned long  iso_type;
+	//unsigned long  iso_region;
+	//char header[8];
+    ISOInfo->iso_type = WII_MAGIC;
+    ISOInfo->iso_region = 0; // I dono if this really matters...
+    
+    //memcpy(ISOInfo->name,"test\0",5);
+    sprintf(ISOInfo->name, "par: %u | ISO: %u", partition_idx, iso_idx);
+    return 0;
+}
+
+unsigned long GetMaxFavorites( void )
+{
+    return 8;
+}
+
+int  GetNumFavorites( void )
+{
+    return 0;
+}
+
+int GetFavoriteInfo(unsigned long index, FavoriteInfo_t * favoriteInfo)
+{
+    return 0;
+}
+
+int EraseFavorite(unsigned long idx)
+{
+    return 0;
+}
+
+int InsertFavorite(unsigned long IsoIndex, unsigned long favorite_idx)
+{
+    return 0;
+}
+
+unsigned long SaveSettings( void )
+{
+    return 0;
+}
+
+int GetSettings( s_user_settings * settings)
+{
+    return 0;
+}
+
+int GetVersions( device_versions * versions )
+{
+    return 0;
+}
+
+int GetTotalISOs( void )
+{
+    return 10;
+}
+
+unsigned long GetSelectedISO( void )
+{
+    return 1;
+}
+
+int LaunchISO(unsigned long Partition, unsigned long Iso)
+{
+    return 0;
+}
+
+int SetAutoBoot(unsigned long autoboot)
+{
+    return 0;
+}
+
+unsigned long GotoFlatMode( void )
+{
+    return 0;
+}
+
+#endif

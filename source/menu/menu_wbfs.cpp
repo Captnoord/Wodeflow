@@ -63,31 +63,12 @@ void CMenu::_addDiscProgress(int status, int total, void *user_data)
 	}
 }
 
+/* hmmm we don't do game installations.... so this function needs to be removed */
 int CMenu::_gameInstaller(void *obj)
 {
 	CMenu &m = *(CMenu *)obj;
 	int ret = -1;
-/*
-	u32 size;
 
-	f32 freespace, used;
-	WBFS_DiskSpace(&used, &freespace);
-	size = WBFS_EstimeGameSize();
-	if (size > freespace)
-	{
-		m._setThrdMsg(wfmt(m._fmt("wbfsop10", L"Not enough space : %i blocks needed, %i available"), size, freespace), 0.f);
-		ret = -1;
-	}
-	else
-	{
-		ret = WBFS_AddGame(CMenu::_addDiscProgress, obj);
-		if (ret == 0)
-			m._setThrdMsg(m._t("wbfsop8", L"Game installed"), 1.f);
-		else
-			m._setThrdMsg(m._t("wbfsop9", L"An error has occurred"), 1.f);
-		slotLight(true);
-	}
-*/	
 	m.m_thrdWorking = false;
 	return ret;
 }
@@ -171,12 +152,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 							break;
 						}
 						Disc_ReadHeader(&header);
-						if (WBFS_CheckGame(header.id))
-						{
-							error(_t("wbfsoperr4", L"Game already installed"));
-							out = true;
-							break;
-						}
+						
 						m_btnMgr.setText(m_wbfsLblDialog, wfmt(_fmt("wbfsop6", L"Installing [%s] %s..."), string((const char *)header.id, sizeof header.id).c_str(), string((const char *)header.title, sizeof header.title).c_str()));
 						done = true;
 						m_thrdWorking = true;

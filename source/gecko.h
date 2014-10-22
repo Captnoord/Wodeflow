@@ -7,9 +7,10 @@
 extern "C" {
 #endif
 
-#define NO_DEBUG
+//#define NO_DEBUG
 #ifndef NO_DEBUG
 	//use this just like printf();
+    #define gprintf _gprintf
 	void _gprintf(const char *str, ...);
 	void gsenddata(const u8 *data, int length, const char *filename);
 	void ghexdump(void *d, int len);

@@ -178,31 +178,6 @@ s32 WBFS_GetHeaders(void *outbuf, u32 cnt, u32 len)
 	free(discHeaders);
 	discHeaders = NULL;
 	return 0;
-	
-/*
-	u32 idx; //, size;
-	s32 ret;
-
-	if (partition_idx == -1)
-		return -1;
-
-	for (idx = 0; idx < cnt; idx++) {
-		struct discHdr *ptr = &((struct discHdr *)outbuf)[idx];
-
-		// Get header
-		ISOInfo_t iso;
-		ret = GetISOInfo(partition_idx, idx, &iso);
-		if (ret != 0)
-			return ret;
-
-		memset(ptr, 0, sizeof(struct discHdr));
-		memcpy(ptr->id, iso.header, 6);
-		strncpy(ptr->title, iso.name, sizeof(ptr->title) - 1);
-		ptr->game_idx = idx;
-		ptr->magic = iso.iso_type == TYPE_GC ? GC_MAGIC : WII_MAGIC;
-	}
-	return 0;
-*/
 }
 
 s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part)
@@ -290,47 +265,6 @@ s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
 	return 0;
 }
 
-s32 WBFS_CheckGame(u8 *discid)
-{
-	// TODO: If the game exists, return 1, otherwise 0
-	return 1;
-}
-
-s32 WBFS_AddGame(progress_callback_t spinner, void *spinner_data)
-{
-	/* No device open */
-	if (partition_idx == -1)
-		return -1;
-
-	// TODO: Add game
-
-	return -1;
-}
-
-s32 WBFS_RemoveGame(u8 *discid)
-{
-	/* No device open */
-	if (partition_idx == -1)
-		return -1;
-
-	// TODO: Remove game
-
-	return -1;
-}
-
-#if 0
-s32 WBFS_DiskSpace(f32 *used, f32 *free)
-{
-	/* No device open */
-	if (partition_idx == -1)
-		return -1;
-
-	// TODO: Get free discspace of partition
-
-	return -1;
-}
-#endif
-
 s32 WBFS_OpenDisc(u8 *gameId, unsigned long game_idx, unsigned long part)
 {
 	/* No device open */
@@ -378,17 +312,21 @@ char *fstfilename2(FST_ENTRY *fst, u32 index)
 	}
 }
 
-unsigned long WBFS_GetCurrentPartition() {
+unsigned long WBFS_GetCurrentPartition()
+{
 	return partition_idx;
 }
 
-unsigned long WBFS_GetPartitionCount() {
+unsigned long WBFS_GetPartitionCount()
+{
 	return GetNumPartitions();
 }
 
-s32 WBFS_GetPartitionName(u32 index, char *buf, u32* len) {
+s32 WBFS_GetPartitionName(u32 index, char *buf, u32* len)
+{
 	PartitionInfo_t t;
-	if (GetPartitionInfo(index, &t) == 0) {
+	if (GetPartitionInfo(index, &t) == 0)
+	{
 		(*len) = strlen(t.name);
 		strncpy(buf, t.name, strlen(t.name));
 		return 0;
@@ -396,19 +334,16 @@ s32 WBFS_GetPartitionName(u32 index, char *buf, u32* len) {
 	return -1;
 }
 
-u32 WBFS_GetDefaultPartition() {
+u32 WBFS_GetDefaultPartition()
+{
 	return WBFS_GetPartitionCount() == 1 ? 0 : 1; // There is always one partition, it's the internal RAM partition with the GC config disc.
 }
 
-bool WBFS_IsReadOnly(void) {
+bool WBFS_IsReadOnly(void)
+{
 	PartitionInfo_t t;
 	if (partition_idx != -1 && GetPartitionInfo(partition_idx, &t) == 0) {
 		return t.partition_mode == pm_read_write;
 	}
 	return true;
-}
-
-f32 WBFS_EstimeGameSize(void) {
-	return 0;
-//    return wbfs_estimate_disc(hdd, __WBFS_ReadDVD, NULL, ONLY_GAME_PARTITION);
 }

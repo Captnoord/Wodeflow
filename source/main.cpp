@@ -13,7 +13,6 @@
 
 extern int use_dvdx;
 
-
 extern const u8 wait_png[];
 extern const u8 wait_disc_png[];
 
@@ -28,6 +27,7 @@ extern "C" {
 
 int old_main()
 {
+    printf("hello\n");
 	geckoinit = InitGecko();
 	use_dvdx = 1;
 	
@@ -65,6 +65,7 @@ int old_main()
 	Fat_Mount();
 
 	WPAD_Init();
+	WPAD_SetIdleTimeout(60);
 	WPAD_SetDataFormat(0, WPAD_FMT_BTNS_ACC_IR);
 
 	dipOK = Disc_Init() >= 0;
@@ -84,7 +85,10 @@ int old_main()
 				if ((padsState & WPAD_BUTTON_B) != 0)
 					break;
 				usleep(100 * 1000);
-			} while (WDVD_GetCoverStatus(&status) != 0 || (status & 2) == 0);
+			//} while (WDVD_GetCoverStatus(&status) != 0 || (status & 2) == 0);
+            
+            status = 2;
+            } while (0);
 			if ((status & 2) == 0) return -2;
 			
 			InitDVD();
