@@ -1,4 +1,4 @@
-#inclde <algorithm>
+#include <algorithm>
 
 
 #include "menu.h"
@@ -18,8 +18,7 @@
 #include "gecko.h"
 
 
-
-using namespace std;
+//using namespace std;
 
 extern const u8 btngamecfg_png[];
 extern const u8 btngamecfgs_png[];
@@ -128,7 +127,7 @@ void CMenu::_game(bool launch)
 	}
 	while (true)
 	{
-		string id(m_cf.getId());
+		std::string id(m_cf.getId());
 		unsigned long idx = m_cf.getIdx();
 		unsigned long part = m_cf.getPart();
 		int type = m_cf.getType();
@@ -259,7 +258,7 @@ void CMenu::_game(bool launch)
 	_hideGame();
 }
 
-void CMenu::_launchGame(const string &id, unsigned long idx, unsigned long part)
+void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long part)
 {
 	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
@@ -269,11 +268,11 @@ void CMenu::_launchGame(const string &id, unsigned long idx, unsigned long part)
 	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERAL", "country_patch", false));
 	
 	int videoMode		= m_cfg.getInt(id, "video_mode", 0);
-	videoMode			= std::min(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
+	videoMode			= std::min<int>(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
 
-	int language		= std::min((u32)m_cfg.getInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
+	int language		= std::min<int>((u32)m_cfg.getInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
 
-	int patchVidMode		= std::min((u32)m_cfg.getInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
+	int patchVidMode		= std::min<int>((u32)m_cfg.getInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
 
 	hooktype			= (u32) m_cfg.getInt(id, "hooktype", 1); // hooktype is defined in patchcode.h
 	debuggerselect		= m_cfg.getBool(id, "debugger", false) ? 1 : 0; // debuggerselect is defined in fst.h
@@ -469,7 +468,7 @@ extern "C" {
 	s32 __Disc_FindPartition(u64 *outbuf);
 }
 
-static void _extractBnr(SmartBuf &bnr, u32 &size, const string &gameId, unsigned long idx, unsigned long part)
+static void _extractBnr(SmartBuf &bnr, u32 &size, const std::string &gameId, unsigned long idx, unsigned long part)
 {
 	u32 discfilecount = 0;
 	u8 found = 0;
@@ -644,8 +643,8 @@ void CMenu::_loadGameSound(const std::string &id, unsigned long idx, unsigned lo
 
 int CMenu::_loadGameSoundThrd(CMenu *m)
 {
-	string prevId;
-	string id;
+	std::string prevId;
+	std::string id;
 	unsigned long idx, part;
 
 	LWP_MutexLock(m->m_gameSndMutex);

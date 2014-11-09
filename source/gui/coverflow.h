@@ -178,24 +178,24 @@ private:
 	};
 	struct CCover
 	{
-		u32 index;
-		Vector3D scale;
-		Vector3D targetScale;
+		u32 index_;
+		Vector3D scale_;
+		Vector3D targetScale_;
 		Vector3D angle;
 		Vector3D targetAngle;
 		Vector3D pos;
 		Vector3D targetPos;
-		CColor color;
-		CColor targetColor;
-		float txtAngle;
-		float txtTargetAngle;
+		CColor color_;
+		CColor targetColor_;
+		float txtAngle_;
+		float txtTargetAngle_;
 		Vector3D txtPos;
 		Vector3D txtTargetPos;
-		u8 txtColor;
-		u8 txtTargetColor;
+		u8 txtColor_;
+		u8 txtTargetColor_;
 		CText title;
-		CColor shadowColor;
-		CColor targetShadowColor;
+		CColor shadowColor_;
+		CColor targetShadowColor_;
 		// 
 		CCover(void);
 	};

@@ -34,19 +34,19 @@ static inline int loopNum(int i, int s)
 	return i < 0 ? (s - (-i % s)) % s : i % s;
 }
 
-CCoverFlow::CCover::CCover(void) 
+CCoverFlow::CCover::CCover(void)
+	:index_(0)
+	,txtAngle_(0.f)
+	,txtTargetAngle_(0.f)
+	,txtColor_(0)
+	,txtTargetColor_(0)
+	,color_(0x00FFFFFF)
+	,targetColor_(0xFFFFFFFF)
+	,shadowColor_(0x00000000)
+	,targetShadowColor_(0x00000000)
+	,scale_(1.f, 1.f, 1.f)
+	,targetScale_(1.f, 1.f, 1.f)
 {
-	index = 0;
-	txtAngle = 0.f;
-	txtTargetAngle = 0.f;
-	txtColor = 0;
-	txtTargetColor = 0;
-	color = 0x00FFFFFF;
-	targetColor = 0xFFFFFFFF;
-	shadowColor = 0x00000000;
-	targetShadowColor = 0x00000000;
-	scale = Vector3D(1.f, 1.f, 1.f);
-	targetScale = Vector3D(1.f, 1.f, 1.f);
 }
 
 CCoverFlow::CItem::CItem(const char *itemId, unsigned long game_idx, unsigned long game_part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type) :
@@ -70,7 +70,7 @@ static inline wchar_t upperCaseWChar(wchar_t c)
 
 bool CCoverFlow::CItem::operator<(const CCoverFlow::CItem &i) const
 {
-	u32 s = min(title.size(), i.title.size());
+	u32 s = std::min<size_t>(title.size(), i.title.size());
 	for (u32 k = 0; k < s; ++k)
 		if (upperCaseWChar(i.title[k]) < upperCaseWChar(title[k]))
 			return false;
@@ -291,7 +291,7 @@ void CCoverFlow::setFont(SFont font, const CColor &color)
 	if (!m_covers.empty())
 	{
 		for (u32 i = 0; i < m_range; ++i)
-			_loadCover(i, m_covers[i].index);
+			_loadCover(i, m_covers[i].index_);
 		_updateAllTargets();
 	}
 }
@@ -332,7 +332,7 @@ void CCoverFlow::setRange(u32 rows, u32 columns)
 		m_rows = rows;
 		m_columns = columns;
 		m_range = range;
-		_loadAllCovers(m_covers[m_range / 2].index);
+		_loadAllCovers(m_covers[m_range / 2].index_);
 		_updateAllTargets();
 		startPicLoader();
 	}
@@ -1057,9 +1057,9 @@ void CCoverFlow::_drawTitle(int i, bool mirror, bool rectangle)
 	Vector3D rotAxis(0.f, 1.f, 0.f);
 	CColor color(m_fontColor);
 
-	if (m_covers[i].txtColor == 0)
+	if (m_covers[i].txtColor_ == 0)
 		return;
-	color.a = mirror ? (u8)((float)m_covers[i].txtColor * m_txtMirrorAlpha) : m_covers[i].txtColor;
+	color.a = mirror ? (u8)((float)m_covers[i].txtColor_ * m_txtMirrorAlpha) : m_covers[i].txtColor_;
 	if (rectangle && !mirror)
 	{
 		// GX setup
@@ -1081,7 +1081,7 @@ void CCoverFlow::_drawTitle(int i, bool mirror, bool rectangle)
 		Mtx rotMtx;
 		guMtxIdentity(modelMtx);
 		guMtxScaleApply(modelMtx, modelMtx, 0.005f, 0.005f, 0.005f);
-		guMtxRotDeg(rotMtx, 'Y', m_covers[i].txtAngle);
+		guMtxRotDeg(rotMtx, 'Y', m_covers[i].txtAngle_);
 		guMtxConcat(rotMtx, modelMtx, modelMtx);
 		guMtxTransApply(modelMtx, modelMtx, m_covers[i].txtPos.x, mirror ? -m_covers[i].txtPos.y : m_covers[i].txtPos.y, m_covers[i].txtPos.z);
 		guMtxConcat(m_viewMtx, modelMtx, modelViewMtx);
@@ -1134,7 +1134,7 @@ void CCoverFlow::_drawTitle(int i, bool mirror, bool rectangle)
 	GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
 	// 
 	guMtxIdentity(modelMtx);
-	guMtxRotAxisDeg(modelMtx, &rotAxis, m_covers[i].txtAngle);
+	guMtxRotAxisDeg(modelMtx, &rotAxis, m_covers[i].txtAngle_);
 	guMtxTransApply(modelMtx, modelMtx, m_covers[i].txtPos.x, mirror ? -m_covers[i].txtPos.y : m_covers[i].txtPos.y, m_covers[i].txtPos.z);
 	guMtxConcat(m_viewMtx, modelMtx, modelViewMtx);
 	GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
@@ -1149,7 +1149,7 @@ void CCoverFlow::_drawCover(int i, bool mirror, CCoverFlow::DrawMode dm)
 	Vector3D osc;
 	Vector3D oscP;
 
-	if (m_covers[i].color.a == 0 || (dm == CCoverFlow::CFDR_SHADOW && m_covers[i].shadowColor.a == 0))
+	if (m_covers[i].color_.a == 0 || (dm == CCoverFlow::CFDR_SHADOW && m_covers[i].shadowColor_.a == 0))
 		return;
 	if (dm == CCoverFlow::CFDR_STENCIL && (i > 0xFF || _invisibleCover(i / m_rows, i % m_rows)))
 		return;
@@ -1160,7 +1160,7 @@ void CCoverFlow::_drawCover(int i, bool mirror, CCoverFlow::DrawMode dm)
 	}
 	// 
 	guMtxIdentity(modelMtx);
-	guMtxScaleApply(modelMtx, modelMtx, m_covers[i].scale.x, m_covers[i].scale.y, m_covers[i].scale.z);
+	guMtxScaleApply(modelMtx, modelMtx, m_covers[i].scale_.x, m_covers[i].scale_.y, m_covers[i].scale_.z);
 	if (dm == CCoverFlow::CFDR_SHADOW)
 		guMtxScaleApply(modelMtx, modelMtx, 1.f + (m_shadowScale - 1.f) * g_boxSize.y / g_boxSize.x, m_shadowScale, m_shadowScale);
 	guMtxRotDeg(rotMtx, 'Z', m_covers[i].angle.z + osc.z);
@@ -1191,14 +1191,14 @@ STexture &CCoverFlow::_coverTexture(int i)
 void CCoverFlow::_drawCoverFlat(int i, bool mirror, CCoverFlow::DrawMode dm)
 {
 	GXTexObj texObj;
-	STexture &tex = _coverTexture(m_covers[i].index);
-	bool boxTex = m_items[m_covers[i].index].boxTexture && !!m_items[m_covers[i].index].texture.data;
+	STexture &tex = _coverTexture(m_covers[i].index_);
+	bool boxTex = m_items[m_covers[i].index_].boxTexture && !!m_items[m_covers[i].index_].texture.data;
 
 	switch (dm)
 	{
 		case CCoverFlow::CFDR_NORMAL:
 		{
-			CColor color(m_covers[i].color);
+			CColor color(m_covers[i].color_);
 			if (mirror)
 				color.a = (u8)((float)color.a * m_mirrorAlpha);
 			GX_SetTevKColor(GX_KCOLOR0, color);
@@ -1209,7 +1209,7 @@ void CCoverFlow::_drawCoverFlat(int i, bool mirror, CCoverFlow::DrawMode dm)
 			break;
 		case CCoverFlow::CFDR_SHADOW:
 		{
-			CColor color(m_covers[i].shadowColor);
+			CColor color(m_covers[i].shadowColor_);
 			if (mirror)
 				color.a = (u8)((float)color.a * m_mirrorAlpha);
 			GX_SetTevKColor(GX_KCOLOR0, color);
@@ -1241,14 +1241,14 @@ void CCoverFlow::_drawCoverFlat(int i, bool mirror, CCoverFlow::DrawMode dm)
 void CCoverFlow::_drawCoverBox(int i, bool mirror, CCoverFlow::DrawMode dm)
 {
 	GXTexObj texObj;
-	STexture &tex = _coverTexture(m_covers[i].index);
+	STexture &tex = _coverTexture(m_covers[i].index_);
 	CColor color;
-	bool flatTex = !m_items[m_covers[i].index].boxTexture && !!m_items[m_covers[i].index].texture.data;
+	bool flatTex = !m_items[m_covers[i].index_].boxTexture && !!m_items[m_covers[i].index_].texture.data;
 
 	switch (dm)
 	{
 		case CCoverFlow::CFDR_NORMAL:
-			color = m_covers[i].color;
+			color = m_covers[i].color_;
 			if (mirror)
 				color.a = (u8)((float)color.a * m_mirrorAlpha);
 			GX_SetTevKColor(GX_KCOLOR0, color);
@@ -1257,7 +1257,7 @@ void CCoverFlow::_drawCoverBox(int i, bool mirror, CCoverFlow::DrawMode dm)
 			GX_SetTevKColor(GX_KCOLOR0, CColor(i + 1, 0xFF, 0xFF, 0xFF));
 			break;
 		case CCoverFlow::CFDR_SHADOW:
-			color = m_covers[i].shadowColor;
+			color = m_covers[i].shadowColor_;
 			if (mirror)
 				color.a = (u8)((float)color.a * m_mirrorAlpha);
 			GX_SetTevKColor(GX_KCOLOR0, color);
@@ -1266,13 +1266,13 @@ void CCoverFlow::_drawCoverBox(int i, bool mirror, CCoverFlow::DrawMode dm)
 	if (dm == CCoverFlow::CFDR_NORMAL)
 	{ 
 		// set dvd box texture, depending on game
-		if (m_items[m_covers[i].index].id == "SMNE01" || m_items[m_covers[i].index].id == "SMNP01" || m_items[m_covers[i].index].id == "SMNJ01" ||
-			m_items[m_covers[i].index].id == "SMNK01" || m_items[m_covers[i].index].id == "SMNW01")
+		if (m_items[m_covers[i].index_].id == "SMNE01" || m_items[m_covers[i].index_].id == "SMNP01" || m_items[m_covers[i].index_].id == "SMNJ01" ||
+			m_items[m_covers[i].index_].id == "SMNK01" || m_items[m_covers[i].index_].id == "SMNW01")
 		{
 			GX_InitTexObj(&texObj, m_dvdSkin_Red.data.get(), m_dvdSkin_Red.width, m_dvdSkin_Red.height, m_dvdSkin_Red.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		} 
 		// Gamecube discs have a black cover
-		else if (m_items[m_covers[i].index].type == TYPE_GC || m_items[m_covers[i].index].id == "RZZJEL" || m_items[m_covers[i].index].id == "RZNJ01")
+		else if (m_items[m_covers[i].index_].type == TYPE_GC || m_items[m_covers[i].index_].id == "RZZJEL" || m_items[m_covers[i].index_].id == "RZNJ01")
 		{
 			GX_InitTexObj(&texObj, m_dvdSkin_Black.data.get(), m_dvdSkin_Black.width, m_dvdSkin_Black.height, m_dvdSkin_Black.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		}
@@ -1339,7 +1339,7 @@ void CCoverFlow::_drawCoverBox(int i, bool mirror, CCoverFlow::DrawMode dm)
 
 void CCoverFlow::_loadCover(int i, int item)
 {
-	m_covers[i].index = item;
+	m_covers[i].index_ = item;
 	m_covers[i].title.setText(m_font, m_items[item].title);
 }
 
@@ -1347,56 +1347,56 @@ string CCoverFlow::getId(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return "";
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].id;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump, m_items.size())].id;
 }
 
 unsigned long CCoverFlow::getIdx(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return -1;
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].game_idx;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump, m_items.size())].game_idx;
 }
 
 unsigned long CCoverFlow::getPart(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return -1;
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].game_part;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump, m_items.size())].game_part;
 }
 
 int CCoverFlow::getType(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return -1;
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump, m_items.size())].type;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump, m_items.size())].type;
 }
 
 string CCoverFlow::getNextId(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return "";
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump + 1, m_items.size())].id;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump + 1, m_items.size())].id;
 }
 
 unsigned long CCoverFlow::getNextIdx(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return -1;
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump + 1, m_items.size())].game_idx;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump + 1, m_items.size())].game_idx;
 }
 
 int CCoverFlow::getNextType(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return -1;
-	return m_items[loopNum(m_covers[m_range / 2].index + m_jump + 1, m_items.size())].type;
+	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump + 1, m_items.size())].type;
 }
 
 string CCoverFlow::getTitle(void) const
 {
 	if (m_covers.empty())
 		return "";
-	return m_items[m_covers[m_range / 2].index].title.toUTF8();
+	return m_items[m_covers[m_range / 2].index_].title.toUTF8();
 }
 
 bool CCoverFlow::select(void)
@@ -1464,21 +1464,21 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		Vector3D deltaAngle(lo.leftDeltaAngle * (float)(hcenter - 1 - x));
 		cvr.targetAngle = lo.leftAngle + deltaAngle;
 		cvr.targetPos = lo.leftPos + lo.leftSpacer.rotateY(deltaAngle.y * 0.5f) * (float)(hcenter - 1 - x);
-		cvr.targetScale = lo.leftScale;
+		cvr.targetScale_ = lo.leftScale;
 		if (_invisibleCover(x, y))
 		{
-			cvr.targetColor = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
-			cvr.targetShadowColor = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
+			cvr.targetColor_ = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
+			cvr.targetShadowColor_ = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
 		}
 		else
 		{
 			u8 a = (x - 1) * 0xFF / max(1, hcenter - 2);
-			cvr.targetColor = CColor::interpolate(lo.endColor, lo.begColor, a);
-			cvr.targetShadowColor = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
+			cvr.targetColor_ = CColor::interpolate(lo.endColor, lo.begColor, a);
+			cvr.targetShadowColor_ = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
 		}
-		cvr.txtTargetAngle = lo.txtLeftAngle;
+		cvr.txtTargetAngle_ = lo.txtLeftAngle;
 		cvr.txtTargetPos = lo.txtLeftPos;
-		cvr.txtTargetColor = 0;
+		cvr.txtTargetColor_ = 0;
 		cvr.title.setFrame(lo.txtSideWidth, lo.txtSideStyle, false, instant);
 	}
 	// Right covers
@@ -1487,52 +1487,52 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		Vector3D deltaAngle(lo.rightDeltaAngle * (float)(x - hcenter - 1));
 		cvr.targetAngle = lo.rightAngle + deltaAngle;
 		cvr.targetPos = lo.rightPos + lo.rightSpacer.rotateY(deltaAngle.y * 0.5f) * (float)(x - hcenter - 1);
-		cvr.targetScale = lo.rightScale;
+		cvr.targetScale_ = lo.rightScale;
 		if (_invisibleCover(x, y))
 		{
-			cvr.targetColor = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
-			cvr.targetShadowColor = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
+			cvr.targetColor_ = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
+			cvr.targetShadowColor_ = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
 		}
 		else
 		{
 			u8 a = (m_columns - x - 2) * 0xFF / max(1, hcenter - 2);
-			cvr.targetColor = CColor::interpolate(lo.endColor, lo.begColor, a);
-			cvr.targetShadowColor = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
+			cvr.targetColor_ = CColor::interpolate(lo.endColor, lo.begColor, a);
+			cvr.targetShadowColor_ = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
 		}
-		cvr.txtTargetAngle = lo.txtRightAngle;
+		cvr.txtTargetAngle_ = lo.txtRightAngle;
 		cvr.txtTargetPos = lo.txtRightPos;
-		cvr.txtTargetColor = 0;
+		cvr.txtTargetColor_ = 0;
 		cvr.title.setFrame(lo.txtSideWidth, lo.txtSideStyle, false, instant);
 	}
 	// New center cover
 	else if (y == vcenter)
 	{
-		cvr.targetColor = 0xFFFFFFFF;
-		cvr.targetShadowColor = lo.shadowColorCenter;
+		cvr.targetColor_ = 0xFFFFFFFF;
+		cvr.targetShadowColor_ = lo.shadowColorCenter;
 		cvr.targetAngle = lo.centerAngle;
 		cvr.targetPos = lo.centerPos;
-		cvr.targetScale = lo.centerScale;
-		cvr.txtTargetColor = 0xFF;
-		cvr.txtTargetAngle = lo.txtCenterAngle;
+		cvr.targetScale_ = lo.centerScale;
+		cvr.txtTargetColor_ = 0xFF;
+		cvr.txtTargetAngle_ = lo.txtCenterAngle;
 		cvr.txtTargetPos = lo.txtCenterPos;
 		cvr.title.setFrame(lo.txtCenterWidth, lo.txtCenterStyle, false, instant);
 	}
 	else // Center of a row
 	{
-		cvr.targetColor = lo.begColor;
-		cvr.targetShadowColor = lo.shadowColorBeg;
+		cvr.targetColor_ = lo.begColor;
+		cvr.targetShadowColor_ = lo.shadowColorBeg;
 		cvr.targetAngle = lo.rowCenterAngle;
 		cvr.targetPos = lo.rowCenterPos;
-		cvr.targetScale = lo.rowCenterScale;
-		cvr.txtTargetColor = 0;
+		cvr.targetScale_ = lo.rowCenterScale;
+		cvr.txtTargetColor_ = 0;
 		if (y < vcenter)
 		{
-			cvr.txtTargetAngle = lo.txtLeftAngle;
+			cvr.txtTargetAngle_ = lo.txtLeftAngle;
 			cvr.txtTargetPos = lo.txtLeftPos;
 		}
 		else // (y > vcenter)
 		{
-			cvr.txtTargetAngle = lo.txtRightAngle;
+			cvr.txtTargetAngle_ = lo.txtRightAngle;
 			cvr.txtTargetPos = lo.txtRightPos;
 		}
 		cvr.title.setFrame(lo.txtSideWidth, lo.txtSideStyle, false, instant);
@@ -1545,16 +1545,16 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		cvr.targetPos += lo.topSpacer.rotateX(deltaAngle.x * 0.5f) * (float)(vcenter - y);
 		if (_invisibleCover(x, y))
 		{
-			cvr.targetColor = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
-			cvr.targetShadowColor = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
+			cvr.targetColor_ = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
+			cvr.targetShadowColor_ = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
 		}
 		else
 		{
 			u8 a = (y - 1) * 0xFF / max(1, vcenter - 2);
 			CColor c1(CColor::interpolate(lo.endColor, lo.begColor, a));
-			cvr.targetColor = CColor::interpolate(c1, cvr.targetColor, 0x7F);
+			cvr.targetColor_ = CColor::interpolate(c1, cvr.targetColor_, 0x7F);
 			CColor c2(CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a));
-			cvr.targetShadowColor = CColor::interpolate(c2, cvr.targetShadowColor, 0x7F);
+			cvr.targetShadowColor_ = CColor::interpolate(c2, cvr.targetShadowColor_, 0x7F);
 		}
 	}
 	// Bottom row
@@ -1565,48 +1565,48 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		cvr.targetPos += lo.bottomSpacer.rotateX(deltaAngle.x * 0.5f) * (float)(y - vcenter);
 		if (_invisibleCover(x, y))
 		{
-			cvr.targetColor = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
-			cvr.targetShadowColor = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
+			cvr.targetColor_ = CColor(lo.endColor.r, lo.endColor.g, lo.endColor.b, 0);
+			cvr.targetShadowColor_ = CColor(lo.shadowColorEnd.r, lo.shadowColorEnd.g, lo.shadowColorEnd.b, 0);
 		}
 		else
 		{
 			u8 a = (m_rows - y - 2) * 0xFF / max(1, vcenter - 2);
 			CColor c1(CColor::interpolate(lo.endColor, lo.begColor, a));
-			cvr.targetColor = CColor::interpolate(c1, cvr.targetColor, 0x7F);
+			cvr.targetColor_ = CColor::interpolate(c1, cvr.targetColor_, 0x7F);
 			CColor c2(CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a));
-			cvr.targetShadowColor = CColor::interpolate(c2, cvr.targetShadowColor, 0x7F);
+			cvr.targetShadowColor_ = CColor::interpolate(c2, cvr.targetShadowColor_, 0x7F);
 		}
 	}
 	else if (vcenter > 0 && !_invisibleCover(x, y) && x != hcenter)
 	{
-		cvr.targetColor = CColor::interpolate(lo.begColor, cvr.targetColor, 0x7F);
-		cvr.targetShadowColor = CColor::interpolate(lo.shadowColorBeg, cvr.targetShadowColor, 0x7F);
+		cvr.targetColor_ = CColor::interpolate(lo.begColor, cvr.targetColor_, 0x7F);
+		cvr.targetShadowColor_ = CColor::interpolate(lo.shadowColorBeg, cvr.targetShadowColor_, 0x7F);
 	}
 	// Mouse selection
 	if (!m_selected && (u32)m_mouse < m_range)
 	{
 		if (i == m_mouse)
 		{
-			cvr.targetColor = 0xFFFFFFFF;
-			cvr.targetShadowColor = lo.shadowColorCenter;
-			cvr.txtTargetAngle = lo.txtCenterAngle;
+			cvr.targetColor_ = 0xFFFFFFFF;
+			cvr.targetShadowColor_ = lo.shadowColorCenter;
+			cvr.txtTargetAngle_ = lo.txtCenterAngle;
 			cvr.txtTargetPos = lo.txtCenterPos;
-			cvr.txtTargetColor = 0xFF;
+			cvr.txtTargetColor_ = 0xFF;
 			cvr.title.setFrame(lo.txtCenterWidth, lo.txtCenterStyle, false, instant);
 		}
 		else
 		{
-			cvr.targetColor = lo.mouseOffColor;
-			cvr.targetShadowColor = lo.shadowColorOff;
-			cvr.txtTargetAngle = m_mouse > i ? lo.txtLeftAngle : lo.txtRightAngle;
+			cvr.targetColor_ = lo.mouseOffColor;
+			cvr.targetShadowColor_ = lo.shadowColorOff;
+			cvr.txtTargetAngle_ = m_mouse > i ? lo.txtLeftAngle : lo.txtRightAngle;
 			cvr.txtTargetPos = m_mouse > i ? lo.txtLeftPos : lo.txtRightPos;
-			cvr.txtTargetColor = 0;
+			cvr.txtTargetColor_ = 0;
 			cvr.title.setFrame(lo.txtSideWidth, lo.txtSideStyle, false, instant);
 		}
 		if (_invisibleCover(x, y))
 		{
-			cvr.targetColor.a = 0;
-			cvr.targetShadowColor.a = 0;
+			cvr.targetColor_.a = 0;
+			cvr.targetShadowColor_.a = 0;
 		}
 	}
 	// 
@@ -1620,12 +1620,12 @@ void CCoverFlow::_instantTarget(int i)
 
 	cvr.angle = cvr.targetAngle;
 	cvr.pos = cvr.targetPos;
-	cvr.scale = cvr.targetScale;
-	cvr.color = cvr.targetColor;
-	cvr.shadowColor = cvr.targetShadowColor;
-	cvr.txtAngle = cvr.txtTargetAngle;
+	cvr.scale_ = cvr.targetScale_;
+	cvr.color_ = cvr.targetColor_;
+	cvr.shadowColor_ = cvr.targetShadowColor_;
+	cvr.txtAngle_ = cvr.txtTargetAngle_;
 	cvr.txtPos = cvr.txtTargetPos;
-	cvr.txtColor = cvr.txtTargetColor;
+	cvr.txtColor_ = cvr.txtTargetColor_;
 }
 
 bool CCoverFlow::_sortByPlayCount(CItem item1, CItem item2)
@@ -1741,7 +1741,7 @@ void CCoverFlow::_left(int repeatDelay, u32 step)
 	m_covers[m_range / 2].pos += _coverMovesP();
 	if (m_rows >= 3)
 	{
-		prev = m_covers[m_range / 2].index;
+		prev = m_covers[m_range / 2].index_;
 		// Shift the array to the right
 		arrStep = step % (m_rows - 2) + (step / (m_rows - 2)) * m_rows;
 		for (int i = (int)m_range - 1; i >= arrStep; --i)
@@ -1757,7 +1757,7 @@ void CCoverFlow::_left(int repeatDelay, u32 step)
 	}
 	else
 	{
-		prev = m_covers[0].index;
+		prev = m_covers[0].index_;
 		// Shift the array to the right
 		for (int i = (int)m_range - 1; i > 0; --i)
 			m_covers[i] = m_covers[i - 1];
@@ -1783,7 +1783,7 @@ void CCoverFlow::_right(int repeatDelay, u32 step)
 	m_covers[m_range / 2].pos += _coverMovesP();
 	if (m_rows >= 3)
 	{
-		prev = m_covers[m_range / 2].index;
+		prev = m_covers[m_range / 2].index_;
 		// Shift the array to the left
 		arrStep = step % (m_rows - 2) + (step / (m_rows - 2)) * m_rows;
 		for (u32 i = 0; i < m_range - arrStep; ++i)
@@ -1799,7 +1799,7 @@ void CCoverFlow::_right(int repeatDelay, u32 step)
 	}
 	else
 	{
-		prev = m_covers[m_range - 1].index;
+		prev = m_covers[m_range - 1].index_;
 		// Shift the array to the left
 		for (u32 i = 0; i < m_range - 1; ++i)
 			m_covers[i] = m_covers[i + 1];
@@ -1816,7 +1816,7 @@ u32 CCoverFlow::_currentPos(void) const
 {
 	if (m_covers.empty())
 		return 0;
-	return m_covers[m_range / 2].index;
+	return m_covers[m_range / 2].index_;
 }
 
 void CCoverFlow::mouse(CVideo &vid, int x, int y)
@@ -1952,20 +1952,20 @@ void CCoverFlow::flip(bool force, bool f)
 		return;
 	CCoverFlow::CCover &cvr = m_covers[m_range / 2];
 	if (!force)
-		f = m_loSelected.centerAngle == cvr.targetAngle && m_loSelected.centerPos == cvr.targetPos && m_loSelected.centerScale == cvr.targetScale;
+		f = m_loSelected.centerAngle == cvr.targetAngle && m_loSelected.centerPos == cvr.targetPos && m_loSelected.centerScale == cvr.targetScale_;
 	if (f)
 	{
 		cvr.targetPos = m_loSelected.centerPos + m_flipCoverPos;
 		cvr.targetAngle = m_loSelected.centerAngle + m_flipCoverAngle;
-		cvr.targetScale = m_loSelected.centerScale * m_flipCoverScale;
-		cvr.txtTargetColor = m_flipCoverPos == Vector3D(0.f, 0.f, 0.f) ? 0xFF : 0;
+		cvr.targetScale_ = m_loSelected.centerScale * m_flipCoverScale;
+		cvr.txtTargetColor_ = m_flipCoverPos == Vector3D(0.f, 0.f, 0.f) ? 0xFF : 0;
 	}
 	else
 	{
 		cvr.targetPos = m_loSelected.centerPos;
 		cvr.targetAngle = m_loSelected.centerAngle;
-		cvr.targetScale = m_loSelected.centerScale;
-		cvr.txtTargetColor = 0xFF;
+		cvr.targetScale_ = m_loSelected.centerScale;
+		cvr.txtTargetColor_ = 0xFF;
 	}
 }
 
@@ -2000,13 +2000,13 @@ void CCoverFlow::_setJump(int j)
 void CCoverFlow::_completeJump(void)
 {
 	if (m_rows >= 3)
-		_loadAllCovers((int)m_covers[m_range / 2].index + m_jump);
+		_loadAllCovers((int)m_covers[m_range / 2].index_ + m_jump);
 	else
 	{
 		if (m_jump < 0)
-			_loadAllCovers((int)m_covers[0].index + m_jump + (int)m_range / 2);
+			_loadAllCovers((int)m_covers[0].index_ + m_jump + (int)m_range / 2);
 		else
-			_loadAllCovers((int)m_covers[m_range - 1].index + m_jump - ((int)m_range - 1) / 2);
+			_loadAllCovers((int)m_covers[m_range - 1].index_ + m_jump - ((int)m_range - 1) / 2);
 	}
 }
 
@@ -2070,25 +2070,25 @@ void CCoverFlow::_coverTick(int i)
 		speed *= 0.5f;
 	m_covers[i].angle += (m_covers[i].targetAngle - m_covers[i].angle) * speed;
 	m_covers[i].pos += posDist * speed;
-	m_covers[i].scale += (m_covers[i].targetScale - m_covers[i].scale) * speed;
-	if (m_covers[i].color != m_covers[i].targetColor)
+	m_covers[i].scale_ += (m_covers[i].targetScale_ - m_covers[i].scale_) * speed;
+	if (m_covers[i].color_ != m_covers[i].targetColor_)
 	{
-		CColor c(m_covers[i].color);
-		m_covers[i].color = CColor::interpolate(c, m_covers[i].targetColor, 0x20);
-		if (m_covers[i].color == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
-			m_covers[i].color = m_covers[i].targetColor;
+		CColor c(m_covers[i].color_);
+		m_covers[i].color_ = CColor::interpolate(c, m_covers[i].targetColor_, 0x20);
+		if (m_covers[i].color_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
+			m_covers[i].color_ = m_covers[i].targetColor_;
 	}
-	if (m_covers[i].shadowColor != m_covers[i].targetShadowColor)
+	if (m_covers[i].shadowColor_ != m_covers[i].targetShadowColor_)
 	{
-		CColor c(m_covers[i].shadowColor);
-		m_covers[i].shadowColor = CColor::interpolate(c, m_covers[i].targetShadowColor, 0x20);
-		if (m_covers[i].shadowColor == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
-			m_covers[i].shadowColor = m_covers[i].targetShadowColor;
+		CColor c(m_covers[i].shadowColor_);
+		m_covers[i].shadowColor_ = CColor::interpolate(c, m_covers[i].targetShadowColor_, 0x20);
+		if (m_covers[i].shadowColor_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
+			m_covers[i].shadowColor_ = m_covers[i].targetShadowColor_;
 	}
-	m_covers[i].txtAngle += (m_covers[i].txtTargetAngle - m_covers[i].txtAngle) * speed;
+	m_covers[i].txtAngle_ += (m_covers[i].txtTargetAngle_ - m_covers[i].txtAngle_) * speed;
 	m_covers[i].txtPos += (m_covers[i].txtTargetPos - m_covers[i].txtPos) * speed;
-	colorDist = (int)m_covers[i].txtTargetColor - (int)m_covers[i].txtColor;
-	m_covers[i].txtColor += abs(colorDist) >= 8 ? (u8)(colorDist / 8) : (u8)colorDist;
+	colorDist = (int)m_covers[i].txtTargetColor_ - (int)m_covers[i].txtColor_;
+	m_covers[i].txtColor_ += abs(colorDist) >= 8 ? (u8)(colorDist / 8) : (u8)colorDist;
 	m_covers[i].title.tick();
 }
 
@@ -2426,7 +2426,7 @@ int CCoverFlow::_picLoader(CCoverFlow *cf)
 		ret = CCoverFlow::CL_OK;
 		cf->m_moved = false;
 		numItems = cf->m_items.size();
-		firstItem = cf->m_covers[cf->m_range / 2].index;
+		firstItem = cf->m_covers[cf->m_range / 2].index_;
 		lastVisible = bufferSize - 1;
 		newHQCover = firstItem;
 		if ((u32)cf->m_hqCover < numItems && newHQCover != cf->m_hqCover)
