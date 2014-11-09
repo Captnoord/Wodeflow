@@ -1,4 +1,4 @@
-#include "boxmesh.hpp"
+#include "boxmesh.h"
 
 // Quick and dirty hardcoded DVD box mesh
 

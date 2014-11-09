@@ -1,5 +1,4 @@
-
-#include "gui.hpp"
+#include "gui.h"
 
 #include <wiiuse/wpad.h>
 #include <algorithm>

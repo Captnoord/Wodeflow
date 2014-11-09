@@ -1,7 +1,14 @@
 
-#include "text.hpp"
+#include "text.h"
+//#include <stdarg.h>
+//#include <string>
+//#include <stdio.h>
+#include <cstdio>
 
-using namespace std;
+//#include <ext/vstring_util.h>
+//#include <ext/rc_string_base.h>
+//#include <ext/sso_string_base.h>
+
 
 static const wchar_t *g_whitespaces = L" \f\n\r\t\v";
 
@@ -22,16 +29,17 @@ const char *fmt(const char *format, ...)
 	vsnprintf(buffer[currentStr], MAX_MSG_SIZE, format, va);
 	buffer[currentStr][MAX_MSG_SIZE - 1] = '\0';
 	va_end(va);
+
 	return buffer[currentStr];
 }
 
 // 
-string sfmt(const char *format, ...)
+std::string sfmt(const char *format, ...)
 {
 	va_list va;
 	u32 length;
 	char *tmp;
-	string s;
+	std::string s;
 
 	va_start(va, format);
 	length = vsnprintf(0, 0, format, va) + 1;
@@ -100,7 +108,7 @@ wstringEx wfmt(const wstringEx &format, ...)
 {
 	// Don't care about performance
 	va_list va;
-	string f(format.toUTF8());
+	std::string f(format.toUTF8());
 	u32 length;
 	char *tmp;
 
@@ -117,7 +125,7 @@ wstringEx wfmt(const wstringEx &format, ...)
 	return ws;
 }
 
-wstringEx vectorToString(const vector<wstringEx> &vect, char sep)
+wstringEx vectorToString(const std::vector<wstringEx> &vect, char sep)
 {
 	wstringEx s;
 
@@ -130,9 +138,9 @@ wstringEx vectorToString(const vector<wstringEx> &vect, char sep)
 	return s;
 }
 
-vector<string> stringToVector(const string &text, char sep)
+std::vector<std::string> stringToVector(const std::string &text, char sep)
 {
-	vector<string> v;
+	std::vector<std::string> v;
 	if (text.empty())
 		return v;
 	u32 count = 1;
@@ -140,26 +148,26 @@ vector<string> stringToVector(const string &text, char sep)
 		if (text[i] == sep)
 			++count;
 	v.reserve(count);
-	string::size_type off = 0;
-	string::size_type i = 0;
+	std::string::size_type off = 0;
+	std::string::size_type i = 0;
 	do
 	{
 		i = text.find_first_of(sep, off);
-		if (i != string::npos)
+		if (i != std::string::npos)
 		{
-			string ws(text.substr(off, i - off));
+			std::string ws(text.substr(off, i - off));
 			v.push_back(ws);
 			off = i + 1;
 		}
 		else
 			v.push_back(text.substr(off));
-	} while (i != string::npos);
+	} while (i != std::string::npos);
 	return v;
 }
 
-vector<wstringEx> stringToVector(const wstringEx &text, char sep)
+std::vector<wstringEx> stringToVector(const wstringEx &text, char sep)
 {
-	vector<wstringEx> v;
+	std::vector<wstringEx> v;
 	if (text.empty())
 		return v;
 	u32 count = 1;
@@ -186,8 +194,8 @@ vector<wstringEx> stringToVector(const wstringEx &text, char sep)
 
 bool SFont::fromBuffer(const u8 *buffer, u32 bufferSize, u32 size, u32 lspacing)
 {
-	size = min(max(6u, size), 1000u);
-	lspacing = min(max(6u, lspacing), 1000u);
+	size = std::min(std::max(6u, size), 1000u);
+	lspacing = std::min(std::max(6u, lspacing), 1000u);
 	lineSpacing = lspacing;
 	font.release();
 	data.release();
@@ -203,8 +211,8 @@ bool SFont::newSize(u32 size, u32 lspacing)
 {
 	if (!data)
 		return false;
-	size = min(max(6u, size), 1000u);
-	lspacing = min(max(6u, lspacing), 1000u);
+	size = std::min(std::max(6u, size), 1000u);
+	lspacing = std::min(std::max(6u, lspacing), 1000u);
 	lineSpacing = lspacing;
 	font.release();
 	font = SmartPtr<FreeTypeGX>(new FreeTypeGX);
@@ -219,8 +227,8 @@ bool SFont::fromFile(const char *filename, u32 size, u32 lspacing)
 	FILE *file;
 	u32 fileSize;
 
-	size = min(max(6u, size), 1000u);
-	lspacing = min(max(6u, lspacing), 1000u);
+	size = std::min(std::max(6u, size), 1000u);
+	lspacing = std::min(std::max(6u, lspacing), 1000u);
 	font.release();
 	data.release();
 	dataSize = 0;
@@ -263,7 +271,7 @@ bool SFont::fromFile(const char *filename, u32 size, u32 lspacing)
 void CText::setText(SFont font, const wstringEx &t)
 {
 	CText::SWord w;
-	vector<wstringEx> lines;
+	std::vector<wstringEx> lines;
 
 	m_lines.clear();
 	m_font = font;

@@ -1,7 +1,6 @@
 
-#include "menu.hpp"
+#include "menu.h"
 #include "loader/wbfs.h"
-#include "menu.hpp"
 
 #include <wiiuse/wpad.h>
 

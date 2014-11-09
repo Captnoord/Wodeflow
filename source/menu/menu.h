@@ -2,9 +2,9 @@
 #ifndef __MENU_HPP
 #define __MENU_HPP
 
-#include "cursor.hpp"
-#include "gui.hpp"
-#include "coverflow.hpp"
+#include "cursor.h"
+#include "gui.h"
+#include "coverflow.h"
 #include "loader/disc.h"
 
 #include <wiiuse/wpad.h>

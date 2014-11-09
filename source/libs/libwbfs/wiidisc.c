@@ -363,6 +363,9 @@ void wd_fix_partition_table(wiidisc_t *d, partition_selector_t selector, u8 *par
 	u32 partition_type; 
 	u32 n_partitions, i, j;
 	u32 *b32;
+	
+	(void)d;
+	
 	if (selector == ALL_PARTITIONS)
 		return;
 	n_partitions = _be32(b);

@@ -21,7 +21,7 @@
 
 #include "FreeTypeGX.h"
 
-#include "mem2.hpp"
+#include "mem2.h"
 
 #include <stdio.h>
 

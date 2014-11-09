@@ -1,5 +1,5 @@
 
-#include "wstringEx.hpp"
+#include "wstringEx.h"
 
 using namespace std;
 

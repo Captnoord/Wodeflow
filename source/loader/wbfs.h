@@ -16,7 +16,7 @@ s32 WBFS_CheckGame(u8 *);
 s32 WBFS_OpenPart(u32 part_idx, char *partition);
 s32 WBFS_OpenNamed(char *partition);
 
-s32 WBFS_OpenDisc(u8 *, unsigned long game_idx, unsigned long game_part);
+s32 WBFS_OpenDisc(u8 *, unsigned long game_idx, long game_part);
 void WBFS_CloseDisc();
 
 bool WBFS_Close();

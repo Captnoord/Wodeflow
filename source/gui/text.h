@@ -41,6 +41,7 @@ private:
 	};
 private:
 	typedef std::vector<SWord> CLine;
+	
 	std::vector<CLine> m_lines;
 	SFont m_font;
 	CColor m_color;

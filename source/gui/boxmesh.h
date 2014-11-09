@@ -2,7 +2,7 @@
 #ifndef __BOXMESH_HPP
 #define __BOXMESH_HPP
 
-#include "video.hpp"
+#include "video.h"
 
 // Quick and dirty hardcoded DVD box mesh
 // Should be replaced by a true mesh loader

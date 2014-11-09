@@ -20,7 +20,7 @@
 #include "wode.h"
 #include "logger.h"
 
-unsigned long partition_idx = -1;
+long partition_idx = -1;
 void *discHeaders = NULL;
 
 s32 WBFS_Init()
@@ -249,7 +249,9 @@ s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
 		for (i = 0; i < part_count; i++)
 			WBFS_populate_game_list_ex(game_list, i);
 			
-	} else if (partition_idx >= 0){ /* list one partition */
+	}
+	else /* list one specific partition */
+	{
 	
 		total_iso_count = GetNumISOs(partition_idx);
 		
@@ -265,7 +267,7 @@ s32 WBFS_populate_game_list(std::vector<struct discHdr> & game_list)
 	return 0;
 }
 
-s32 WBFS_OpenDisc(u8 *gameId, unsigned long game_idx, unsigned long part)
+s32 WBFS_OpenDisc(u8 * /*gameId*/, unsigned long game_idx, long part)
 {
 	/* No device open */
 	if (part == -1)

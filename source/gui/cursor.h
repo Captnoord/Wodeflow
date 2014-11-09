@@ -2,7 +2,7 @@
 #ifndef __CURSOR_HPP
 #define __CURSOR_HPP
 
-#include "video.hpp"
+#include "video.h"
 
 class CCursor
 {

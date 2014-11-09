@@ -1,5 +1,5 @@
 
-#include "menu.hpp"
+#include "menu.h"
 #include "loader/sys.h"
 #include "loader/wbfs.h"
 #include "oggplayer.h"
@@ -1093,6 +1093,7 @@ bool CMenu::_loadGameList(void)
 	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
 
 	ret = WBFS_OpenNamed((char *) m_cfg.getString(" GENERAL", "partition", defaultPartition).c_str());
+	ret = 1;
 	if (ret < 0)
 	{
 		error(wfmt(_fmt("wbfs2", L"Can't open wode : %i"), ret));

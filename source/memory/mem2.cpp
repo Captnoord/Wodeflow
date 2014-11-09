@@ -1,7 +1,7 @@
 
-#include "mem2.hpp"
-#include "mem2alloc.hpp"
-#include "objalloc.hpp"
+#include "mem2.h"
+#include "mem2alloc.h"
+#include "objalloc.h"
 
 #include <malloc.h>
 #include <string.h>

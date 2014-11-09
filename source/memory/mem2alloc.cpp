@@ -1,6 +1,6 @@
 
-#include "mem2alloc.hpp"
-#include "lockMutex.hpp"
+#include "mem2alloc.h"
+#include "lockMutex.h"
 
 #include <ogc/system.h>
 #include <algorithm>

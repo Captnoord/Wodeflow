@@ -8,14 +8,14 @@
 #include <new>
 #include <zlib.h>
 
-#include "coverflow.hpp"
+#include "coverflow.h"
 #include "pngu.h"
-#include "boxmesh.hpp"
-#include "wstringEx.hpp"
+#include "boxmesh.h"
+#include "wstringEx.h"
 
 #include "gecko.h"
 
-#include "lockMutex.hpp"
+#include "lockMutex.h"
 
 using namespace std;
 

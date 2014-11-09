@@ -20,7 +20,7 @@
  */
 
 #include "Metaphrasis.h"
-#include "mem2.hpp"
+#include "mem2.h"
 
 /**
  * Default constructor for the Metaphrasis class.

@@ -1,6 +1,6 @@
-#include "objalloc.hpp"
+#include "objalloc.h"
 #include "string.h"
-#include "lockMutex.hpp"
+#include "lockMutex.h"
 
 void *CObjAlloc::allocate(u32 s)
 {

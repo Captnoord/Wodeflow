@@ -1,5 +1,5 @@
 
-#include "menu.hpp"
+#include "menu.h"
 
 #include "loader/sys.h"
 #include "loader/wbfs.h"
@@ -11,7 +11,7 @@
 
 #include "gecko.h"
 
-#include "lockMutex.hpp"
+#include "lockMutex.h"
 
 #define TAG_GAME_ID		"gameid"
 #define TAG_LOC			"loc"

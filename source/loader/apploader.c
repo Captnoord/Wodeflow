@@ -38,8 +38,9 @@ static u32 buffer[0x20] ATTRIBUTE_ALIGN(32);
 
 static void maindolpatches(void *dst, int len, bool cheat, u8 vidMode, GXRModeObj *vmode, bool vipatch, bool countryString, u8 patchVidModes);
 
-static void __noprint(const char *fmt, ...)
+static void __noprint(const char * fmt, ...)
 {
+	(void)fmt;
 }
 
 

@@ -3,7 +3,7 @@
 #define __SOUND_HPP
 
 #include <gccore.h>
-#include "smartptr.hpp"
+#include "smartptr.h"
 
 struct SSoundEffect
 {

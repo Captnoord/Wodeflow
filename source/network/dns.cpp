@@ -71,14 +71,14 @@ u32 getipbynamecached(char *domain)
 	u32 ip = getipbyname(domain);
 	
 	//No cache of this domain could be found, create a cache node and add it to the front of the cache
-	struct dnsentry *newnode = malloc(sizeof(struct dnsentry));
+	struct dnsentry *newnode = (struct dnsentry *)malloc(sizeof(struct dnsentry));
 	if(newnode == NULL) {
 		return ip;
 	}
 	
     u32 domain_len = strlen(domain);
 	newnode->ip = ip;
-	newnode->domain = malloc(domain_len+1);
+	newnode->domain = (char*)malloc(domain_len+1);
 	if(newnode->domain == NULL)
 	{
 		free(newnode);

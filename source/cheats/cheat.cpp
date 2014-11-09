@@ -1,9 +1,9 @@
 #include <string.h>
 #include <gccore.h>
-#include "cheat.hpp"
-#include "text.hpp"
+#include "cheat.h"
+#include "text.h"
 
-#include "menu.hpp"
+#include "menu.h"
 #include "http.h"
 
 #define GECKOURL "http://www.geckocodes.org/codes/R/%s.txt"
@@ -67,7 +67,10 @@ void CMenu::_CheatSettings()
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		u32 btn = _btnRepeat(wd->btns_h);
+		
+		//u32 btn = 
+		_btnRepeat(wd->btns_h);
+		
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)
@@ -113,24 +116,27 @@ void CMenu::_CheatSettings()
 			}
 				
 			for (int i = 0; i < CHEATSPERPAGE; ++i)
-				if (m_btnMgr.selected() == m_cheatBtnItem[i]) {
+			{
+				if (m_btnMgr.selected() == m_cheatBtnItem[i])
+				{
 					// handling code for clicked cheat
 					m_cheatfile.sCheatSelected[(m_cheatSettingsPage-1)*CHEATSPERPAGE + i] = !m_cheatfile.sCheatSelected[(m_cheatSettingsPage-1)*CHEATSPERPAGE + i];
 					_showCheatSettings();
 				}
+			}
 			
 			if (m_btnMgr.selected() == m_cheatBtnApply)
 			{
 				int operation_ok,check = 0;
 				//checks if at least one cheat is selected
-				for (unsigned int i=0; i < m_cheatfile.getCnt(); ++i) {
+				for (unsigned int i=0; i < m_cheatfile.getCnt(); ++i)
+				{
 					if (m_cheatfile.sCheatSelected[i] == true) 
-						{
+					{
 						check = 1;
 						break;
-						}
-					
 					}
+				}
 					
 				if (check)
 				{

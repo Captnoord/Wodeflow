@@ -1,9 +1,9 @@
 
-#include "menu.hpp"
+#include "menu.h"
 #include "loader/wbfs.h"
 
 #include <wiiuse/wpad.h>
-#include "lockMutex.hpp"
+#include "lockMutex.h"
 
 using namespace std;
 
@@ -111,10 +111,10 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
 		u32 btn = _btnRepeat(wd->btns_h);
-		
+
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0 && !m_thrdWorking)
 			break;
-			
+
 		if (wd->ir.valid)
 			m_btnMgr.mouse(wd->ir.x - m_cur.width() / 2, wd->ir.y - m_cur.height() / 2);
 		else if ((padsState & WPAD_BUTTON_UP) != 0)
@@ -126,6 +126,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 			m_btnMgr.click();
 			if (m_btnMgr.selected() == m_wbfsBtnBack)
 				break;
+
 			else if (m_btnMgr.selected() == m_wbfsBtnGo)
 			{
 				switch (op)

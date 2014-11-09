@@ -1,5 +1,5 @@
 
-#include "smartptr.hpp"
+#include "smartptr.h"
 
 SmartBuf smartMalloc(unsigned int size)
 {

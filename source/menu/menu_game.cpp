@@ -1,8 +1,10 @@
+#inclde <algorithm>
 
-#include "menu.hpp"
+
+#include "menu.h"
 #include "loader/patchcode.h"
 #include "loader/sys.h"
-#include "cheat.hpp"
+#include "cheat.h"
 #include <wiiuse/wpad.h>
 #include <ogc/machine/processor.h>
 #include <unistd.h>
@@ -14,6 +16,8 @@
 #include "loader/wdvd.h"
 
 #include "gecko.h"
+
+
 
 using namespace std;
 
@@ -260,15 +264,19 @@ void CMenu::_launchGame(const string &id, unsigned long idx, unsigned long part)
 	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
 
-	bool vipatch = m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERAL", "vipatch", false));
-	bool cheat = m_cfg.testOptBool(id, "cheat", m_cfg.getBool(" GENERAL", "cheat", false));
-	bool countryPatch = m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERAL", "country_patch", false));
-	u8 videoMode = (u8)min((u32)m_cfg.getInt(id, "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1u);
-	int language = min((u32)m_cfg.getInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
+	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERAL", "vipatch", false));
+	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool(" GENERAL", "cheat", false));
+	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERAL", "country_patch", false));
+	
+	int videoMode		= m_cfg.getInt(id, "video_mode", 0);
+	videoMode			= std::min(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
 
-	u8 patchVidMode = min((u32)m_cfg.getInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
-	hooktype = (u32) m_cfg.getInt(id, "hooktype", 1); // hooktype is defined in patchcode.h
-	debuggerselect = m_cfg.getBool(id, "debugger", false) ? 1 : 0; // debuggerselect is defined in fst.h
+	int language		= std::min((u32)m_cfg.getInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
+
+	int patchVidMode		= std::min((u32)m_cfg.getInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
+
+	hooktype			= (u32) m_cfg.getInt(id, "hooktype", 1); // hooktype is defined in patchcode.h
+	debuggerselect		= m_cfg.getBool(id, "debugger", false) ? 1 : 0; // debuggerselect is defined in fst.h
 	
 	SmartBuf cheatFile;
 	u32 cheatSize = 0;

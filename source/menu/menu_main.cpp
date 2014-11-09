@@ -1,5 +1,5 @@
 
-#include "menu.hpp"
+#include "menu.h"
 
 #include <wiiuse/wpad.h>
 #include <unistd.h>

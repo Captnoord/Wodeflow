@@ -4,12 +4,12 @@
 #ifndef __GUI_HPP
 #define __GUI_HPP
 
-#include "video.hpp"
+#include "video.h"
 #include "FreeTypeGX.h"
-#include "wstringEx.hpp"
-#include "smartptr.hpp"
-#include "text.hpp"
-#include "sound.hpp"
+#include "wstringEx.h"
+#include "smartptr.h"
+#include "text.h"
+#include "sound.h"
 
 #include <vector>
 

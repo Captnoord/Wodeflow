@@ -1,14 +1,14 @@
 #include <ogc/system.h>
 #include <wiiuse/wpad.h>
 #include <unistd.h>
-#include "video.hpp"
-#include "menu/menu.hpp"
+#include "video.h"
+#include "menu/menu.h"
 #include "loader/disc.h"
 #include "loader/fs.h"
 #include "loader/sys.h"
 #include "loader/wbfs.h"
 #include "loader/wdvd.h"
-#include "text.hpp"
+#include "text.h"
 #include "gecko.h"
 
 extern int use_dvdx;

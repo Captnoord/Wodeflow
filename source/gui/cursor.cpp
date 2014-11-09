@@ -1,5 +1,5 @@
 
-#include "cursor.hpp"
+#include "cursor.h"
 #include "pngu.h"
 
 #include <algorithm>

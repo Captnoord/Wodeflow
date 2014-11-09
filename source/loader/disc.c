@@ -299,6 +299,7 @@ s32 Disc_IsWii(void)
 s32 Disc_BootPartition(u64 offset, u8 vidMode, const u8 *cheat, u32 cheatSize, bool vipatch, bool countryString, u8 patchVidMode)
 {
 	entry_point p_entry;
+	(void)cheatSize;
 
 	gprintf("Open partition at offset: 0x%08x\n", offset);
 	s32 ret = WDVD_OpenPartition(offset, 0, 0, 0, Tmd_Buffer);
@@ -440,6 +441,9 @@ s32 Disc_OpenPartition(u32 mode, u8 *id)
 
 s32 Disc_OpenPartitionO(u32 mode, u8 *id, u64 *offset)
 {
+	(void)mode;
+	(void)id;
+	
 	if (Disc_Open() < 0)
 		return -2;
 	if (__Disc_FindPartition(offset) < 0)

@@ -8,12 +8,12 @@
 #include <string>
 #include <vector>
 
-#include "video.hpp"
-#include "smartptr.hpp"
+#include "video.h"
+#include "smartptr.h"
 #include "FreeTypeGX.h"
-#include "text.hpp"
-#include "config.hpp"
-#include "sound.hpp"
+#include "text.h"
+#include "config.h"
+#include "sound.h"
 #include "wode.h"
 
 class CCoverFlow

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <ogcsys.h>
 
-#include "texture.hpp"
+#include "texture.h"
 #include "pngu.h"
 
 using namespace std;

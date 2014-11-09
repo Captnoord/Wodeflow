@@ -1,5 +1,5 @@
 
-#include "menu.hpp"
+#include "menu.h"
 #include "wbfs.h"
 
 #include <dirent.h>

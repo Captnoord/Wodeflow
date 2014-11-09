@@ -472,7 +472,7 @@ int PlayOgg(int fd, int time_pos, int mode)
 		return -1;
 	}
 
-	if (LWP_CreateThread(&h_oggplayer, (void *) ogg_player_thread,
+	if (LWP_CreateThread(&h_oggplayer, (void *(*)(void*)) ogg_player_thread,
 			&private_ogg, oggplayer_stack, STACKSIZE, 80) == -1)
 	{
 		ogg_thread_running = 0;
