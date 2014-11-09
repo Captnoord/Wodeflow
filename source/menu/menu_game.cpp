@@ -1,6 +1,5 @@
 #include <algorithm>
 
-
 #include "menu.h"
 #include "loader/patchcode.h"
 #include "loader/sys.h"
@@ -16,9 +15,6 @@
 #include "loader/wdvd.h"
 
 #include "gecko.h"
-
-
-//using namespace std;
 
 extern const u8 btngamecfg_png[];
 extern const u8 btngamecfgs_png[];
@@ -114,7 +110,6 @@ void CMenu::_game(bool launch)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
 	bool b;
 	bool first = true;
 
@@ -123,7 +118,6 @@ void CMenu::_game(bool launch)
 	{
 		WPAD_ScanPads();
 		_showGame();
-//		_playGameSound();
 	}
 	while (true)
 	{
@@ -139,7 +133,7 @@ void CMenu::_game(bool launch)
 			first = false;
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		(void)_btnRepeat(wd->btns_h);
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)
@@ -172,7 +166,6 @@ void CMenu::_game(bool launch)
 				if (!WBFS_IsReadOnly())
 				{
 					_hideGame();
-					_waitForGameSoundExtract();
 					if (_wbfsOp(CMenu::WO_REMOVE_GAME))
 						break;
 					_showGame();
@@ -191,7 +184,6 @@ void CMenu::_game(bool launch)
 			else if (m_btnMgr.selected() == m_gameBtnSettings)
 			{
 				_hideGame();
-				_waitForGameSoundExtract();
 				_gameSettings();
 				_showGame();
 			}
@@ -254,7 +246,6 @@ void CMenu::_game(bool launch)
 		_mainLoopCommon(wd, true);
 	}
 	WPAD_Rumble(WPAD_CHAN_0, 0);
-	_waitForGameSoundExtract();
 	_hideGame();
 }
 
@@ -280,11 +271,12 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	SmartBuf cheatFile;
 	u32 cheatSize = 0;
 
-	_waitForGameSoundExtract();
 	if (videoMode == 0)
 		videoMode = (u8)min((u32)m_cfg.getInt(" GENERAL", "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1);
+
 	if (language == 0)
 		language = min((u32)m_cfg.getInt(" GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
+
 	m_cfg.setString(" GENERAL", "current_game", id);
 	m_cfg.setInt(id, "playcount", m_cfg.getInt(id, "playcount", 0) + 1);
 	
@@ -402,295 +394,3 @@ void CMenu::_textGame(void)
 	m_btnMgr.setText(m_gameBtnBack, _t("gm2", L"Back"));
 }
 
-struct IMD5Header
-{
-	u32 fcc;
-	u32 filesize;
-	u8 zeroes[8];
-	u8 crypto[16];
-} __attribute__((packed));
-
-struct IMETHeader
-{
-	u8 zeroes[64];
-	u32 fcc;
-	u8 unk[8];
-	u32 iconSize;
-	u32 bannerSize;
-	u32 soundSize;
-	u32 flag1;
-	u8 names[7][84];
-	u8 zeroes_2[0x348];
-	u8 crypto[16];
-} __attribute__((packed));
-
-struct U8Header
-{
-	u32 fcc;
-	u32 rootNodeOffset;
-	u32 headerSize;
-	u32 dataOffset;
-	u8 zeroes[16];
-} __attribute__((packed));
-
-struct U8Entry
-{
-	struct
-	{
-		u32 fileType : 8;
-		u32 nameOffset : 24;
-	};
-	u32 fileOffset;
-	union
-	{
-		u32 fileLength;
-		u32 numEntries;
-	};
-} __attribute__((packed));
-
-struct LZ77Info
-{
-	u16 length : 4;
-	u16 offset : 12;
-} __attribute__((packed));
-
-static char *u8Filename(const U8Entry *fst, int i)
-{
-	return (char *)(fst + fst[0].numEntries) + fst[i].nameOffset;
-}
-
-inline u32 le32(u32 i)
-{
-	return ((i & 0xFF) << 24) | ((i & 0xFF00) << 8) | ((i & 0xFF0000) >> 8) | ((i & 0xFF000000) >> 24);
-}
-
-extern "C" {
-	s32 __Disc_FindPartition(u64 *outbuf);
-}
-
-static void _extractBnr(SmartBuf &bnr, u32 &size, const std::string &gameId, unsigned long idx, unsigned long part)
-{
-	u32 discfilecount = 0;
-	u8 found = 0;
-	SmartBuf fstbuffer;
-	U8Entry *fstt;
-	SmartBuf buffer;
-	u64 offset;
-
-	bnr.release();
-
-	int ret = WBFS_OpenDisc((u8 *) gameId.c_str(), idx, part);
-	if (ret != 0) { 
-		gprintf("Opening disc failed: %d\n", ret);
-		goto out;
-	}
-	CloseWode(); // This will make the disc accessible again
-	
-	Disc_Open();
-
-	ret = __Disc_FindPartition(&offset);
-	if (ret < 0) {
-		gprintf("Finding partition failed: %d\n", ret);
-		goto out;
-	}	
-	ret = Disc_OpenPartitionSimple(offset);
-	if (ret < 0) {
-		gprintf("WDVD_OpenPartitionSimple failed: %d\n", ret);
-		goto out;
-	}
-	
-	buffer = smartAnyAlloc(0x20);
-	ret = WDVD_Read(buffer.get(), 0x20, 0x420);
-	if (ret < 0) {
-		gprintf("Reading fst header failed: %d\n", ret);
-		goto out;
-	}
-	
-	fstbuffer = smartAnyAlloc(buffer.get()[2]*4);
-	fstt = (U8Entry *)fstbuffer.get();
-	
-	if (fstt == NULL) goto out;
-	
-	ret = WDVD_Read(fstbuffer.get(), buffer.get()[2]*4, buffer.get()[1]*4);
-	if (ret <  0)  {
-		gprintf("Reading fst body failed: %d\n", ret);
-		goto out;
-	}
-	
-	discfilecount = fstt[0].fileLength;
-	for (u32 i = 0; i < discfilecount; i++) {
-		if(strcasestr(u8Filename(fstt, i), "opening.bnr" ) && !fstt[i].fileType) {
-			found =1;
-			bnr = smartMem2Alloc(fstt[i].fileLength);
-			ret = WDVD_Read(bnr.get(), fstt[i].fileLength, fstt[i].fileOffset << 2);
-			if (ret < 0) {
-				gprintf("Reading opening.bnr failed: %d\n");
-				goto out;
-			}
-			size = fstt[i].fileOffset;
-			break;
-		}
-	}
-	WDVD_ClosePartition();
-out:	
-	OpenWode();
-}
-
-SmartBuf uncompressLZ77(u32 &size, const u8 *inputBuf, u32 inputLength)
-{
-	SmartBuf buffer;
-	if (inputLength <= 0x8 || *(const u32 *)inputBuf != 'LZ77' || inputBuf[4] != 0x10)
-		return buffer;
-	u32 uncSize = le32(((const u32 *)inputBuf)[1] << 8);
-	const u8 *inBuf = inputBuf + 8;
-	const u8 *inBufEnd = inputBuf + inputLength;
-	buffer = smartMem2Alloc(uncSize);
-	if (!buffer)
-		return buffer;
-	u8 *bufCur = buffer.get();
-	u8 *bufEnd = buffer.get() + uncSize;
-	while (bufCur < bufEnd && inBuf < inBufEnd)
-	{
-		u8 flags = *inBuf;
-		++inBuf;
-		for (int i = 0; i < 8 && bufCur < bufEnd && inBuf < inBufEnd; ++i)
-		{
-			if ((flags & 0x80) != 0)
-			{
-				const LZ77Info &info = *(const LZ77Info *)inBuf;
-				inBuf += sizeof (LZ77Info);
-				int length = info.length + 3;
-				if (bufCur - info.offset - 1 < buffer.get() || bufCur + length > bufEnd)
-					return buffer;
-				memcpy(bufCur, bufCur - info.offset - 1, length);
-				bufCur += length;
-			}
-			else
-			{
-				*bufCur = *inBuf;
-				++inBuf;
-				++bufCur;
-			}
-			flags <<= 1;
-		}
-	}
-	size = uncSize;
-	return buffer;
-}
-
-void CMenu::_loadGameSound(const std::string &id, unsigned long idx, unsigned long part)
-{
-	SmartBuf bnr;
-	const u8 *soundBin;
-	const u8 *bnrArc;
-	u32 bnrSize;
-	u32 sndType;
-	const U8Entry *fst;
-	u32 i;
-	const u8 *soundChunk;
-	u32 soundChunkSize;
-	SmartBuf uncompressed;
-
-	_extractBnr(bnr, bnrSize, id, idx, part);
-	if (!bnr)
-		return;
-	const IMETHeader &imetHdr = *(IMETHeader *)bnr.get();
-	if (imetHdr.fcc != 'IMET')
-		return;
-	bnrArc = (const u8 *)(&imetHdr + 1);
-	const U8Header &bnrArcHdr = *(U8Header *)bnrArc;
-	fst = (const U8Entry *)(bnrArc + bnrArcHdr.rootNodeOffset);
-	for (i = 1; i < fst[0].numEntries; ++i)
-		if (fst[i].fileType == 0 && strcasecmp(u8Filename(fst, i), "sound.bin") == 0)
-			break;
-	if (i >= fst[0].numEntries)
-		return;
-	soundBin = bnrArc + fst[i].fileOffset;
-	if (((IMD5Header *)soundBin)->fcc != 'IMD5')
-		return;
-	soundChunk = soundBin + sizeof (IMD5Header);
-	sndType = *(u32 *)soundChunk;
-	soundChunkSize = fst[i].fileLength - sizeof (IMD5Header);
-	if (sndType == 'LZ77')
-	{
-		u32 uncSize;
-		uncompressed = uncompressLZ77(uncSize, soundChunk, soundChunkSize);
-		if (!uncompressed)
-			return;
-		soundChunk = uncompressed.get();
-		soundChunkSize = uncSize;
-		sndType = *(u32 *)soundChunk;
-	}
-	switch (sndType)
-	{
-		case 'RIFF':
-			LWP_MutexLock(m_gameSndMutex);
-			m_gameSoundTmp.fromWAV(soundChunk, soundChunkSize);
-			LWP_MutexUnlock(m_gameSndMutex);
-			break;
-		case 'BNS ':
-			LWP_MutexLock(m_gameSndMutex);
-			m_gameSoundTmp.fromBNS(soundChunk, soundChunkSize);
-			LWP_MutexUnlock(m_gameSndMutex);
-			break;
-		case 'FORM':
-			LWP_MutexLock(m_gameSndMutex);
-			m_gameSoundTmp.fromAIFF(soundChunk, soundChunkSize);
-			LWP_MutexUnlock(m_gameSndMutex);
-			break;
-	}
-}
-
-int CMenu::_loadGameSoundThrd(CMenu *m)
-{
-	std::string prevId;
-	std::string id;
-	unsigned long idx, part;
-
-	LWP_MutexLock(m->m_gameSndMutex);
-	id = m->m_gameSoundId;
-	idx = m->m_gameSoundIdx;
-	part = m->m_gameSoundPart;
-	m->m_gameSoundId.clear();
-	m->m_gameSoundIdx = -1;
-	LWP_MutexUnlock(m->m_gameSndMutex);
-	while (id != prevId && !id.empty())
-	{
-		prevId = id;
-		m->_loadGameSound(id, idx, part);
-		LWP_MutexLock(m->m_gameSndMutex);
-		id = m->m_gameSoundId;
-		m->m_gameSoundId.clear();
-		m->m_gameSoundIdx = -1;
-		m->m_gameSoundPart = -1;
-		LWP_MutexUnlock(m->m_gameSndMutex);
-	}
-	m->m_gameSoundThread = 0;
-	return 0;
-}
-
-void CMenu::_playGameSound(void)
-{
-	if (m_bnrSndVol == 0)
-		return;
-	LWP_MutexLock(m_gameSndMutex);
-	m_gameSoundId = m_cf.getId();
-	m_gameSoundIdx = m_cf.getIdx();
-	m_gameSoundPart = m_cf.getPart();
-	
-	LWP_MutexUnlock(m_gameSndMutex);
-	m_cf.stopPicLoader();
-	if (m_gameSoundThread == 0)
-		LWP_CreateThread(&m_gameSoundThread, (void *(*)(void *))CMenu::_loadGameSoundThrd, (void *)this, 0, 8 * 1024, 40);
-}
-
-void CMenu::_waitForGameSoundExtract(void)
-{
-	for (int i = 0; i < 30 && m_gameSoundThread != 0; ++i)	// 3 s
-		usleep(100000);
-	if (m_gameSoundThread != 0)
-	{
-		error(L"Error while reading a game disc");
-		Sys_Reboot();
-	}
-}

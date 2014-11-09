@@ -518,11 +518,6 @@ private:
 	void _loopMusic(void);
 	void _stopSounds(void);
 	// 
-	void _playGameSound(void);
-	void _loadGameSound(const std::string &id, unsigned long idx, unsigned long part);
-	void _waitForGameSoundExtract(void);
-	static int _loadGameSoundThrd(CMenu *m);
-	// 
 	struct SOption { const char id[10]; const wchar_t text[16]; };
 	static const SOption _languages[11];
 	static const SOption _videoModes[7];

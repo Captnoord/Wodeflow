@@ -34,12 +34,14 @@ bool CMenu::_code(char code[4], bool erase)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
 	u32 n = 0;
 	wchar_t codeLbl[] = L"_ _ _ _";
 
 	WPAD_Rumble(WPAD_CHAN_0, 0);
-	memset(code, 0, sizeof(code));
+	//memset(code, 0, sizeof(code));
+	code[0] = code[1] = code[2] = code[3] = 0;
+
+
 	m_btnMgr.setText(m_codeLblTitle, codeLbl);
 	_showCode();
 	if (erase)
@@ -49,7 +51,7 @@ bool CMenu::_code(char code[4], bool erase)
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		(void)_btnRepeat(wd->btns_h);
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)
@@ -63,7 +65,8 @@ bool CMenu::_code(char code[4], bool erase)
 			m_btnMgr.click();
 			if (m_btnMgr.selected() == m_codeBtnErase)
 			{
-				memset(code, 0, sizeof(code));
+				//memset(code, 0, sizeof(code));
+				code[0] = code[1] = code[2] = code[3] = 0;
 				n = sizeof(code);
 				break;
 			}
