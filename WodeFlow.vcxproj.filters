@@ -4,9 +4,6 @@
     <Filter Include="cheats">
       <UniqueIdentifier>{e1ae4a17-9748-4415-85fd-8792a059aebf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="data">
-      <UniqueIdentifier>{69c0e817-2659-4e72-9bce-bde01599d5a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gui">
       <UniqueIdentifier>{c051cde9-3ac1-40e0-80a0-e1ca039ef736}</UniqueIdentifier>
     </Filter>
@@ -30,57 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\data\background.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\btnnext.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\btnnexts.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\btnprev.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\btnprevs.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\butfont.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\cffont.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\click.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\dvdskin.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\dvdskin_black.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\dvdskin_red.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\error.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\fbi.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\flatloading.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\hover.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\loading.c">
-      <Filter>data</Filter>
-    </ClCompile>
-    <ClCompile Include="source\data\nopic.c">
-      <Filter>data</Filter>
-    </ClCompile>
     <ClCompile Include="source\config.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\wstringEx.cpp" />
@@ -195,9 +141,6 @@
       <Filter>loader</Filter>
     </ClCompile>
     <ClCompile Include="source\loader\wode.c">
-      <Filter>loader</Filter>
-    </ClCompile>
-    <ClCompile Include="source\loader\wodefs.c">
       <Filter>loader</Filter>
     </ClCompile>
     <ClCompile Include="source\loader\apploader.c">
@@ -317,9 +260,6 @@
       <Filter>loader</Filter>
     </ClInclude>
     <ClInclude Include="source\loader\wode.h">
-      <Filter>loader</Filter>
-    </ClInclude>
-    <ClInclude Include="source\loader\wodefs.h">
       <Filter>loader</Filter>
     </ClInclude>
     <ClInclude Include="source\loader\apploader.h">

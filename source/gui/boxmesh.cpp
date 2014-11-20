@@ -17,8 +17,8 @@ const Vector3D g_boxSize(
 	g_coverTR.y - g_coverBL.y + 2 * g_boxBorderWidth,
 	g_coverTR.z - g_coverBL.z + 2 * g_boxBorderWidth);
 
-#define w(x)	((float)x / 64.0f)
-#define h(y)	((float)y / 256.0f)
+#define w(x)	((float)x / 64.f)
+#define h(y)	((float)y / 256.f)
 
 
 const SMeshVert g_boxMeshQ[] = {	// Quads
@@ -179,8 +179,8 @@ const CTexCoord g_boxCoverBackTex[sizeof g_boxBackCoverMesh / sizeof g_boxBackCo
 	CTexCoord(1.3f / 1.46f, 1.f)
 };
 
-const u32 g_flatCoverMeshSize = sizeof g_flatCoverMesh / sizeof g_flatCoverMesh[0];
-const u32 g_boxMeshQSize = sizeof g_boxMeshQ / sizeof g_boxMeshQ[0];
-const u32 g_boxMeshTSize = sizeof g_boxMeshT / sizeof g_boxMeshT[0];
-const u32 g_boxCoverMeshSize = sizeof g_boxCoverMesh / sizeof g_boxCoverMesh[0];
+const u32 g_flatCoverMeshSize	= sizeof g_flatCoverMesh / sizeof g_flatCoverMesh[0];
+const u32 g_boxMeshQSize		= sizeof g_boxMeshQ / sizeof g_boxMeshQ[0];
+const u32 g_boxMeshTSize		= sizeof g_boxMeshT / sizeof g_boxMeshT[0];
+const u32 g_boxCoverMeshSize	= sizeof g_boxCoverMesh / sizeof g_boxCoverMesh[0];
 const u32 g_boxBackCoverMeshSize = sizeof g_boxBackCoverMesh / sizeof g_boxBackCoverMesh[0];

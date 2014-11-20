@@ -526,7 +526,7 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 		case CMenu::SCFParamDesc::PDT_FLOAT:
 		{
 			float val = m_theme.getFloat(domain, key);
-			m_theme.setFloat(domain, key, min(max(p.minMaxVal[k][0], val + step), p.minMaxVal[k][1]));
+			m_theme.setFloat(domain, key, std::min(std::max(p.minMaxVal[k][0], val + step), p.minMaxVal[k][1]));
 			break;
 		}
 		case CMenu::SCFParamDesc::PDT_V3D:
@@ -535,13 +535,13 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 			switch (i % 4)
 			{
 				case 0:
-					v.x = min(max(p.minMaxVal[k][0], v.x + step), p.minMaxVal[k][1]);
+					v.x = std::min(std::max(p.minMaxVal[k][0], v.x + step), p.minMaxVal[k][1]);
 					break;
 				case 1:
-					v.y = min(max(p.minMaxVal[k][0], v.y + step), p.minMaxVal[k][1]);
+					v.y = std::min(std::max(p.minMaxVal[k][0], v.y + step), p.minMaxVal[k][1]);
 					break;
 				case 2:
-					v.z = min(max(p.minMaxVal[k][0], v.z + step), p.minMaxVal[k][1]);
+					v.z = std::min(std::max(p.minMaxVal[k][0], v.z + step), p.minMaxVal[k][1]);
 					break;
 			}
 			m_theme.setVector3D(domain, key, v);
@@ -553,16 +553,16 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 			switch (i % 4)
 			{
 				case 0:
-					color.r = min(max(0, color.r + (int)step), 0xFF);
+					color.r = std::min(std::max(0, color.r + (int)step), 0xFF);
 					break;
 				case 1:
-					color.g = min(max(0, color.g + (int)step), 0xFF);
+					color.g = std::min(std::max(0, color.g + (int)step), 0xFF);
 					break;
 				case 2:
-					color.b = min(max(0, color.b + (int)step), 0xFF);
+					color.b = std::min(std::max(0, color.b + (int)step), 0xFF);
 					break;
 				case 3:
-					color.a = min(max(0, color.a + (int)step), 0xFF);
+					color.a = std::min(std::max(0, color.a + (int)step), 0xFF);
 					break;
 			}
 			m_theme.setColor(domain, key, color);
@@ -576,7 +576,7 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 		case CMenu::SCFParamDesc::PDT_INT:
 		{
 			int val = m_theme.getInt(domain, key);
-			m_theme.setInt(domain, key, min(max((int)p.minMaxVal[k][0], val + (int)step), (int)p.minMaxVal[k][1]));
+			m_theme.setInt(domain, key, std::min(std::max((int)p.minMaxVal[k][0], val + (int)step), (int)p.minMaxVal[k][1]));
 			break;
 		}
 		case CMenu::SCFParamDesc::PDT_TXTSTYLE:

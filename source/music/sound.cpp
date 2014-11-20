@@ -363,7 +363,7 @@ static void decodeADPCMBlock(s16 *buffer, const BNSADPCMBlock &block, BNSDecObj 
 		int sampleDeltaHP = (nibSample << block.lshift) << 11;
 		int predictedSampleHP = c1 * h1 + c2 * h2;
 		int sampleHP = predictedSampleHP + sampleDeltaHP;
-		buffer[i] = min(max(-32768, (sampleHP + 1024) >> 11), 32767);
+		buffer[i] = std::min(std::max(-32768, (sampleHP + 1024) >> 11), 32767);
 		h2 = h1;
 		h1 = buffer[i];
 	}

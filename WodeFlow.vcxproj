@@ -79,23 +79,6 @@
   <ItemGroup>
     <ClCompile Include="source\cheats\cheat.cpp" />
     <ClCompile Include="source\cheats\gct.cpp" />
-    <ClCompile Include="source\data\background.c" />
-    <ClCompile Include="source\data\btnnext.c" />
-    <ClCompile Include="source\data\btnnexts.c" />
-    <ClCompile Include="source\data\btnprev.c" />
-    <ClCompile Include="source\data\btnprevs.c" />
-    <ClCompile Include="source\data\butfont.c" />
-    <ClCompile Include="source\data\cffont.c" />
-    <ClCompile Include="source\data\click.c" />
-    <ClCompile Include="source\data\dvdskin.c" />
-    <ClCompile Include="source\data\dvdskin_black.c" />
-    <ClCompile Include="source\data\dvdskin_red.c" />
-    <ClCompile Include="source\data\error.c" />
-    <ClCompile Include="source\data\fbi.c" />
-    <ClCompile Include="source\data\flatloading.c" />
-    <ClCompile Include="source\data\hover.c" />
-    <ClCompile Include="source\data\loading.c" />
-    <ClCompile Include="source\data\nopic.c" />
     <ClCompile Include="source\gecko.cpp" />
     <ClCompile Include="source\config.cpp" />
     <ClCompile Include="source\gui\boxmesh.cpp" />
@@ -121,7 +104,6 @@
     <ClCompile Include="source\loader\wdvd.c" />
     <ClCompile Include="source\loader\wip.c" />
     <ClCompile Include="source\loader\wode.c" />
-    <ClCompile Include="source\loader\wodefs.c" />
     <ClCompile Include="source\logger.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\memory\mem2.cpp" />
@@ -184,7 +166,6 @@
     <ClInclude Include="source\loader\wdvd.h" />
     <ClInclude Include="source\loader\wip.h" />
     <ClInclude Include="source\loader\wode.h" />
-    <ClInclude Include="source\loader\wodefs.h" />
     <ClInclude Include="source\logger.h" />
     <ClInclude Include="source\memory\mem2.h" />
     <ClInclude Include="source\memory\mem2alloc.h" />

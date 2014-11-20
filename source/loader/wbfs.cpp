@@ -188,7 +188,10 @@ s32 WBFS_populate_game_list_ex(std::vector<struct discHdr> & game_list, int part
 	
 	/* No device open */
 	if (part == -1)
+	{
+		printf("unable to open partition\n");
 		return -1;
+	}
 	
 	/* simply don't list "ram*" */
 	WBFS_GetPartitionName(part, (char*)partname, &partnamelen);
@@ -327,10 +330,12 @@ unsigned long WBFS_GetPartitionCount()
 s32 WBFS_GetPartitionName(u32 index, char *buf, u32* len)
 {
 	PartitionInfo_t t;
+	memset(&t, 0, sizeof(t));
 	if (GetPartitionInfo(index, &t) == 0)
 	{
 		(*len) = strlen(t.name);
 		strncpy(buf, t.name, strlen(t.name));
+		buf[strlen(t.name)] = '\0';
 		return 0;
 	}
 	return -1;

@@ -22,9 +22,12 @@ void CMenu::_hideConfig4(bool instant)
 	m_btnMgr.hide(m_config4BtnSaveFavMode, instant);
 	m_btnMgr.hide(m_config4LblSearchMode, instant);
 	m_btnMgr.hide(m_config4BtnSearchMode, instant);
+
 	for (u32 i = 0; i < ARRAY_SIZE(m_config4LblUser); ++i)
+	{
 		if (m_config4LblUser[i] != -1u)
 			m_btnMgr.hide(m_config4LblUser[i], instant);
+	}
 }
 
 void CMenu::_showConfig4(void)
@@ -57,7 +60,7 @@ int CMenu::_config4(void)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
+//	u32 btn;
 	int nextPage = 0;
 
 	_showConfig4();
@@ -66,7 +69,8 @@ int CMenu::_config4(void)
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		//btn = 
+		_btnRepeat(wd->btns_h);
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)
@@ -119,13 +123,13 @@ int CMenu::_config4(void)
 void CMenu::_initConfig4Menu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_config4LblUser, ARRAY_SIZE(m_config4LblUser), "CONFIG4");
-	m_config4Bg = _texture(theme.texSet, "CONFIG4/BG", "texture", theme.bg);
-	m_config4LblHome = _addLabel(theme, "CONFIG4/WIIMENU", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config4BtnHome = _addButton(theme, "CONFIG4/WIIMENU_BTN", theme.btnFont, L"", 400, 130, 200, 56, theme.btnFontColor);
+	m_config4Bg				= _texture(theme.texSet, "CONFIG4/BG", "texture", theme.bg);
+	m_config4LblHome		= _addLabel(theme, "CONFIG4/WIIMENU", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config4BtnHome		= _addButton(theme, "CONFIG4/WIIMENU_BTN", theme.btnFont, L"", 400, 130, 200, 56, theme.btnFontColor);
 	m_config4LblSaveFavMode = _addLabel(theme, "CONFIG4/SAVE_FAVMODE", theme.lblFont, L"", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
 	m_config4BtnSaveFavMode = _addButton(theme, "CONFIG4/SAVE_FAVMODE_BTN", theme.btnFont, L"", 400, 190, 200, 56, theme.btnFontColor);
-	m_config4LblSearchMode = _addLabel(theme, "CONFIG4/SEARCH_MODE", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config4BtnSearchMode = _addButton(theme, "CONFIG4/SEARCH_MODE_BTN", theme.btnFont, L"", 400, 250, 200, 56, theme.btnFontColor);
+	m_config4LblSearchMode	= _addLabel(theme, "CONFIG4/SEARCH_MODE", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config4BtnSearchMode	= _addButton(theme, "CONFIG4/SEARCH_MODE_BTN", theme.btnFont, L"", 400, 250, 200, 56, theme.btnFontColor);
 	// 
 	_setHideAnim(m_config4LblHome, "CONFIG4/WIIMENU", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_config4BtnHome, "CONFIG4/WIIMENU_BTN", 0, 0, -2.f, 0.f);

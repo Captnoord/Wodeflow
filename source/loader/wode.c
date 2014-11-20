@@ -521,31 +521,37 @@ int GetTotalISOs( void )
 
 int InitDVD()
 {
+	gprintf("InitDVD\n");
     return 0;
 }
 
 int OpenWode( void )
 {
+	gprintf("OpenWode\n");
     return 1;
 }
 
 int CloseWode( void )
 {
+	gprintf("CloseWode\n");
     return 0;
 }
 
 unsigned long GetNumPartitions( void )
 {
-    return 1;
+	gprintf("GetNumPartitions\n");
+    return 2;
 }
 
 unsigned long GetNumISOs(unsigned long partition_idx)
 {
+	gprintf("GetNumISOs\n");
     return 10;
 }
 
 int GetPartitionInfo(unsigned long partition_idx, PartitionInfo_t* PartitionInfo)
 {
+	gprintf("GetPartitionInfo\n");
 // add more info
 
     //memcpy(PartitionInfo->name,dvdbuffer,64);
@@ -554,6 +560,7 @@ int GetPartitionInfo(unsigned long partition_idx, PartitionInfo_t* PartitionInfo
 	PartitionInfo->NumISOs 			= 10;
 	//PartitionInfo->partition_type 	= *((unsigned long*)&dvdbuffer[68]);
 	PartitionInfo->partition_mode 	= pm_read_write;
+	
     
     return 0;
 }
@@ -566,7 +573,12 @@ int GetISOInfo(unsigned long partition_idx, unsigned long iso_idx, ISOInfo_t * I
 	//unsigned long  iso_type;
 	//unsigned long  iso_region;
 	//char header[8];
-    ISOInfo->iso_type = WII_MAGIC;
+
+	//TYPE_GC
+
+	gprintf("GetISOInfo\n");
+
+	ISOInfo->iso_type = TYPE_WII;
     ISOInfo->iso_region = 0; // I dono if this really matters...
     
     //memcpy(ISOInfo->name,"test\0",5);
@@ -579,7 +591,7 @@ unsigned long GetMaxFavorites( void )
     return 8;
 }
 
-int  GetNumFavorites( void )
+int GetNumFavorites( void )
 {
     return 0;
 }

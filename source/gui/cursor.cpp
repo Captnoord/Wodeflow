@@ -175,7 +175,7 @@ void CCursor::_blur(void)
 		{
 			sum = 0;
 			for (int i = -radius; i <= radius; ++i)
-				sum += pic[coordsI8(min(max(0, i), w - 1), y, w)];
+				sum += pic[coordsI8(std::min(std::max(0, i), w - 1), y, w)];
 			for (int x = 0; x < w; ++x)
 			{
 				r[yi] = sum / div;

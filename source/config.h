@@ -16,6 +16,7 @@ class Config
 { 
 public:
 	Config(void);
+
 	void clear(void) { m_domains.clear(); }
 	bool load(const char *filename = 0);
 	void save(void);
@@ -48,6 +49,12 @@ public:
 	bool hasDomain(const std::string &domain) const;
 	void copyDomain(const std::string &dst, const std::string &src);
 private:
+
+	/* set parameter to domain map including all the wierd convertions */
+	void __set(const std::string &domain, const std::string & key, const std::string & value);
+	/* get parameter from domain map including all the wierd convertions */
+	std::string &__get(const std::string &domain, const std::string & key);
+
 	typedef std::map<std::string, std::string> KeyMap;
 	typedef std::map<std::string, KeyMap> DomainMap;
 private:

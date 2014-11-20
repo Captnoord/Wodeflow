@@ -1,13 +1,6 @@
 
 #include "text.h"
-//#include <stdarg.h>
-//#include <string>
-//#include <stdio.h>
 #include <cstdio>
-
-//#include <ext/vstring_util.h>
-//#include <ext/rc_string_base.h>
-//#include <ext/sso_string_base.h>
 
 
 static const wchar_t *g_whitespaces = L" \f\n\r\t\v";

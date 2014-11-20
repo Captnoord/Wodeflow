@@ -13,6 +13,25 @@
 
 #include "gct.h"
 
+namespace menu
+{
+class rect
+{
+public:
+	rect(int x, int y, int width, int height)
+		:x_(x)
+		, y_(y)
+		, width_(width)
+		, height_(height)
+	{
+
+	}
+
+	int x_, y_, width_, height_;
+};
+
+} // namespace menu
+
 class CMenu
 {
 public:
@@ -486,15 +505,22 @@ private:
 	u16 _textStyle(const char *domain, const char *key, u16 def);
 	u32 _addButton(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color);
 	u32 _addPicButton(SThemeData &theme, const char *domain, STexture &texNormal, STexture &texSelected, int x, int y, u32 width, u32 height);
+	
+	
+	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, menu::rect rect, const CColor &color, u16 style);
+
 	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style);
 	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, STexture &bg);
+	
 	u32 _addProgressBar(SThemeData &theme, const char *domain, int x, int y, u32 width, u32 height);
 	void _setHideAnim(u32 id, const char *domain, int dx, int dy, float scaleX, float scaleY);
 	void _addUserLabels(CMenu::SThemeData &theme, u32 *ids, u32 size, const char *domain);
+
 	// 
 	const wstringEx _t(const char *key, const wchar_t *def = L"") { return m_loc.getWString(m_curLanguage, key, def); }
 	const wstringEx _fmt(const char *key, const wchar_t *def);
 	// 
+
 	void _setThrdMsg(const wstringEx &msg, float progress);
 	int _coverDownloader(bool missingOnly);
 	static int _coverDownloaderAll(CMenu *m);

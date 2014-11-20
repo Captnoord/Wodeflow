@@ -16,56 +16,53 @@ Config::Config(void) :
 {
 }
 
-static string trimEnd(string line)
+void trimEnd(std::string &line)
 {
-	string::size_type i = line.find_last_not_of(g_whitespaces);
-	if (i == string::npos)
+	std::string::size_type i = line.find_last_not_of(g_whitespaces);
+	if (i == std::string::npos)
 		line.clear();
 	else
 		line.resize(i + 1);
-	return line;
+	
 }
 
-static string trim(string line)
+void trim(std::string &line)
 {
-	string::size_type i = line.find_last_not_of(g_whitespaces);
+	std::string::size_type i = line.find_last_not_of(g_whitespaces);
 	if (i == string::npos)
 	{
 		line.clear();
-		return line;
 	}
 	else
 		line.resize(i + 1);
+
 	i = line.find_first_not_of(g_whitespaces);
 	if (i > 0)
 		line.erase(0, i);
-	return line;
 }
 
-static string upperCase(string text)
+void upperCase(std::string &text)
 {
 	char c;
 
-	for (string::size_type i = 0; i < text.size(); ++i)
+	for (std::string::size_type i = 0; i < text.size(); ++i)
 	{
 		c = text[i];
 		if (c >= 'a' && c <= 'z')
 			text[i] = c & 0xDF;
 	}
-	return text;
 }
 
-static string lowerCase(string text)
+void lowerCase(std::string &text)
 {
 	char c;
 
-	for (string::size_type i = 0; i < text.size(); ++i)
+	for (std::string::size_type i = 0; i < text.size(); ++i)
 	{
 		c = text[i];
 		if (c >= 'A' && c <= 'Z')
 			text[i] = c | 0x20;
 	}
-	return text;
 }
 
 static string unescNewlines(const string &text)
@@ -184,7 +181,9 @@ bool Config::load(const char *filename)
 	n = 0;
 	if (!file.is_open())
 		return m_loaded;
+	
 	m_domains.clear();
+
 	while (file.good())
 	{
 		line.clear();
@@ -192,16 +191,20 @@ bool Config::load(const char *filename)
 		++n;
 		if (!file.bad() && !file.fail())
 		{
-			line = trimEnd(line);
+			trimEnd(line);
+
 			if (line.empty() || line[0] == '#')
 				continue;
+
 			if (line[0] == '[')
 			{
 				string::size_type i = line.find_first_of(']');
 				if (i != string::npos && i > 1)
 				{
-					domain = upperCase(line.substr(1, i - 1));
-					if (m_domains.find(domain) != m_domains.end())
+					domain = line.substr(1, i - 1);
+					upperCase(domain);
+
+					if (m_domains.count(domain) > 0)
 						domain.clear();
 				}
 			}
@@ -210,7 +213,17 @@ bool Config::load(const char *filename)
 				{
 					string::size_type i = line.find_first_of('=');
 					if (i != string::npos && i > 0)
-						m_domains[domain][lowerCase(trim(line.substr(0, i)))] = unescNewlines(trim(line.substr(i + 1)));
+					{
+						std::string key = line.substr(0, i);
+						std::string value = line.substr(i + 1);
+
+						trim(key);
+						lowerCase(key);
+
+						trim(value);
+
+						m_domains[domain][key] = unescNewlines(value);
+					}
 				}
 		}
 	}
@@ -234,83 +247,126 @@ bool Config::has(const std::string &domain, const std::string &key) const
 {
 	if (domain.empty() || key.empty())
 		return false;
-	DomainMap::const_iterator i = m_domains.find(upperCase(domain));
+	
+	std::string temp_domain = domain;
+	std::string temp_key = key;
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	DomainMap::const_iterator i = m_domains.find(temp_domain);
+
 	if (i == m_domains.end())
 		return false;
-	return i->second.find(lowerCase(key)) != i->second.end();
+
+	return i->second.count(temp_key) > 0;
 }
 
-void Config::setWString(const string &domain, const string &key, const wstringEx &val)
+void Config::__set(const std::string &domain, const std::string & key, const std::string & value)
+{
+	std::string temp_domain = domain;
+	std::string temp_key = key;
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	m_domains[temp_domain][temp_key] = value;
+}
+
+void Config::setWString(const std::string &domain, const string &key, const wstringEx &val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = val.toUTF8();
+
+	__set(domain, key, val.toUTF8());
 }
 
-void Config::setString(const string &domain, const string &key, const string &val)
+void Config::setString(const string &domain, const string &key, const std::string &val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = val;
+
+	__set(domain, key, val);
 }
 
 void Config::setBool(const string &domain, const string &key, bool val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = val ? "yes" : "no";
+
+	__set(domain, key, val ? "yes" : "no");
 }
 
 void Config::setOptBool(const string &domain, const string &key, int val)
 {
 	if (domain.empty() || key.empty())
 		return;
+	
+	const char* value = nullptr;
 	switch (val)
 	{
 		case 0:
-			m_domains[upperCase(domain)][lowerCase(key)] = "no";
+			value = "no";
 			break;
 		case 1:
-			m_domains[upperCase(domain)][lowerCase(key)] = "yes";
+			value = "yes";
 			break;
 		default:
-			m_domains[upperCase(domain)][lowerCase(key)] = "default";
+			value = "default";
 	}
+
+	__set(domain, key, value);
+	
 }
 
 void Config::setInt(const string &domain, const string &key, int val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = sfmt("%i", val);
+
+	__set(domain, key, sfmt("%i", val));
 }
 
 void Config::setFloat(const string &domain, const string &key, float val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = sfmt("%.*g", g_floatPrecision, val);
+
+	__set(domain, key, sfmt("%.*g", g_floatPrecision, val));
 }
 
 void Config::setVector3D(const std::string &domain, const std::string &key, const Vector3D &val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = sfmt("%.*g, %.*g, %.*g", g_floatPrecision, val.x, g_floatPrecision, val.y, g_floatPrecision, val.z);
+
+	__set(domain, key, sfmt("%.*g, %.*g, %.*g", g_floatPrecision, val.x, g_floatPrecision, val.y, g_floatPrecision, val.z));
 }
 
 void Config::setColor(const std::string &domain, const std::string &key, const CColor &val)
 {
 	if (domain.empty() || key.empty())
 		return;
-	m_domains[upperCase(domain)][lowerCase(key)] = sfmt("#%.2X%.2X%.2X%.2X", val.r, val.g, val.b, val.a);
+
+	__set(domain, key, sfmt("#%.2X%.2X%.2X%.2X", val.r, val.g, val.b, val.a));
 }
 
-wstringEx Config::getWString(const string &domain, const string &key, const wstringEx &defVal)
+std::string &Config::__get(const std::string &domain, const std::string & key)
+{
+	std::string temp_domain = domain;
+	std::string temp_key = key;
+
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	return m_domains[temp_domain][temp_key];
+}
+
+wstringEx Config::getWString(const std::string &domain, const std::string &key, const wstringEx &defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+
+	std::string &data = __get(domain, key);
+
 	if (data.empty())
 	{
 		data = defVal.toUTF8();
@@ -325,7 +381,8 @@ string Config::getString(const string &domain, const string &key, const string &
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+	
+	string &data = __get(domain, key);
 	if (data.empty())
 	{
 		data = defVal;
@@ -338,30 +395,45 @@ bool Config::getBool(const string &domain, const string &key, bool defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+	
+	std::string &data = __get(domain, key);
 	if (data.empty())
 	{
 		data = defVal ? "yes" : "no";
 		return defVal;
 	}
-	string s(lowerCase(trim(data)));
-	if (s == "yes" || s == "true" || s == "y" || s == "1")
-		return true;
-	return false;
+
+	trim(data);
+	lowerCase(data);
+
+	return (data == "yes" || data == "true" || data == "y" || data == "1");
 }
 
 bool Config::testOptBool(const string &domain, const string &key, bool defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	KeyMap &km = m_domains[upperCase(domain)];
-	KeyMap::iterator i = km.find(lowerCase(key));
+
+	std::string temp_domain = domain;
+	std::string temp_key = key;
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	KeyMap &km = m_domains[temp_domain];
+	KeyMap::iterator i = km.find(temp_key);
 	if (i == km.end())
 		return defVal;
-	if (lowerCase(trim(i->second)) == "yes")
+
+	std::string result = i->second;
+	trim(result);
+	lowerCase(result);
+
+
+	if (result == "yes")
 		return true;
-	if (lowerCase(trim(i->second)) == "no")
+	else if (result == "no")
 		return false;
+
 	return defVal;
 }
 
@@ -369,7 +441,13 @@ int Config::getOptBool(const string &domain, const string &key, int defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+
+	std::string temp_domain = domain;
+	std::string temp_key = key;
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	std::string &data = m_domains[temp_domain][temp_key];
 	if (data.empty())
 	{
 		switch (defVal)
@@ -385,9 +463,13 @@ int Config::getOptBool(const string &domain, const string &key, int defVal)
 		}
 		return defVal;
 	}
-	if (lowerCase(trim(data)) == "yes")
+
+	trim(data);
+	lowerCase(data);
+
+	if (data == "yes")
 		return 1;
-	if (lowerCase(trim(data)) == "no")
+	else if (data == "no")
 		return 0;
 	return 2;
 }
@@ -396,7 +478,8 @@ int Config::getInt(const string &domain, const string &key, int defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+	
+	string &data = __get(domain, key);
 	if (data.empty())
 	{
 		data = sfmt("%i", defVal);
@@ -409,7 +492,7 @@ float Config::getFloat(const string &domain, const string &key, float defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+	string &data = __get(domain, key);
 	if (data.empty())
 	{
 		data = sfmt("%.*g", g_floatPrecision, defVal);
@@ -422,7 +505,7 @@ Vector3D Config::getVector3D(const std::string &domain, const std::string &key, 
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
+	string &data = __get(domain, key);
 	string::size_type i;
 	string::size_type j = string::npos;
 	i = data.find_first_of(',');
@@ -440,8 +523,17 @@ CColor Config::getColor(const std::string &domain, const std::string &key, const
 {
 	if (domain.empty() || key.empty())
 		return defVal;
-	string &data = m_domains[upperCase(domain)][lowerCase(key)];
-	string text(upperCase(trim(data)));
+
+	std::string temp_key = key;
+	std::string temp_domain = domain;
+	upperCase(temp_domain);
+	lowerCase(temp_key);
+
+	std::string &data = m_domains[temp_domain][temp_key];
+	std::string text = data;
+	trim(text);
+	upperCase(text);
+
 	u32 i = (u32)text.find_first_of('#');
 	if (i != string::npos)
 	{
@@ -455,9 +547,12 @@ CColor Config::getColor(const std::string &domain, const std::string &key, const
 					text[i] -= '0';
 				else
 					text[i] -= 'A' - 10;
+
 			CColor c(text[0] * 0x10 + text[1], text[2] * 0x10 + text[3], text[4] * 0x10 + text[5], 1.f);
+			
 			if (n == 8)
 				c.a = text[6] * 0x10 + text[7];
+			
 			return c;
 		}
 	}

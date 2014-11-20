@@ -176,26 +176,27 @@ private:
 		CItem(const char *itemId, unsigned long idx, unsigned long part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
 		bool operator<(const CItem &i) const;
 	};
+	
 	struct CCover
 	{
-		u32 index_;
-		Vector3D scale_;
-		Vector3D targetScale_;
-		Vector3D angle;
-		Vector3D targetAngle;
-		Vector3D pos;
-		Vector3D targetPos;
-		CColor color_;
-		CColor targetColor_;
-		float txtAngle_;
-		float txtTargetAngle_;
-		Vector3D txtPos;
-		Vector3D txtTargetPos;
-		u8 txtColor_;
-		u8 txtTargetColor_;
-		CText title;
-		CColor shadowColor_;
-		CColor targetShadowColor_;
+		u32			index_;
+		Vector3D	scale_;
+		Vector3D	targetScale_;
+		Vector3D	angle;
+		Vector3D	targetAngle;
+		Vector3D	pos;
+		Vector3D	targetPos;
+		CColor		color_;
+		CColor		targetColor_;
+		float		txtAngle_;
+		float		txtTargetAngle_;
+		Vector3D	txtPos;
+		Vector3D	txtTargetPos;
+		u8			txtColor_;
+		u8			txtTargetColor_;
+		CText		title;
+		CColor		shadowColor_;
+		CColor		targetShadowColor_;
 		// 
 		CCover(void);
 	};

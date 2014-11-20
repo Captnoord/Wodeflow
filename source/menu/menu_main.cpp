@@ -116,13 +116,17 @@ int CMenu::main(void)
 			reload = (wd->btns_h & WPAD_BUTTON_B) != 0;
 			break;
 		}
+
 		if (wd->ir.valid)
 			m_btnMgr.mouse(wd->ir.x - m_cur.width() / 2, wd->ir.y - m_cur.height() / 2);
+
 		++repeatButton;
+		
 		if ((wd->btns_h & WPAD_BUTTON_A) == 0)
 			buttonHeld = (u32)-1;
 		else if (buttonHeld != (u32)-1 && buttonHeld == m_btnMgr.selected() && repeatButton >= 16)
 			padsState |= WPAD_BUTTON_A;
+
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
 			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERAL", "last_cf_mode", 1), m_numCFVersions);
@@ -372,5 +376,5 @@ void CMenu::_initMainMenu(CMenu::SThemeData &theme)
 void CMenu::_textMain(void)
 {
 	m_btnMgr.setText(m_mainBtnInit, _t("main1", L"Settings"));
-	m_btnMgr.setText(m_mainLblInit, _t("main2", L"Welcome to WodeFlow. I have not found any game. Click on Settings to install games."), true);
+	m_btnMgr.setText(m_mainLblInit, _t("main2", L"Welcome to WodeFlow. I have not found any game."), true);
 }

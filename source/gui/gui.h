@@ -28,7 +28,7 @@ class CButtonsMgr
 public:
 	bool init(void);
 	void setRumble(bool enabled) { m_rumbleEnabled = enabled; }
-	void reserve(u32 capacity) { m_elts.reserve(capacity); }
+	void reserve(u32 capacity) { m_elements.reserve(capacity); }
 	u32 addButton(SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color,
 		const SButtonTextureSet &texSet, const SSoundEffect &clickSound = _noSound, const SSoundEffect &hoverSound = _noSound);
 	u32 addLabel(SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, const STexture &bg = _noTexture);
@@ -123,7 +123,7 @@ private:
 		virtual void tick(void);
 	};
 private:
-	std::vector<SmartPtr<SElement> > m_elts;
+	std::vector<SmartPtr<SElement> > m_elements;
 	u32 m_selected;
 	bool m_rumbleEnabled;
 	int m_rumble;

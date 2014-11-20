@@ -255,8 +255,8 @@ void CMenu::_initConfigAdvMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfigAdv(void)
 {
-	m_btnMgr.setText(m_configAdvLblTheme, _t("cfga7", L"Theme"));
-	m_btnMgr.setText(m_configAdvLblLanguage, _t("cfga6", L"Language"));
+	m_btnMgr.setText(m_configAdvLblTheme,	_t("cfga7", L"Theme"));
+	m_btnMgr.setText(m_configAdvLblLanguage,_t("cfga6", L"Language"));
 	m_btnMgr.setText(m_configAdvLblCFTheme, _t("cfgc4", L"Adjust Coverflow"));
 	m_btnMgr.setText(m_configAdvBtnCFTheme, _t("cfgc5", L"Go"));
 	m_btnMgr.setText(m_configAdvLblInstall, _t("cfga2", L"Install game"));

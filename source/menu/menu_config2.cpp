@@ -60,15 +60,19 @@ void CMenu::_showConfig2(void)
 	m_btnMgr.show(m_config2BtnErr2Fix);
 	m_btnMgr.show(m_config2LblOcarina);
 	m_btnMgr.show(m_config2BtnOcarina);
+
 	for (u32 i = 0; i < ARRAY_SIZE(m_config2LblUser); ++i)
+	{
 		if (m_config2LblUser[i] != -1u)
 			m_btnMgr.show(m_config2LblUser[i]);
+	}
+
 	// 
 	int i;
 	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
-	i = min(max(0, m_cfg.getInt(" GENERAL", "video_mode", 0)), (int)ARRAY_SIZE(CMenu::_videoModes) - 1);
+	i = std::min(std::max(0, m_cfg.getInt(" GENERAL", "video_mode", 0)), (int)ARRAY_SIZE(CMenu::_videoModes) - 1);
 	m_btnMgr.setText(m_config2LblVideo, _t(CMenu::_videoModes[i].id, CMenu::_videoModes[i].text));
-	i = min(max(0, m_cfg.getInt(" GENERAL", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
+	i = std::min(std::max(0, m_cfg.getInt(" GENERAL", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
 	m_btnMgr.setText(m_config2LblLanguage, _t(CMenu::_languages[i].id, CMenu::_languages[i].text));
 	m_btnMgr.setText(m_config2BtnErr2Fix, m_cfg.getBool(" GENERAL", "error_002_fix", true) ? _t("on", L"On") : _t("off", L"Off"));
 	m_btnMgr.setText(m_config2BtnOcarina, m_cfg.getBool(" GENERAL", "cheat") ? _t("on", L"On") : _t("off", L"Off"));
@@ -78,7 +82,6 @@ int CMenu::_config2(void)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
 	int nextPage = 0;
 
 	_showConfig2();
@@ -87,7 +90,7 @@ int CMenu::_config2(void)
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		_btnRepeat(wd->btns_h);
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)

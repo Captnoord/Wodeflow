@@ -83,9 +83,9 @@ void CMenu::init(bool fromHBC)
 {
 	string themeName;
 	const char *drive = "sd";
-	const char *defaultLanguage;
 
-	string appdir = APPDATA_DIR;
+	std::string defaultLanguage;
+	std::string appdir = APPDATA_DIR;
 
 	m_noHBC = !fromHBC;
 	m_waitMessage.fromPNG(wait_png);
@@ -174,6 +174,7 @@ void CMenu::init(bool fromHBC)
 	}
 	if (CONF_GetArea() == CONF_AREA_BRA)
 		defaultLanguage = "BRAZILIAN";
+
 	m_curLanguage = m_cfg.getString(" GENERAL", "language", defaultLanguage);
 	// 
 	m_aa = 3;
@@ -274,10 +275,10 @@ void CMenu::_loadCFCfg()
 			m_theme.getInt(domain, "font_line_height", 32));
 	m_cf.setFont(font, m_theme.getColor(domain, "font_color", CColor(0xFFFFFFFF)));
 	// 
-	m_numCFVersions = min(max(2, m_theme.getInt("_COVERFLOW", "number_of_modes", 2)), 8);
+	m_numCFVersions = std::min(std::max(2, m_theme.getInt("_COVERFLOW", "number_of_modes", 2)), 8);
 	for (u32 i = 1; i <= m_numCFVersions; ++i)
 		_loadCFLayout(i);
-	_loadCFLayout(min(max(1, m_cfg.getInt(" GENERAL", "last_cf_mode", 1)), (int)m_numCFVersions));
+	_loadCFLayout(std::min(std::max(1, m_cfg.getInt(" GENERAL", "last_cf_mode", 1)), (int)m_numCFVersions));
 }
 
 Vector3D CMenu::_getCFV3D(const string &domain, const string &key, const Vector3D &def, bool otherScrnFmt)
@@ -587,10 +588,10 @@ SFont CMenu::_font(CMenu::FontSet &fontSet, const char *domain, const char *key,
 				filename[c] |= 0x20;
 		fontSizeKey = key;
 		fontSizeKey += "_size";
-		fontSize = min(max(6u, (u32)m_theme.getInt(domain, fontSizeKey)), 300u);
+		fontSize = std::min(std::max(6u, (u32)m_theme.getInt(domain, fontSizeKey)), 300u);
 		lineSpacingKey = key;
 		lineSpacingKey += "_line_height";
-		lineSpacing = min(max(6u, (u32)m_theme.getInt(domain, lineSpacingKey)), 300u);
+		lineSpacing = std::min(std::max(6u, (u32)m_theme.getInt(domain, lineSpacingKey)), 300u);
 		if (!filename.empty())
 		{
 			// Try to find the same font with the same size
@@ -735,17 +736,22 @@ u32 CMenu::_addPicButton(CMenu::SThemeData &theme, const char *domain, STexture 
 	return m_btnMgr.addPicButton(tex1, tex2, x, y, width, height, clickSound, hoverSound);
 }
 
+u32 CMenu::_addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, menu::rect rect, const CColor &color, u16 style)
+{
+	return _addLabel(theme, domain, font, text, rect.x_, rect.y_, rect.width_, rect.height_, color, style);
+}
+
 u32 CMenu::_addLabel(CMenu::SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style)
 {
 	CColor c(color);
 
-	c = m_theme.getColor(domain, "color", c);
-	x = m_theme.getInt(domain, "x", x);
-	y = m_theme.getInt(domain, "y", y);
-	width = m_theme.getInt(domain, "width", width);
-	height = m_theme.getInt(domain, "height", height);
-	font = _font(theme.fontSet, domain, "font", font);
-	style = _textStyle(domain, "style", style);
+	c		= m_theme.getColor(domain, "color", c);
+	x		= m_theme.getInt(domain, "x", x);
+	y		= m_theme.getInt(domain, "y", y);
+	width	= m_theme.getInt(domain, "width", width);
+	height	= m_theme.getInt(domain, "height", height);
+	font	= _font(theme.fontSet, domain, "font", font);
+	style	= _textStyle(domain, "style", style);
 	return m_btnMgr.addLabel(font, text, x, y, width, height, c, style);
 }
 
@@ -1042,7 +1048,10 @@ void CMenu::_drawBg(void)
 	GX_SetZMode(GX_DISABLE, GX_ALWAYS, GX_FALSE);
 	guMtxIdentity(modelViewMtx);
 	GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
-	if (!m_curBg.data.get()) return;
+	
+	if (!m_curBg.data.get())
+		return;
+
 	GX_InitTexObj(&texObj, m_curBg.data.get(), m_curBg.width, m_curBg.height, m_curBg.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 	GX_LoadTexObj(&texObj, GX_TEXMAP0);
 	GX_Begin(GX_QUADS, GX_VTXFMT0, 4);

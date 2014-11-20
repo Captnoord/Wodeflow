@@ -17,8 +17,6 @@
 
 #include "lockMutex.h"
 
-using namespace std;
-
 extern const u8 dvdskin_png[];
 extern const u8 dvdskin_red_png[];
 extern const u8 dvdskin_black_png[];
@@ -34,39 +32,55 @@ static inline int loopNum(int i, int s)
 	return i < 0 ? (s - (-i % s)) % s : i % s;
 }
 
+static inline wchar_t upperCaseWChar(wchar_t c)
+{
+	return c >= L'a' && c <= L'z' ? c & 0x00DF : c;
+}
+
 CCoverFlow::CCover::CCover(void)
-	:index_(0)
-	,txtAngle_(0.f)
-	,txtTargetAngle_(0.f)
-	,txtColor_(0)
+	:index_			(0)
+	,scale_			(1.f, 1.f, 1.f)
+	,targetScale_	(1.f, 1.f, 1.f)
+	,angle			(0.f, 0.f, 0.f) // was not in constructor
+	,targetAngle	(0.f, 0.f, 0.f) // was not in constructor
+	,pos			(0.f, 0.f, 0.f) // was not in constructor
+	,targetPos		(0.f, 0.f, 0.f) // was not in constructor
+	,color_			(0x00FFFFFF)
+	,targetColor_	(0xFFFFFFFF)
+	,txtAngle_		(0.f)
+	,txtTargetAngle_(0)
+	,txtPos			(0.f, 0.f, 0.f) // was not in constructor
+	,txtTargetPos	(0.f, 0.f, 0.f) // was not in constructor
+	,txtColor_		(0)
 	,txtTargetColor_(0)
-	,color_(0x00FFFFFF)
-	,targetColor_(0xFFFFFFFF)
-	,shadowColor_(0x00000000)
+	,title()
+	,shadowColor_	(0x00000000)
 	,targetShadowColor_(0x00000000)
-	,scale_(1.f, 1.f, 1.f)
-	,targetScale_(1.f, 1.f, 1.f)
 {
 }
 
-CCoverFlow::CItem::CItem(const char *itemId, unsigned long game_idx, unsigned long game_part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type) :
-	id(itemId),
-	game_idx(game_idx),
-	game_part(game_part),
-	title(itemTitle),
-	picPath(itemPic),
-	boxPicPath(itemBoxPic),
-	playcount(playcount),
-	type(type)
+CCoverFlow::CItem::CItem(
+		const char *	itemId,
+		unsigned long	game_idx,
+		unsigned long	game_part,
+		const wchar_t *	itemTitle,
+		const char *	itemPic,
+		const char *	itemBoxPic,
+		int				playcount,
+		int				type)
+	:id(itemId)
+	,game_idx(game_idx)
+	,game_part(game_part)
+	,title(itemTitle)
+	,picPath(itemPic)
+	,boxPicPath(itemBoxPic)
+	,playcount(playcount)
+	,type(type)
 {
 	state = CCoverFlow::STATE_Loading;
 	boxTexture = false;
 }
 
-static inline wchar_t upperCaseWChar(wchar_t c)
-{
-	return c >= L'a' && c <= L'z' ? c & 0x00DF : c;
-}
 
 bool CCoverFlow::CItem::operator<(const CCoverFlow::CItem &i) const
 {
@@ -246,7 +260,7 @@ void CCoverFlow::setCachePath(const char *path, bool deleteSource, bool compress
 
 void CCoverFlow::setTextureQuality(float lodBias, int aniso, bool edgeLOD)
 {
-	m_lodBias = min(max(-3.f, lodBias), 1.f);
+	m_lodBias = std::min(std::max(-3.f, lodBias), 1.f);
 	switch (aniso)
 	{
 		case 1:
@@ -270,10 +284,10 @@ void CCoverFlow::setBufferSize(u32 numCovers)
 {
 	if (!m_covers.empty())
 		return;
-	m_numBufCovers = min(max(3u, numCovers / 2u), 400u);
+	m_numBufCovers = std::min(std::max(3u, numCovers / 2u), 400u);
 }
 
-void CCoverFlow::setTextures(const string &loadingPic, const string &loadingPicFlat, const string &noCoverPic, const string &noCoverPicFlat)
+void CCoverFlow::setTextures(const std::string &loadingPic, const std::string &loadingPicFlat, const std::string &noCoverPic, const std::string &noCoverPicFlat)
 {
 	if (!m_covers.empty())
 		return;
@@ -296,13 +310,16 @@ void CCoverFlow::setFont(SFont font, const CColor &color)
 	}
 }
 
-void CCoverFlow::_transposeCover(vector<CCoverFlow::CCover> &dst, u32 rows, u32 columns, int pos)
+void CCoverFlow::_transposeCover(std::vector<CCoverFlow::CCover> &dst, u32 rows, u32 columns, int pos)
 {
 	int i = pos - (int)(rows * columns / 2);
 	int j = rows >= 3 ? abs(i) - ((abs(i) + (int)rows / 2) / (int)rows) * 2 : abs(i);
+	
 	if (m_rows >= 3)
 		j += ((j + ((int)m_rows - 2) / 2) / ((int)m_rows - 2)) * 2;
+
 	int k = m_range / 2 + (i < 0 ? -j : j);
+
 	if ((u32)k < m_range)
 		dst[pos] = m_covers[k];
 }
@@ -311,24 +328,36 @@ void CCoverFlow::setRange(u32 rows, u32 columns)
 {
 	u32 range;
 
-	rows = rows < 3u ? 1u : min(rows | 1u, 9u) + 2u;
-	columns = min(max(3u, columns | 1u), 21u) + 2u;
+	rows = rows < 3u ? 1u : std::min(rows | 1u, 9u) + 2u;
+	columns = std::min(std::max(3u, columns | 1u), 21u) + 2u;
 	range = rows * columns;
 	if (rows == m_rows && columns == m_columns && range == m_range)
 		return;
+
 	if (!m_covers.empty())
 	{
 		stopPicLoader();
-		vector<CCoverFlow::CCover> tmpCovers;
+		std::vector<CCoverFlow::CCover> tmpCovers;
 		tmpCovers.resize(range);
 		if (rows >= 3)
+		{
 			for (u32 x = 0; x < columns; ++x)
+			{
 				for (u32 y = 1; y < rows - 1; ++y)
+				{
 					_transposeCover(tmpCovers, rows, columns, x * rows + y);
+				}
+			}
+		}
+
 		else
+		{
 			for (u32 x = 0; x < range; ++x)
+			{
 				_transposeCover(tmpCovers, rows, columns, x);
-		swap(tmpCovers, m_covers);
+			}
+		}
+		std::swap(tmpCovers, m_covers);
 		m_rows = rows;
 		m_columns = columns;
 		m_range = range;
@@ -516,12 +545,12 @@ void CCoverFlow::setBlur(u32 blurResolution, u32 blurRadius, float blurFactor)
 	static const struct { u32 x; u32 y; } blurRes[] = {
 		{ 64, 48 }, { 96, 72 }, { 128, 96 }, { 192, 144 }
 	};
-	u32 i = min(max(0u, blurResolution), sizeof blurRes / sizeof blurRes[0] - 1u);
+	u32 i = std::min(std::max(0u, blurResolution), sizeof blurRes / sizeof blurRes[0] - 1u);
 	m_effectTex.width = blurRes[i].x;
 	m_effectTex.height = blurRes[i].y;
 	m_effectTex.data.release();
-	m_blurRadius = min(max(1u, blurRadius), 3u);
-	m_blurFactor = min(max(1.f, blurFactor), 2.f);
+	m_blurRadius = std::min(std::max(1u, blurRadius), 3u);
+	m_blurFactor = std::min(std::max(1.f, blurFactor), 2.f);
 }
 
 void CCoverFlow::setSounds(const SSoundEffect &sound, const SSoundEffect &hoverSound, const SSoundEffect &selectSound, const SSoundEffect &cancelSound)
@@ -1343,7 +1372,7 @@ void CCoverFlow::_loadCover(int i, int item)
 	m_covers[i].title.setText(m_font, m_items[item].title);
 }
 
-string CCoverFlow::getId(void) const
+std::string CCoverFlow::getId(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return "";
@@ -1371,7 +1400,7 @@ int CCoverFlow::getType(void) const
 	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump, m_items.size())].type;
 }
 
-string CCoverFlow::getNextId(void) const
+std::string CCoverFlow::getNextId(void) const
 {
 	if (m_covers.empty() || m_items.empty())
 		return "";
@@ -1392,7 +1421,7 @@ int CCoverFlow::getNextType(void) const
 	return m_items[loopNum(m_covers[m_range / 2].index_ + m_jump + 1, m_items.size())].type;
 }
 
-string CCoverFlow::getTitle(void) const
+std::string CCoverFlow::getTitle(void) const
 {
 	if (m_covers.empty())
 		return "";
@@ -1472,7 +1501,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		}
 		else
 		{
-			u8 a = (x - 1) * 0xFF / max(1, hcenter - 2);
+			u8 a = (x - 1) * 0xFF / std::max(1, hcenter - 2);
 			cvr.targetColor_ = CColor::interpolate(lo.endColor, lo.begColor, a);
 			cvr.targetShadowColor_ = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
 		}
@@ -1495,7 +1524,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		}
 		else
 		{
-			u8 a = (m_columns - x - 2) * 0xFF / max(1, hcenter - 2);
+			u8 a = (m_columns - x - 2) * 0xFF / std::max(1, hcenter - 2);
 			cvr.targetColor_ = CColor::interpolate(lo.endColor, lo.begColor, a);
 			cvr.targetShadowColor_ = CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a);
 		}
@@ -1550,7 +1579,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		}
 		else
 		{
-			u8 a = (y - 1) * 0xFF / max(1, vcenter - 2);
+			u8 a = (y - 1) * 0xFF / std::max(1, vcenter - 2);
 			CColor c1(CColor::interpolate(lo.endColor, lo.begColor, a));
 			cvr.targetColor_ = CColor::interpolate(c1, cvr.targetColor_, 0x7F);
 			CColor c2(CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a));
@@ -1570,7 +1599,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 		}
 		else
 		{
-			u8 a = (m_rows - y - 2) * 0xFF / max(1, vcenter - 2);
+			u8 a = (m_rows - y - 2) * 0xFF / std::max(1, vcenter - 2);
 			CColor c1(CColor::interpolate(lo.endColor, lo.begColor, a));
 			cvr.targetColor_ = CColor::interpolate(c1, cvr.targetColor_, 0x7F);
 			CColor c2(CColor::interpolate(lo.shadowColorEnd, lo.shadowColorBeg, a));
@@ -1857,7 +1886,7 @@ bool CCoverFlow::mouseOver(CVideo &vid, int x, int y)
 bool CCoverFlow::findId(const char *id, bool instant)
 {
 	LockMutex lock(m_mutex);
-	string strId(id);
+	std::string strId(id);
 	u32 i;
 	int j;
 	u32 curPos = _currentPos();
@@ -1896,7 +1925,7 @@ void CCoverFlow::pageUp(void)
 		return;
 	if (m_rows >= 3)
 	{
-		j = m_jump - max(1, (int)m_columns - 2);
+		j = m_jump - std::max(1, (int)m_columns - 2);
 		if (m_jump != 0)
 		{
 			n = ((int)m_items.size() - 1) / (m_rows - 2) + 1;
@@ -1906,7 +1935,7 @@ void CCoverFlow::pageUp(void)
 	}
 	else
 	{
-		j = m_jump - max(1, (int)m_range / 2);
+		j = m_jump - std::max(1, (int)m_range / 2);
 		if (m_jump != 0)
 		{
 			n = (int)m_items.size();
@@ -1925,7 +1954,7 @@ void CCoverFlow::pageDown(void)
 		return;
 	if (m_rows >= 3)
 	{
-		j = m_jump + max(1, (int)m_columns - 2);
+		j = m_jump + std::max(1, (int)m_columns - 2);
 		if (m_jump != 0)
 		{
 			n = ((int)m_items.size() - 1) / (m_rows - 2) + 1;
@@ -1935,7 +1964,7 @@ void CCoverFlow::pageDown(void)
 	}
 	else
 	{
-		j = m_jump + max(1, (int)m_range / 2);
+		j = m_jump + std::max(1, (int)m_range / 2);
 		if (m_jump != 0)
 		{
 			n = (int)m_items.size();

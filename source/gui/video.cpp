@@ -56,12 +56,23 @@ const int CVideo::_stencilWidth = 128;
 const int CVideo::_stencilHeight = 128;
 
 CVideo::CVideo(void) :
-	m_rmode(NULL), m_frameBuf(), m_curFB(0), m_fifo(NULL),
-	m_yScale(0.0f), m_xfbHeight(0), m_wide(false),
-	m_width2D(640), m_height2D(480), m_x2D(0), m_y2D(0), m_aa(0), m_aaAlpha(false),
-	m_aaWidth(0), m_aaHeight(0)
+	m_rmode(NULL),
+	m_frameBuf(),
+	m_curFB(0),
+	m_fifo(NULL),
+	m_yScale(0.0f),
+	m_xfbHeight(0),
+	m_wide(false),
+	m_width2D(640),
+	m_height2D(480),
+	m_x2D(0),
+	m_y2D(0),
+	m_aa(0),
+	m_aaAlpha(false),
+	m_aaWidth(0),
+	m_aaHeight(0)
 {
-	memset(m_frameBuf, 0, sizeof m_frameBuf);
+	memset(m_frameBuf, 0, sizeof(m_frameBuf));
 }
 
 CVideo::~CVideo(void)

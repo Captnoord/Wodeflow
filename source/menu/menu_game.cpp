@@ -393,4 +393,3 @@ void CMenu::_textGame(void)
 	m_btnMgr.setText(m_gameBtnPlay, _t("gm1", L"Play"));
 	m_btnMgr.setText(m_gameBtnBack, _t("gm2", L"Back"));
 }
-

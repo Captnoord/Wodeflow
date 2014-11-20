@@ -31,9 +31,12 @@ void CMenu::_hideConfig3(bool instant)
 	m_btnMgr.hide(m_config3LblTVYVal, instant);
 	m_btnMgr.hide(m_config3BtnTVYM, instant);
 	m_btnMgr.hide(m_config3BtnTVYP, instant);
-	for (u32 i = 0; i < ARRAY_SIZE(m_config3LblUser); ++i)
+	
+	for (unsigned int i = 0; i < ARRAY_SIZE(m_config3LblUser); ++i)
+	{
 		if (m_config3LblUser[i] != -1u)
 			m_btnMgr.hide(m_config3LblUser[i], instant);
+	}
 }
 
 void CMenu::_showConfig3(void)
@@ -62,8 +65,11 @@ void CMenu::_showConfig3(void)
 	m_btnMgr.show(m_config3BtnTVYM);
 	m_btnMgr.show(m_config3BtnTVYP);
 	for (u32 i = 0; i < ARRAY_SIZE(m_config3LblUser); ++i)
+	{
 		if (m_config3LblUser[i] != -1u)
 			m_btnMgr.show(m_config3LblUser[i]);
+	}
+
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
 	m_btnMgr.setText(m_config3LblTVWidthVal, wfmt(L"%i", 640 * 640 / max(1, m_cfg.getInt(" GENERAL", "tv_width", 640))));
@@ -78,7 +84,7 @@ int CMenu::_config3(void)
 {
 	s32 padsState;
 	WPADData *wd;
-	u32 btn;
+	//u32 btn;
 	int nextPage = 0;
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;
@@ -89,7 +95,8 @@ int CMenu::_config3(void)
 		WPAD_ScanPads();
 		padsState = WPAD_ButtonsDown(0);
 		wd = WPAD_Data(0);
-		btn = _btnRepeat(wd->btns_h);
+		//btn = 
+		_btnRepeat(wd->btns_h);
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
 		if (wd->ir.valid)
@@ -135,13 +142,13 @@ int CMenu::_config3(void)
 				else if (m_btnMgr.selected() == m_config3BtnTVXM || m_btnMgr.selected() == m_config3BtnTVYP)
 					step = 1;
 				if (m_btnMgr.selected() == m_config3BtnTVWidthM || m_btnMgr.selected() == m_config3BtnTVWidthP)
-					m_cfg.setInt(" GENERAL", "tv_width", min(max(512, m_cfg.getInt(" GENERAL", "tv_width", 640) + step), 800));
+					m_cfg.setInt(" GENERAL", "tv_width", std::min(std::max(512, m_cfg.getInt(" GENERAL", "tv_width", 640) + step), 800));
 				else if (m_btnMgr.selected() == m_config3BtnTVHeightM || m_btnMgr.selected() == m_config3BtnTVHeightP)
-					m_cfg.setInt(" GENERAL", "tv_height", min(max(384, m_cfg.getInt(" GENERAL", "tv_height", 480) + step), 600));
+					m_cfg.setInt(" GENERAL", "tv_height", std::min(std::max(384, m_cfg.getInt(" GENERAL", "tv_height", 480) + step), 600));
 				else if (m_btnMgr.selected() == m_config3BtnTVXP || m_btnMgr.selected() == m_config3BtnTVXM)
-					m_cfg.setInt(" GENERAL", "tv_x", min(max(-50, m_cfg.getInt(" GENERAL", "tv_x", 0) + step), 50));
+					m_cfg.setInt(" GENERAL", "tv_x", std::min(std::max(-50, m_cfg.getInt(" GENERAL", "tv_x", 0) + step), 50));
 				else if (m_btnMgr.selected() == m_config3BtnTVYP || m_btnMgr.selected() == m_config3BtnTVYM)
-					m_cfg.setInt(" GENERAL", "tv_y", min(max(-30, m_cfg.getInt(" GENERAL", "tv_y", 0) + step), 30));
+					m_cfg.setInt(" GENERAL", "tv_y", std::min(std::max(-30, m_cfg.getInt(" GENERAL", "tv_y", 0) + step), 30));
 				_showConfig3();
 				m_vid.set2DViewport(m_cfg.getInt(" GENERAL", "tv_width", 640), m_cfg.getInt(" GENERAL", "tv_height", 480), m_cfg.getInt(" GENERAL", "tv_x", 0), m_cfg.getInt(" GENERAL", "tv_y", 0));
 				if (buttonHeld != m_btnMgr.selected())
@@ -160,23 +167,24 @@ int CMenu::_config3(void)
 void CMenu::_initConfig3Menu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_config3LblUser, ARRAY_SIZE(m_config3LblUser), "CONFIG3");
-	m_config3Bg = _texture(theme.texSet, "CONFIG3/BG", "texture", theme.bg);
-	m_config3LblTVWidth = _addLabel(theme, "CONFIG3/TVWIDTH", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config3LblTVWidthVal = _addLabel(theme, "CONFIG3/TVWIDTH_BTN", theme.btnFont, L"", 426, 130, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
-	m_config3BtnTVWidthM = _addPicButton(theme, "CONFIG3/TVWIDTH_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 130, 56, 56);
-	m_config3BtnTVWidthP = _addPicButton(theme, "CONFIG3/TVWIDTH_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 130, 56, 56);
-	m_config3LblTVHeight = _addLabel(theme, "CONFIG3/TVHEIGHT", theme.lblFont, L"", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+
+	m_config3Bg				= _texture(theme.texSet, "CONFIG3/BG", "texture", theme.bg);
+	m_config3LblTVWidth		= _addLabel(theme, "CONFIG3/TVWIDTH", theme.lblFont, L"",     40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config3LblTVWidthVal	= _addLabel(theme, "CONFIG3/TVWIDTH_BTN", theme.btnFont, L"", 426, 130, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_config3BtnTVWidthM	= _addPicButton(theme, "CONFIG3/TVWIDTH_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 130, 56, 56);
+	m_config3BtnTVWidthP	= _addPicButton(theme, "CONFIG3/TVWIDTH_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 130, 56, 56);
+	m_config3LblTVHeight	= _addLabel(theme, "CONFIG3/TVHEIGHT", theme.lblFont, L"",     40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
 	m_config3LblTVHeightVal = _addLabel(theme, "CONFIG3/TVHEIGHT_BTN", theme.btnFont, L"", 426, 190, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
-	m_config3BtnTVHeightM = _addPicButton(theme, "CONFIG3/TVHEIGHT_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 190, 56, 56);
-	m_config3BtnTVHeightP = _addPicButton(theme, "CONFIG3/TVHEIGHT_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 190, 56, 56);
-	m_config3LblTVX = _addLabel(theme, "CONFIG3/TVX", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config3LblTVXVal = _addLabel(theme, "CONFIG3/TVX_BTN", theme.btnFont, L"", 426, 250, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
-	m_config3BtnTVXM = _addPicButton(theme, "CONFIG3/TVX_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 250, 56, 56);
-	m_config3BtnTVXP = _addPicButton(theme, "CONFIG3/TVX_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 250, 56, 56);
-	m_config3LblTVY = _addLabel(theme, "CONFIG3/TVY", theme.lblFont, L"", 40, 310, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config3LblTVYVal = _addLabel(theme, "CONFIG3/TVY_BTN", theme.btnFont, L"", 426, 310, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
-	m_config3BtnTVYM = _addPicButton(theme, "CONFIG3/TVY_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 310, 56, 56);
-	m_config3BtnTVYP = _addPicButton(theme, "CONFIG3/TVY_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 310, 56, 56);
+	m_config3BtnTVHeightM	= _addPicButton(theme, "CONFIG3/TVHEIGHT_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 190, 56, 56);
+	m_config3BtnTVHeightP	= _addPicButton(theme, "CONFIG3/TVHEIGHT_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 190, 56, 56);
+	m_config3LblTVX			= _addLabel(theme, "CONFIG3/TVX", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config3LblTVXVal		= _addLabel(theme, "CONFIG3/TVX_BTN", theme.btnFont, L"", 426, 250, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_config3BtnTVXM		= _addPicButton(theme, "CONFIG3/TVX_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 250, 56, 56);
+	m_config3BtnTVXP		= _addPicButton(theme, "CONFIG3/TVX_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 250, 56, 56);
+	m_config3LblTVY			= _addLabel(theme, "CONFIG3/TVY", theme.lblFont, L"", 40, 310, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config3LblTVYVal		= _addLabel(theme, "CONFIG3/TVY_BTN", theme.btnFont, L"", 426, 310, 118, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_config3BtnTVYM		= _addPicButton(theme, "CONFIG3/TVY_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 370, 310, 56, 56);
+	m_config3BtnTVYP		= _addPicButton(theme, "CONFIG3/TVY_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 310, 56, 56);
 	// 
 	_setHideAnim(m_config3LblTVWidth, "CONFIG3/TVWIDTH", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_config3LblTVWidthVal, "CONFIG3/TVWIDTH_BTN", 0, 0, 1.f, -1.f);
