@@ -36,8 +36,8 @@ private:
 	struct SWord
 	{
 		wstringEx text;
-		Vector3D pos;
-		Vector3D targetPos;
+		vec3 pos;
+		vec3 targetPos;
 	};
 private:
 	typedef std::vector<SWord> CLine;

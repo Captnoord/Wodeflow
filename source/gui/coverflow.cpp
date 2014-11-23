@@ -96,30 +96,30 @@ bool CCoverFlow::CItem::operator<(const CCoverFlow::CItem &i) const
 
 CCoverFlow::CCoverFlow(void)
 {
-	m_loNormal.camera = Vector3D(0.f, 1.5f, 5.f);
-	m_loNormal.cameraAim = Vector3D(0.f, 0.f, -1.f);
-	m_loNormal.leftScale = Vector3D(1.f, 1.f, 1.f);
-	m_loNormal.rightScale = Vector3D(1.f, 1.f, 1.f);
-	m_loNormal.centerScale = Vector3D(1.f, 1.f, 1.f);
-	m_loNormal.rowCenterScale = Vector3D(1.f, 1.f, 1.f);
-	m_loNormal.leftPos = Vector3D(-1.6f, 0.f, 0.f);
-	m_loNormal.rightPos = Vector3D(1.6f, 0.f, 0.f);
-	m_loNormal.centerPos = Vector3D(0.f, 0.f, 1.f);
-	m_loNormal.rowCenterPos = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.leftAngle = Vector3D(0.f, 70.f, 0.f);
-	m_loNormal.rightAngle = Vector3D(0.f, -70.f, 0.f);
-	m_loNormal.centerAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.rowCenterAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.leftSpacer = Vector3D(-0.35f, 0.f, 0.f);
-	m_loNormal.rightSpacer = Vector3D(0.35f, 0.f, 0.f);
-	m_loNormal.leftDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.rightDeltaAngle = Vector3D(0.f, 0.f, 0.f);
+	m_loNormal.camera = vec3(0.f, 1.5f, 5.f);
+	m_loNormal.cameraAim = vec3(0.f, 0.f, -1.f);
+	m_loNormal.leftScale = vec3(1.f, 1.f, 1.f);
+	m_loNormal.rightScale = vec3(1.f, 1.f, 1.f);
+	m_loNormal.centerScale = vec3(1.f, 1.f, 1.f);
+	m_loNormal.rowCenterScale = vec3(1.f, 1.f, 1.f);
+	m_loNormal.leftPos = vec3(-1.6f, 0.f, 0.f);
+	m_loNormal.rightPos = vec3(1.6f, 0.f, 0.f);
+	m_loNormal.centerPos = vec3(0.f, 0.f, 1.f);
+	m_loNormal.rowCenterPos = vec3(0.f, 0.f, 0.f);
+	m_loNormal.leftAngle = vec3(0.f, 70.f, 0.f);
+	m_loNormal.rightAngle = vec3(0.f, -70.f, 0.f);
+	m_loNormal.centerAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.rowCenterAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.leftSpacer = vec3(-0.35f, 0.f, 0.f);
+	m_loNormal.rightSpacer = vec3(0.35f, 0.f, 0.f);
+	m_loNormal.leftDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.rightDeltaAngle = vec3(0.f, 0.f, 0.f);
 	m_loNormal.txtLeftAngle = -55.f;
 	m_loNormal.txtRightAngle = 55.f;
 	m_loNormal.txtCenterAngle = 0.f;
-	m_loNormal.txtLeftPos = Vector3D(-4.f, 0.f, 1.3f);
-	m_loNormal.txtRightPos = Vector3D(4.f, 0.f, 1.3f);
-	m_loNormal.txtCenterPos = Vector3D(0.f, 0.f, 2.6f);
+	m_loNormal.txtLeftPos = vec3(-4.f, 0.f, 1.3f);
+	m_loNormal.txtRightPos = vec3(4.f, 0.f, 1.3f);
+	m_loNormal.txtCenterPos = vec3(0.f, 0.f, 2.6f);
 	m_loNormal.txtSideWidth = 500.f;
 	m_loNormal.txtCenterWidth = 500.f;
 	m_loNormal.txtSideStyle = FTGX_ALIGN_BOTTOM | FTGX_JUSTIFY_CENTER;
@@ -131,37 +131,37 @@ CCoverFlow::CCoverFlow(void)
 	m_loNormal.shadowColorEnd = CColor(0x00000000);
 	m_loNormal.shadowColorBeg = CColor(0x00000000);
 	m_loNormal.shadowColorOff = CColor(0x00000000);
-	m_loNormal.topSpacer = Vector3D(0.f, 2.f, 0.f);
-	m_loNormal.bottomSpacer = Vector3D(0.f, -2.f, 0.f);
-	m_loNormal.topDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.bottomDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.topAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loNormal.bottomAngle = Vector3D(0.f, 0.f, 0.f);
+	m_loNormal.topSpacer = vec3(0.f, 2.f, 0.f);
+	m_loNormal.bottomSpacer = vec3(0.f, -2.f, 0.f);
+	m_loNormal.topDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.bottomDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.topAngle = vec3(0.f, 0.f, 0.f);
+	m_loNormal.bottomAngle = vec3(0.f, 0.f, 0.f);
 	// 
-	m_loSelected.camera = Vector3D(0.f, 1.5f, 5.f);
-	m_loSelected.cameraAim = Vector3D(0.f, 0.f, -1.f);
-	m_loSelected.leftScale = Vector3D(1.f, 1.f, 1.f);
-	m_loSelected.rightScale = Vector3D(1.f, 1.f, 1.f);
-	m_loSelected.centerScale = Vector3D(1.f, 1.f, 1.f);
-	m_loSelected.rowCenterScale = Vector3D(1.f, 1.f, 1.f);
-	m_loSelected.leftPos = Vector3D(-4.6f, 2.f, 0.f);
-	m_loSelected.rightPos = Vector3D(4.6f, 2.f, 0.f);
-	m_loSelected.centerPos = Vector3D(-0.6f, 0.f, 2.6f);
-	m_loSelected.rowCenterPos = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.leftAngle = Vector3D(-45.f, 90.f, 0.f);
-	m_loSelected.rightAngle = Vector3D(-45.f, -90.f, 0.f);
-	m_loSelected.centerAngle = Vector3D(0.f, 380.f, 0.f);
-	m_loSelected.rowCenterAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.leftSpacer = Vector3D(-0.35f, 0.f, 0.f);
-	m_loSelected.rightSpacer = Vector3D(0.35f, 0.f, 0.f);
-	m_loSelected.leftDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.rightDeltaAngle = Vector3D(0.f, 0.f, 0.f);
+	m_loSelected.camera = vec3(0.f, 1.5f, 5.f);
+	m_loSelected.cameraAim = vec3(0.f, 0.f, -1.f);
+	m_loSelected.leftScale = vec3(1.f, 1.f, 1.f);
+	m_loSelected.rightScale = vec3(1.f, 1.f, 1.f);
+	m_loSelected.centerScale = vec3(1.f, 1.f, 1.f);
+	m_loSelected.rowCenterScale = vec3(1.f, 1.f, 1.f);
+	m_loSelected.leftPos = vec3(-4.6f, 2.f, 0.f);
+	m_loSelected.rightPos = vec3(4.6f, 2.f, 0.f);
+	m_loSelected.centerPos = vec3(-0.6f, 0.f, 2.6f);
+	m_loSelected.rowCenterPos = vec3(0.f, 0.f, 0.f);
+	m_loSelected.leftAngle = vec3(-45.f, 90.f, 0.f);
+	m_loSelected.rightAngle = vec3(-45.f, -90.f, 0.f);
+	m_loSelected.centerAngle = vec3(0.f, 380.f, 0.f);
+	m_loSelected.rowCenterAngle = vec3(0.f, 0.f, 0.f);
+	m_loSelected.leftSpacer = vec3(-0.35f, 0.f, 0.f);
+	m_loSelected.rightSpacer = vec3(0.35f, 0.f, 0.f);
+	m_loSelected.leftDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loSelected.rightDeltaAngle = vec3(0.f, 0.f, 0.f);
 	m_loSelected.txtLeftAngle = -55.f;
 	m_loSelected.txtRightAngle = 55.f;
 	m_loSelected.txtCenterAngle = 0.f;
-	m_loSelected.txtLeftPos = Vector3D(-4.35f, 0.f, 1.3f);
-	m_loSelected.txtRightPos = Vector3D(4.35f, 0.f, 1.3f);
-	m_loSelected.txtCenterPos = Vector3D(2.3f, 1.8f, 1.f);
+	m_loSelected.txtLeftPos = vec3(-4.35f, 0.f, 1.3f);
+	m_loSelected.txtRightPos = vec3(4.35f, 0.f, 1.3f);
+	m_loSelected.txtCenterPos = vec3(2.3f, 1.8f, 1.f);
 	m_loSelected.txtSideWidth = 500.f;
 	m_loSelected.txtCenterWidth =  310.f;
 	m_loSelected.txtSideStyle = FTGX_ALIGN_BOTTOM | FTGX_JUSTIFY_CENTER;
@@ -173,12 +173,12 @@ CCoverFlow::CCoverFlow(void)
 	m_loSelected.shadowColorEnd = CColor(0x00000000);
 	m_loSelected.shadowColorBeg = CColor(0x00000000);
 	m_loSelected.shadowColorOff = CColor(0x00000000);
-	m_loSelected.topSpacer = Vector3D(0.f, 2.f, 0.f);
-	m_loSelected.bottomSpacer = Vector3D(0.f, -2.f, 0.f);
-	m_loSelected.topDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.bottomDeltaAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.topAngle = Vector3D(0.f, 0.f, 0.f);
-	m_loSelected.bottomAngle = Vector3D(0.f, 0.f, 0.f);
+	m_loSelected.topSpacer = vec3(0.f, 2.f, 0.f);
+	m_loSelected.bottomSpacer = vec3(0.f, -2.f, 0.f);
+	m_loSelected.topDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loSelected.bottomDeltaAngle = vec3(0.f, 0.f, 0.f);
+	m_loSelected.topAngle = vec3(0.f, 0.f, 0.f);
+	m_loSelected.bottomAngle = vec3(0.f, 0.f, 0.f);
 	// 
 	m_mirrorAlpha = 0.2f;
 	m_txtMirrorAlpha = 0.2f;
@@ -202,9 +202,9 @@ CCoverFlow::CCoverFlow(void)
 	m_shadowScale = 1.f;
 	m_shadowX = 0.f;
 	m_shadowY = 0.f;
-	m_flipCoverPos = Vector3D(0.f, 0.f, 0.f);
-	m_flipCoverAngle = Vector3D(0.f, 180.f, 0.f);
-	m_flipCoverScale = Vector3D(1.f, 1.f, 1.f);
+	m_flipCoverPos = vec3(0.f, 0.f, 0.f);
+	m_flipCoverAngle = vec3(0.f, 180.f, 0.f);
+	m_flipCoverScale = vec3(1.f, 1.f, 1.f);
 	// Settings
 	m_lodBias = -0.3f;
 	m_aniso = GX_ANISO_1;
@@ -373,21 +373,21 @@ void CCoverFlow::setRange(u32 rows, u32 columns)
 	}
 }
 
-void CCoverFlow::setCameraPos(bool selected, const Vector3D &pos, const Vector3D &aim)
+void CCoverFlow::setCameraPos(bool selected, const vec3 &pos, const vec3 &aim)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.camera = pos;
 	lo.cameraAim = aim;
 }
 
-void CCoverFlow::setCameraOsc(bool selected, const Vector3D &speed, const Vector3D &amp)
+void CCoverFlow::setCameraOsc(bool selected, const vec3 &speed, const vec3 &amp)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.cameraOscSpeed = speed;
 	lo.cameraOscAmp = amp;
 }
 
-void CCoverFlow::setCoverScale(bool selected, const Vector3D &left, const Vector3D &right, const Vector3D &center, const Vector3D &rowCenter)
+void CCoverFlow::setCoverScale(bool selected, const vec3 &left, const vec3 &right, const vec3 &center, const vec3 &rowCenter)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.leftScale = left;
@@ -396,7 +396,7 @@ void CCoverFlow::setCoverScale(bool selected, const Vector3D &left, const Vector
 	lo.rowCenterScale = rowCenter;
 }
 
-void CCoverFlow::setCoverPos(bool selected, const Vector3D &left, const Vector3D &right, const Vector3D &center, const Vector3D &rowCenter)
+void CCoverFlow::setCoverPos(bool selected, const vec3 &left, const vec3 &right, const vec3 &center, const vec3 &rowCenter)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.leftPos = left;
@@ -405,35 +405,35 @@ void CCoverFlow::setCoverPos(bool selected, const Vector3D &left, const Vector3D
 	lo.rowCenterPos = rowCenter;
 }
 
-void CCoverFlow::setCoverAngleOsc(bool selected, const Vector3D &speed, const Vector3D &amp)
+void CCoverFlow::setCoverAngleOsc(bool selected, const vec3 &speed, const vec3 &amp)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.coverOscASpeed = speed;
 	lo.coverOscAAmp = amp;
 }
 
-void CCoverFlow::setCoverPosOsc(bool selected, const Vector3D &speed, const Vector3D &amp)
+void CCoverFlow::setCoverPosOsc(bool selected, const vec3 &speed, const vec3 &amp)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.coverOscPSpeed = speed;
 	lo.coverOscPAmp = amp;
 }
 
-void CCoverFlow::setSpacers(bool selected, const Vector3D &left, const Vector3D &right)
+void CCoverFlow::setSpacers(bool selected, const vec3 &left, const vec3 &right)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.leftSpacer = left;
 	lo.rightSpacer = right;
 }
 
-void CCoverFlow::setDeltaAngles(bool selected, const Vector3D &left, const Vector3D &right)
+void CCoverFlow::setDeltaAngles(bool selected, const vec3 &left, const vec3 &right)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.leftDeltaAngle = left;
 	lo.rightDeltaAngle = right;
 }
 
-void CCoverFlow::setAngles(bool selected, const Vector3D &left, const Vector3D &right, const Vector3D &center, const Vector3D &rowCenter)
+void CCoverFlow::setAngles(bool selected, const vec3 &left, const vec3 &right, const vec3 &center, const vec3 &rowCenter)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.leftAngle = left;
@@ -450,7 +450,7 @@ void CCoverFlow::setTitleAngles(bool selected, float left, float right, float ce
 	lo.txtCenterAngle = center;
 }
 
-void CCoverFlow::setTitlePos(bool selected, const Vector3D &left, const Vector3D &right, const Vector3D &center)
+void CCoverFlow::setTitlePos(bool selected, const vec3 &left, const vec3 &right, const vec3 &center)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 	lo.txtLeftPos = left;
@@ -509,7 +509,7 @@ void CCoverFlow::setShadowPos(float scale, float x, float y)
 	m_shadowY = y;
 }
 
-void CCoverFlow::setRowSpacers(bool selected, const Vector3D &top, const Vector3D &bottom)
+void CCoverFlow::setRowSpacers(bool selected, const vec3 &top, const vec3 &bottom)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 
@@ -517,7 +517,7 @@ void CCoverFlow::setRowSpacers(bool selected, const Vector3D &top, const Vector3
 	lo.bottomSpacer = bottom;
 }
 
-void CCoverFlow::setRowDeltaAngles(bool selected, const Vector3D &top, const Vector3D &bottom)
+void CCoverFlow::setRowDeltaAngles(bool selected, const vec3 &top, const vec3 &bottom)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 
@@ -525,7 +525,7 @@ void CCoverFlow::setRowDeltaAngles(bool selected, const Vector3D &top, const Vec
 	lo.bottomDeltaAngle = bottom;
 }
 
-void CCoverFlow::setRowAngles(bool selected, const Vector3D &top, const Vector3D &bottom)
+void CCoverFlow::setRowAngles(bool selected, const vec3 &top, const vec3 &bottom)
 {
 	SLayout &lo = selected ? m_loSelected : m_loNormal;
 
@@ -533,7 +533,7 @@ void CCoverFlow::setRowAngles(bool selected, const Vector3D &top, const Vector3D
 	lo.bottomAngle = bottom;
 }
 
-void CCoverFlow::setCoverFlipping(const Vector3D &pos, const Vector3D &angle, const Vector3D &scale)
+void CCoverFlow::setCoverFlipping(const vec3 &pos, const vec3 &angle, const vec3 &scale)
 {
 	m_flipCoverPos = pos;
 	m_flipCoverAngle = angle;
@@ -925,9 +925,9 @@ void CCoverFlow::draw(void)
 void CCoverFlow::drawText(bool withRectangle)
 {
 	LockMutex lock(m_mutex);
-	Vector3D up(0.f, 1.f, 0.f);
-	Vector3D dir(m_cameraAim);
-	Vector3D pos(m_cameraPos);
+	vec3 up(0.f, 1.f, 0.f);
+	vec3 dir(m_cameraAim);
+	vec3 pos(m_cameraPos);
 
 	if (m_covers.empty())
 		return;
@@ -957,9 +957,9 @@ inline int innerToOuter(int i, int range)
 void CCoverFlow::_draw(DrawMode dm, bool mirror, bool blend)
 {
 	LockMutex lock(m_mutex);
-	Vector3D up(0.f, 1.f, 0.f);
-	Vector3D dir(m_cameraAim);
-	Vector3D pos(m_cameraPos);
+	vec3 up(0.f, 1.f, 0.f);
+	vec3 dir(m_cameraAim);
+	vec3 pos(m_cameraPos);
 
 	if (mirror && m_mirrorAlpha <= 0.f)
 		return;
@@ -1052,29 +1052,29 @@ void CCoverFlow::_draw(DrawMode dm, bool mirror, bool blend)
 	}
 }
 
-Vector3D CCoverFlow::_cameraMoves(void)
+vec3 CCoverFlow::_cameraMoves(void)
 {
 	SLayout &lo = m_selected ? m_loSelected : m_loNormal;
 	float tick = (float)m_tickCount * 0.005f;
-	return Vector3D(cos(tick * lo.cameraOscSpeed.x) * lo.cameraOscAmp.x,
+	return vec3(cos(tick * lo.cameraOscSpeed.x) * lo.cameraOscAmp.x,
 		cos(tick * lo.cameraOscSpeed.y) * lo.cameraOscAmp.y,
 		cos(tick * lo.cameraOscSpeed.z) * lo.cameraOscAmp.z);
 }
 
-Vector3D CCoverFlow::_coverMovesA(void)
+vec3 CCoverFlow::_coverMovesA(void)
 {
 	SLayout &lo = m_selected ? m_loSelected : m_loNormal;
 	float tick = (float)m_tickCount * 0.005f;
-	return Vector3D(cos(tick * lo.coverOscASpeed.x) * lo.coverOscAAmp.x,
+	return vec3(cos(tick * lo.coverOscASpeed.x) * lo.coverOscAAmp.x,
 		sin(tick * lo.coverOscASpeed.y) * lo.coverOscAAmp.y,
 		cos(tick * lo.coverOscASpeed.z) * lo.coverOscAAmp.z);
 }
 
-Vector3D CCoverFlow::_coverMovesP(void)
+vec3 CCoverFlow::_coverMovesP(void)
 {
 	SLayout &lo = m_selected ? m_loSelected : m_loNormal;
 	float tick = (float)m_tickCount * 0.005f;
-	return Vector3D(cos(tick * lo.coverOscPSpeed.x) * lo.coverOscPAmp.x,
+	return vec3(cos(tick * lo.coverOscPSpeed.x) * lo.coverOscPAmp.x,
 		sin(tick * lo.coverOscPSpeed.y) * lo.coverOscPAmp.y,
 		cos(tick * lo.coverOscPSpeed.z) * lo.coverOscPAmp.z);
 }
@@ -1083,7 +1083,7 @@ void CCoverFlow::_drawTitle(int i, bool mirror, bool rectangle)
 {
 	Mtx modelMtx;
 	Mtx modelViewMtx;
-	Vector3D rotAxis(0.f, 1.f, 0.f);
+	vec3 rotAxis(0.f, 1.f, 0.f);
 	CColor color(m_fontColor);
 
 	if (m_covers[i].txtColor_ == 0)
@@ -1175,8 +1175,8 @@ void CCoverFlow::_drawCover(int i, bool mirror, CCoverFlow::DrawMode dm)
 	Mtx modelMtx;
 	Mtx rotMtx;
 	Mtx modelViewMtx;
-	Vector3D osc;
-	Vector3D oscP;
+	vec3 osc;
+	vec3 oscP;
 
 	if (m_covers[i].color_.a == 0 || (dm == CCoverFlow::CFDR_SHADOW && m_covers[i].shadowColor_.a == 0))
 		return;
@@ -1425,7 +1425,7 @@ std::string CCoverFlow::getTitle(void) const
 {
 	if (m_covers.empty())
 		return "";
-	return m_items[m_covers[m_range / 2].index_].title.toUTF8();
+	return codecvt_utf16_utf8(m_items[m_covers[m_range / 2].index_].title);
 }
 
 bool CCoverFlow::select(void)
@@ -1490,7 +1490,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 	// Left covers
 	if (x < hcenter)
 	{
-		Vector3D deltaAngle(lo.leftDeltaAngle * (float)(hcenter - 1 - x));
+		vec3 deltaAngle(lo.leftDeltaAngle * (float)(hcenter - 1 - x));
 		cvr.targetAngle = lo.leftAngle + deltaAngle;
 		cvr.targetPos = lo.leftPos + lo.leftSpacer.rotateY(deltaAngle.y * 0.5f) * (float)(hcenter - 1 - x);
 		cvr.targetScale_ = lo.leftScale;
@@ -1513,7 +1513,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 	// Right covers
 	else if (x > hcenter)
 	{
-		Vector3D deltaAngle(lo.rightDeltaAngle * (float)(x - hcenter - 1));
+		vec3 deltaAngle(lo.rightDeltaAngle * (float)(x - hcenter - 1));
 		cvr.targetAngle = lo.rightAngle + deltaAngle;
 		cvr.targetPos = lo.rightPos + lo.rightSpacer.rotateY(deltaAngle.y * 0.5f) * (float)(x - hcenter - 1);
 		cvr.targetScale_ = lo.rightScale;
@@ -1569,7 +1569,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 	// Top row
 	if (y < vcenter)
 	{
-		Vector3D deltaAngle(lo.topDeltaAngle * (float)(vcenter - y - 1));
+		vec3 deltaAngle(lo.topDeltaAngle * (float)(vcenter - y - 1));
 		cvr.targetAngle += lo.topAngle + deltaAngle;
 		cvr.targetPos += lo.topSpacer.rotateX(deltaAngle.x * 0.5f) * (float)(vcenter - y);
 		if (_invisibleCover(x, y))
@@ -1589,7 +1589,7 @@ void CCoverFlow::_updateTarget(int i, bool instant)
 	// Bottom row
 	else if (y > vcenter)
 	{
-		Vector3D deltaAngle(lo.bottomDeltaAngle * (float)(y - vcenter - 1));
+		vec3 deltaAngle(lo.bottomDeltaAngle * (float)(y - vcenter - 1));
 		cvr.targetAngle += lo.bottomAngle + deltaAngle;
 		cvr.targetPos += lo.bottomSpacer.rotateX(deltaAngle.x * 0.5f) * (float)(y - vcenter);
 		if (_invisibleCover(x, y))
@@ -1987,7 +1987,7 @@ void CCoverFlow::flip(bool force, bool f)
 		cvr.targetPos = m_loSelected.centerPos + m_flipCoverPos;
 		cvr.targetAngle = m_loSelected.centerAngle + m_flipCoverAngle;
 		cvr.targetScale_ = m_loSelected.centerScale * m_flipCoverScale;
-		cvr.txtTargetColor_ = m_flipCoverPos == Vector3D(0.f, 0.f, 0.f) ? 0xFF : 0;
+		cvr.txtTargetColor_ = m_flipCoverPos == vec3(0.f, 0.f, 0.f) ? 0xFF : 0;
 	}
 	else
 	{
@@ -2092,7 +2092,7 @@ wchar_t CCoverFlow::prevLetter(void)
 void CCoverFlow::_coverTick(int i)
 {
 	float speed = m_selected ? 0.07f : 0.1f;
-	Vector3D posDist(m_covers[i].targetPos - m_covers[i].pos);
+	vec3 posDist(m_covers[i].targetPos - m_covers[i].pos);
 	int colorDist;
 
 	if (posDist.sqNorm() < 0.5f)

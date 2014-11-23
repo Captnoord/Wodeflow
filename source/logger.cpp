@@ -35,7 +35,7 @@ static void print_hexview(FILE *dstFile, const char *pSource, unsigned int sourc
 	fputs(" offset |00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |0123456789ABCDEF|\n", dstFile);
 	fputs("--------|------------------------------------------------|----------------|\n", dstFile);
 
-	size_t i = 0;
+	unsigned int i = 0;
 	size_t c = 0;
 	size_t start;
 	size_t written;

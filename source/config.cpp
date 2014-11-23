@@ -135,14 +135,6 @@ const string &Config::firstDomain(void)
 	return m_iter->first;
 }
 
-const string &Config::nextDomain(void)
-{
-	++m_iter;
-	if (m_iter == m_domains.end())
-		return Config::emptyString;
-	return m_iter->first;
-}
-
 const string &Config::nextDomain(const string &start) const
 {
 	Config::DomainMap::const_iterator i;
@@ -333,7 +325,7 @@ void Config::setFloat(const string &domain, const string &key, float val)
 	__set(domain, key, sfmt("%.*g", g_floatPrecision, val));
 }
 
-void Config::setVector3D(const std::string &domain, const std::string &key, const Vector3D &val)
+void Config::setVector3D(const std::string &domain, const std::string &key, const vec3 &val)
 {
 	if (domain.empty() || key.empty())
 		return;
@@ -360,7 +352,7 @@ std::string &Config::__get(const std::string &domain, const std::string & key)
 	return m_domains[temp_domain][temp_key];
 }
 
-wstringEx Config::getWString(const std::string &domain, const std::string &key, const wstringEx &defVal)
+wstringEx Config::getWString(const std::string &domain, const std::string &key, const wstringEx defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
@@ -377,7 +369,7 @@ wstringEx Config::getWString(const std::string &domain, const std::string &key, 
 	return ws;
 }
 
-string Config::getString(const string &domain, const string &key, const string &defVal)
+string Config::getString(const string &domain, const string &key, string defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
@@ -501,7 +493,7 @@ float Config::getFloat(const string &domain, const string &key, float defVal)
 	return strtod(data.c_str(), 0);
 }
 
-Vector3D Config::getVector3D(const std::string &domain, const std::string &key, const Vector3D &defVal)
+vec3 Config::getVector3D(const std::string &domain, const std::string &key, const vec3 &defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
@@ -516,7 +508,7 @@ Vector3D Config::getVector3D(const std::string &domain, const std::string &key, 
 		data = sfmt("%.*g, %.*g, %.*g", g_floatPrecision, defVal.x, g_floatPrecision, defVal.y, g_floatPrecision, defVal.z);
 		return defVal;
 	}
-	return Vector3D(strtod(data.substr(0, i).c_str(), 0), strtod(data.substr(i + 1, j - i - 1).c_str(), 0), strtod(data.substr(j + 1).c_str(), 0));
+	return vec3(strtod(data.substr(0, i).c_str(), 0), strtod(data.substr(i + 1, j - i - 1).c_str(), 0), strtod(data.substr(j + 1).c_str(), 0));
 }
 
 CColor Config::getColor(const std::string &domain, const std::string &key, const CColor &defVal)

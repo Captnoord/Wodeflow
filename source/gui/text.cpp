@@ -320,18 +320,19 @@ void CText::setFrame(float width, u16 style, bool ignoreNewlines, bool instant)
 		CText::CLine &words = m_lines[k];
 		if (words.empty())
 			posY += (float)m_font.lineSpacing;
+		
 		for (u32 i = 0; i < words.size(); ++i)
 		{
 			wordWidth = m_font.font->getWidth(words[i].text.c_str());
 			if (posX == 0.f || posX + (float)wordWidth <= width)
 			{
-				words[i].targetPos = Vector3D(posX, posY, 0.f);
+				words[i].targetPos = vec3(posX, posY, 0.f);
 				posX += wordWidth + space;
 			}
 			else
 			{
 				posY += (float)m_font.lineSpacing;
-				words[i].targetPos = Vector3D(0.f, posY, 0.f);
+				words[i].targetPos = vec3(0.f, posY, 0.f);
 				if ((style & (FTGX_JUSTIFY_CENTER | FTGX_JUSTIFY_RIGHT)) != 0)
 				{
 					posX -= space;
@@ -344,8 +345,7 @@ void CText::setFrame(float width, u16 style, bool ignoreNewlines, bool instant)
 			}
 		}
 		// Quick patch for newline support
-		if (!ignoreNewlines && k + 1 < m_lines.size())
-			posX = 9999999.f;
+		if (!ignoreNewlines && k + 1 < m_lines.size())			posX = 9999999.f;
 	}
 	if ((style & (FTGX_JUSTIFY_CENTER | FTGX_JUSTIFY_RIGHT)) != 0)
 	{
@@ -386,10 +386,12 @@ void CText::draw(void)
 	if (!m_font.font)
 		return;
 	for (u32 k = 0; k < m_lines.size(); ++k)
+	{
 		for (u32 i = 0; i < m_lines[k].size(); ++i)
 		{
 			m_font.font->setX(m_lines[k][i].pos.x);
 			m_font.font->setY(m_lines[k][i].pos.y);
 			m_font.font->drawText(0, m_font.lineSpacing, m_lines[k][i].text.c_str(), m_color);
 		}
+	}
 }

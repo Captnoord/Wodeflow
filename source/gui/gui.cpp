@@ -67,7 +67,7 @@ void CButtonsMgr::hide(u32 id, int dx, int dy, float scaleX, float scaleY, bool 
 	b.visible = false;
 	b.targetScaleX = scaleX;
 	b.targetScaleY = scaleY;
-	b.targetPos = Vector3D((float)(b.x + dx), (float)(b.y + dy), 0.f);
+	b.targetPos = vec3((float)(b.x + dx), (float)(b.y + dy), 0.f);
 	b.targetAlpha = 0x00;
 	if (instant)
 	{
@@ -117,7 +117,7 @@ void CButtonsMgr::show(u32 id)
 	b.visible = true;
 	b.targetScaleX = 1.0f;
 	b.targetScaleY = 1.0f;
-	b.targetPos = Vector3D((float)b.x, (float)b.y, 0);
+	b.targetPos = vec3((float)b.x, (float)b.y, 0);
 	b.targetAlpha = 0xFF;
 }
 
@@ -410,7 +410,8 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 		scaleY = (1.f - b.click) * 1.6f;
 	}
 
-	if (alpha == 0 || scaleX <= 0.0001f || scaleY <= 0.0001f)
+	//if (alpha == 0 || scaleX <= 0.000001f || scaleY <= 0.000001f)
+	if (alpha == 0 || scaleX == 0.f || scaleY <= 0.f)
 		return;
 
 	guMtxIdentity(modelViewMtx);
@@ -490,6 +491,7 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 			GX_InitTexObj(&texObjLeft, b.tex.center.data.get(), b.tex.center.width, b.tex.center.height, b.tex.center.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		w = (float)(b.w / 2) * scaleX;
 		h = (float)(b.h / 2) * scaleY;
+
 		GX_LoadTexObj(&texObjLeft, GX_TEXMAP0);
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
 		GX_Position3f32(-w, -h, 0.f);
@@ -511,7 +513,7 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 
 	b.font.font->reset();
 	CColor txtColor(b.textColor.r, b.textColor.g, b.textColor.b, (u8)((int)b.textColor.a * (int)alpha / 0xFF));
-    b.font.font->setScale(scaleX, scaleY);    
+    b.font.font->setScale(scaleX, scaleY);
 	b.font.font->drawText(0, 0, b.text.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
 }
 

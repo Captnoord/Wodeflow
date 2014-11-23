@@ -189,7 +189,9 @@ void CMenu::init(bool fromHBC)
 	_loadCFCfg();
 	WPAD_SetVRes(0, m_vid.width() + m_cur.width(), m_vid.height() + m_cur.height());
 	m_locked = m_cfg.getString(" GENERAL", "parent_code", "").size() >= 4;
+	
 	m_btnMgr.setRumble(m_cfg.getBool(" GENERAL", "rumble", true));
+	
 	m_vid.set2DViewport(m_cfg.getInt(" GENERAL", "tv_width", 640), m_cfg.getInt(" GENERAL", "tv_height", 480),
 		m_cfg.getInt(" GENERAL", "tv_x", 0), m_cfg.getInt(" GENERAL", "tv_y", 0));
 	Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool(" GENERAL", "exit_to_wii_menu", false));
@@ -281,7 +283,7 @@ void CMenu::_loadCFCfg()
 	_loadCFLayout(std::min(std::max(1, m_cfg.getInt(" GENERAL", "last_cf_mode", 1)), (int)m_numCFVersions));
 }
 
-Vector3D CMenu::_getCFV3D(const string &domain, const string &key, const Vector3D &def, bool otherScrnFmt)
+vec3 CMenu::_getCFV3D(const string &domain, const string &key, const vec3 &def, bool otherScrnFmt)
 {
 	string key169(key);
 	string key43(key);
@@ -291,7 +293,7 @@ Vector3D CMenu::_getCFV3D(const string &domain, const string &key, const Vector3
 		swap(key169, key43);
 	if (m_theme.has(domain, key169))
 	{
-		Vector3D v(m_theme.getVector3D(domain, key169));
+		vec3 v(m_theme.getVector3D(domain, key169));
 		m_theme.getVector3D(domain, key43, v);
 		return v;
 	}
@@ -348,61 +350,61 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 		m_theme.getBool(domain, "tex_edge_lod", false));
 	m_cf.setRange(_getCFInt(domain, "rows", 1, sf), _getCFInt(domain, "columns", 9, sf));
 	m_cf.setCameraPos(false,
-		_getCFV3D(domain, "camera_pos", Vector3D(0.f, 1.5f, 5.f), sf),
-		_getCFV3D(domain, "camera_aim", Vector3D(0.f, 0.f, -1.f), sf));
+		_getCFV3D(domain, "camera_pos", vec3(0.f, 1.5f, 5.f), sf),
+		_getCFV3D(domain, "camera_aim", vec3(0.f, 0.f, -1.f), sf));
 	m_cf.setCameraPos(true,
-		_getCFV3D(domainSel, "camera_pos", Vector3D(0.f, 1.5f, 5.f), sf),
-		_getCFV3D(domainSel, "camera_aim", Vector3D(0.f, 0.f, -1.f), sf));
+		_getCFV3D(domainSel, "camera_pos", vec3(0.f, 1.5f, 5.f), sf),
+		_getCFV3D(domainSel, "camera_aim", vec3(0.f, 0.f, -1.f), sf));
 	m_cf.setCameraOsc(false,
-		_getCFV3D(domain, "camera_osc_speed", Vector3D(2.f, 1.1f, 1.3f), sf),
-		_getCFV3D(domain, "camera_osc_amp", Vector3D(0.1f, 0.2f, 0.1f), sf));
+		_getCFV3D(domain, "camera_osc_speed", vec3(2.f, 1.1f, 1.3f), sf),
+		_getCFV3D(domain, "camera_osc_amp", vec3(0.1f, 0.2f, 0.1f), sf));
 	m_cf.setCameraOsc(true,
-		_getCFV3D(domainSel, "camera_osc_speed", Vector3D(0.f, 0.f, 0.f), sf),
-		_getCFV3D(domainSel, "camera_osc_amp", Vector3D(0.f, 0.f, 0.f), sf));
+		_getCFV3D(domainSel, "camera_osc_speed", vec3(0.f, 0.f, 0.f), sf),
+		_getCFV3D(domainSel, "camera_osc_amp", vec3(0.f, 0.f, 0.f), sf));
 	m_cf.setCoverPos(false,
-		_getCFV3D(domain, "left_pos", Vector3D(-1.6f, 0.f, 0.f), sf),
-		_getCFV3D(domain, "right_pos", Vector3D(1.6f, 0.f, 0.f), sf),
-		_getCFV3D(domain, "center_pos", Vector3D(0.f, 0.f, 1.f), sf),
-		_getCFV3D(domain, "row_center_pos", Vector3D(0.f, 0.f, 0.f), sf));
+		_getCFV3D(domain, "left_pos", vec3(-1.6f, 0.f, 0.f), sf),
+		_getCFV3D(domain, "right_pos", vec3(1.6f, 0.f, 0.f), sf),
+		_getCFV3D(domain, "center_pos", vec3(0.f, 0.f, 1.f), sf),
+		_getCFV3D(domain, "row_center_pos", vec3(0.f, 0.f, 0.f), sf));
 	m_cf.setCoverPos(true,
-		_getCFV3D(domainSel, "left_pos", Vector3D(-4.6f, 2.f, 0.f), sf),
-		_getCFV3D(domainSel, "right_pos", Vector3D(4.6f, 2.f, 0.f), sf),
-		_getCFV3D(domainSel, "center_pos", Vector3D(-0.6f, 0.f, 2.6f), sf),
-		_getCFV3D(domainSel, "row_center_pos", Vector3D(0.f, 2.f, 0.f), sf));
+		_getCFV3D(domainSel, "left_pos", vec3(-4.6f, 2.f, 0.f), sf),
+		_getCFV3D(domainSel, "right_pos", vec3(4.6f, 2.f, 0.f), sf),
+		_getCFV3D(domainSel, "center_pos", vec3(-0.6f, 0.f, 2.6f), sf),
+		_getCFV3D(domainSel, "row_center_pos", vec3(0.f, 2.f, 0.f), sf));
 	m_cf.setCoverAngleOsc(false,
-		m_theme.getVector3D(domain, "cover_osc_speed", Vector3D(2.f, 2.f, 0.f)),
-		m_theme.getVector3D(domain, "cover_osc_amp", Vector3D(5.f, 10.f, 0.f)));
+		m_theme.getVector3D(domain, "cover_osc_speed", vec3(2.f, 2.f, 0.f)),
+		m_theme.getVector3D(domain, "cover_osc_amp", vec3(5.f, 10.f, 0.f)));
 	m_cf.setCoverAngleOsc(true,
-		m_theme.getVector3D(domainSel, "cover_osc_speed", Vector3D(2.1f, 2.1f, 0.f)),
-		m_theme.getVector3D(domainSel, "cover_osc_amp", Vector3D(2.f, 5.f, 0.f)));
+		m_theme.getVector3D(domainSel, "cover_osc_speed", vec3(2.1f, 2.1f, 0.f)),
+		m_theme.getVector3D(domainSel, "cover_osc_amp", vec3(2.f, 5.f, 0.f)));
 	m_cf.setCoverPosOsc(false,
-		m_theme.getVector3D(domain, "cover_pos_osc_speed", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "cover_pos_osc_amp", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "cover_pos_osc_speed", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "cover_pos_osc_amp", vec3(0.f, 0.f, 0.f)));
 	m_cf.setCoverPosOsc(true,
-		m_theme.getVector3D(domainSel, "cover_pos_osc_speed", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domainSel, "cover_pos_osc_amp", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "cover_pos_osc_speed", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domainSel, "cover_pos_osc_amp", vec3(0.f, 0.f, 0.f)));
 	m_cf.setSpacers(false,
-		m_theme.getVector3D(domain, "left_spacer", Vector3D(-0.35f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "right_spacer", Vector3D(0.35f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "left_spacer", vec3(-0.35f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "right_spacer", vec3(0.35f, 0.f, 0.f)));
 	m_cf.setSpacers(true,
-		m_theme.getVector3D(domainSel, "left_spacer", Vector3D(-0.35f, 0.f, 0.f)),
-		m_theme.getVector3D(domainSel, "right_spacer", Vector3D(0.35f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "left_spacer", vec3(-0.35f, 0.f, 0.f)),
+		m_theme.getVector3D(domainSel, "right_spacer", vec3(0.35f, 0.f, 0.f)));
 	m_cf.setDeltaAngles(false,
-		m_theme.getVector3D(domain, "left_delta_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "right_delta_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "left_delta_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "right_delta_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setDeltaAngles(true,
-		m_theme.getVector3D(domainSel, "left_delta_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domainSel, "right_delta_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "left_delta_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domainSel, "right_delta_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setAngles(false,
-		m_theme.getVector3D(domain, "left_angle", Vector3D(0.f, 70.f, 0.f)),
-		m_theme.getVector3D(domain, "right_angle", Vector3D(0.f, -70.f, 0.f)),
-		m_theme.getVector3D(domain, "center_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "row_center_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "left_angle", vec3(0.f, 70.f, 0.f)),
+		m_theme.getVector3D(domain, "right_angle", vec3(0.f, -70.f, 0.f)),
+		m_theme.getVector3D(domain, "center_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "row_center_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setAngles(true,
-		m_theme.getVector3D(domainSel, "left_angle", Vector3D(-45.f, 90.f, 0.f)),
-		m_theme.getVector3D(domainSel, "right_angle", Vector3D(-45.f, -90.f, 0.f)),
-		m_theme.getVector3D(domainSel, "center_angle", Vector3D(0.f, 380.f, 0.f)),
-		m_theme.getVector3D(domainSel, "row_center_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "left_angle", vec3(-45.f, 90.f, 0.f)),
+		m_theme.getVector3D(domainSel, "right_angle", vec3(-45.f, -90.f, 0.f)),
+		m_theme.getVector3D(domainSel, "center_angle", vec3(0.f, 380.f, 0.f)),
+		m_theme.getVector3D(domainSel, "row_center_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setTitleAngles(false,
 		_getCFFloat(domain, "text_left_angle", -55.f, sf),
 		_getCFFloat(domain, "text_right_angle", 55.f, sf),
@@ -412,13 +414,13 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 		_getCFFloat(domainSel, "text_right_angle", 55.f, sf),
 		_getCFFloat(domainSel, "text_center_angle", 0.f, sf));
 	m_cf.setTitlePos(false,
-		_getCFV3D(domain, "text_left_pos", Vector3D(-4.f, 0.f, 1.3f), sf),
-		_getCFV3D(domain, "text_right_pos", Vector3D(4.f, 0.f, 1.3f), sf),
-		_getCFV3D(domain, "text_center_pos", Vector3D(0.f, 0.f, 2.6f), sf));
+		_getCFV3D(domain, "text_left_pos", vec3(-4.f, 0.f, 1.3f), sf),
+		_getCFV3D(domain, "text_right_pos", vec3(4.f, 0.f, 1.3f), sf),
+		_getCFV3D(domain, "text_center_pos", vec3(0.f, 0.f, 2.6f), sf));
 	m_cf.setTitlePos(true,
-		_getCFV3D(domainSel, "text_left_pos", Vector3D(-4.f, 0.f, 1.3f), sf),
-		_getCFV3D(domainSel, "text_right_pos", Vector3D(4.f, 0.f, 1.3f), sf),
-		_getCFV3D(domainSel, "text_center_pos", Vector3D(1.7f, 1.8f, 1.6f), sf));
+		_getCFV3D(domainSel, "text_left_pos", vec3(-4.f, 0.f, 1.3f), sf),
+		_getCFV3D(domainSel, "text_right_pos", vec3(4.f, 0.f, 1.3f), sf),
+		_getCFV3D(domainSel, "text_center_pos", vec3(1.7f, 1.8f, 1.6f), sf));
 	m_cf.setTitleWidth(false,
 		_getCFFloat(domain, "text_side_wrap_width", 500.f, sf),
 		_getCFFloat(domain, "text_center_wrap_width", 500.f, sf));
@@ -455,37 +457,37 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 		m_theme.getFloat(domain, "shadow_x", 0.f),
 		m_theme.getFloat(domain, "shadow_y", 0.f));
 	m_cf.setRowSpacers(false,
-		m_theme.getVector3D(domain, "top_spacer", Vector3D(0.f, 2.f, 0.f)),
-		m_theme.getVector3D(domain, "bottom_spacer", Vector3D(0.f, -2.f, 0.f)));
+		m_theme.getVector3D(domain, "top_spacer", vec3(0.f, 2.f, 0.f)),
+		m_theme.getVector3D(domain, "bottom_spacer", vec3(0.f, -2.f, 0.f)));
 	m_cf.setRowSpacers(true,
-		m_theme.getVector3D(domainSel, "top_spacer", Vector3D(0.f, 2.f, 0.f)),
-		m_theme.getVector3D(domainSel, "bottom_spacer", Vector3D(0.f, -2.f, 0.f)));
+		m_theme.getVector3D(domainSel, "top_spacer", vec3(0.f, 2.f, 0.f)),
+		m_theme.getVector3D(domainSel, "bottom_spacer", vec3(0.f, -2.f, 0.f)));
 	m_cf.setRowDeltaAngles(false,
-		m_theme.getVector3D(domain, "top_delta_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "bottom_delta_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "top_delta_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "bottom_delta_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setRowDeltaAngles(true,
-		m_theme.getVector3D(domainSel, "top_delta_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domainSel, "bottom_delta_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "top_delta_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domainSel, "bottom_delta_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setRowAngles(false,
-		m_theme.getVector3D(domain, "top_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domain, "bottom_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domain, "top_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domain, "bottom_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setRowAngles(true,
-		m_theme.getVector3D(domainSel, "top_angle", Vector3D(0.f, 0.f, 0.f)),
-		m_theme.getVector3D(domainSel, "bottom_angle", Vector3D(0.f, 0.f, 0.f)));
+		m_theme.getVector3D(domainSel, "top_angle", vec3(0.f, 0.f, 0.f)),
+		m_theme.getVector3D(domainSel, "bottom_angle", vec3(0.f, 0.f, 0.f)));
 	m_cf.setCoverScale(false,
-		m_theme.getVector3D(domain, "left_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domain, "right_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domain, "center_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domain, "row_center_scale", Vector3D(1.f, 1.f, 1.f)));
+		m_theme.getVector3D(domain, "left_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domain, "right_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domain, "center_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domain, "row_center_scale", vec3(1.f, 1.f, 1.f)));
 	m_cf.setCoverScale(true,
-		m_theme.getVector3D(domainSel, "left_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domainSel, "right_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domainSel, "center_scale", Vector3D(1.f, 1.f, 1.f)),
-		m_theme.getVector3D(domainSel, "row_center_scale", Vector3D(1.f, 1.f, 1.f)));
+		m_theme.getVector3D(domainSel, "left_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domainSel, "right_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domainSel, "center_scale", vec3(1.f, 1.f, 1.f)),
+		m_theme.getVector3D(domainSel, "row_center_scale", vec3(1.f, 1.f, 1.f)));
 	m_cf.setCoverFlipping(
-		_getCFV3D(domainSel, "flip_pos", Vector3D(0.f, 0.f, 0.f), sf),
-		_getCFV3D(domainSel, "flip_angle", Vector3D(0.f, 180.f, 0.f), sf),
-		_getCFV3D(domainSel, "flip_scale", Vector3D(1.f, 1.f, 1.f), sf));
+		_getCFV3D(domainSel, "flip_pos", vec3(0.f, 0.f, 0.f), sf),
+		_getCFV3D(domainSel, "flip_angle", vec3(0.f, 180.f, 0.f), sf),
+		_getCFV3D(domainSel, "flip_scale", vec3(1.f, 1.f, 1.f), sf));
 	m_cf.setBlur(
 		m_theme.getInt(domain, "blur_resolution", 1),
 		m_theme.getInt(domain, "blur_radius", 2),
@@ -854,7 +856,10 @@ void CMenu::_initCF(void)
 		{
 			wstringEx w(titles.getWString("TITLES", id));
 			if (w.empty())
-				w = titles.getWString("TITLES", id.substr(0, 4), string(m_gameList[i].title, sizeof m_gameList[0].title));
+			{
+				//w = titles.getWString("TITLES", id.substr(0, 4), wstringEx(std::string(m_gameList[i].title, sizeof(m_gameList[0].title))));
+			}
+
 			int playcount = m_cfg.getInt(id, "playcount", 0);
 			m_cf.addItem(id.c_str(), m_gameList[i].game_idx, m_gameList[i].game_part, w.c_str(), sfmt("%s/%s.png", m_picDir.c_str(), id.c_str()).c_str(), sfmt("%s/%s.png", m_boxPicDir.c_str(), id.c_str()).c_str(), playcount, m_gameList[i].magic == GC_MAGIC ? TYPE_GC : TYPE_WII);
 		}
@@ -930,7 +935,6 @@ void CMenu::_mainLoopCommon(const WPADData *wd, bool withCF, bool blockReboot, b
 	LWP_MutexUnlock(m_gameSndMutex);
 	if (withCF && m_gameSoundThread == 0)
 		m_cf.startPicLoader();
-	_loopMusic();
 }
 
 void CMenu::_setBg(const STexture &tex, const STexture &lqTex)
@@ -1046,23 +1050,22 @@ void CMenu::_drawBg(void)
 	GX_SetAlphaUpdate(GX_FALSE);
 	GX_SetCullMode(GX_CULL_NONE);
 	GX_SetZMode(GX_DISABLE, GX_ALWAYS, GX_FALSE);
+	
 	guMtxIdentity(modelViewMtx);
 	GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
 	
+	// we don't have a background texture yet.. don't draw it..
 	if (!m_curBg.data.get())
 		return;
 
+	// background///
 	GX_InitTexObj(&texObj, m_curBg.data.get(), m_curBg.width, m_curBg.height, m_curBg.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 	GX_LoadTexObj(&texObj, GX_TEXMAP0);
 	GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
-	GX_Position3f32(0.f, 0.f, 0.f);
-	GX_TexCoord2f32(0.f, 0.f);
-	GX_Position3f32(640.f, 0.f, 0.f);
-	GX_TexCoord2f32(1.f, 0.f);
-	GX_Position3f32(640.f, 480.f, 0.f);
-	GX_TexCoord2f32(1.f, 1.f);
-	GX_Position3f32(0.f, 480.f, 0.f);
-	GX_TexCoord2f32(0.f, 1.f);
+	GX_Position3f32(  0.f,   0.f, 0.f);	GX_TexCoord2f32(0.f, 0.f);
+	GX_Position3f32(640.f,   0.f, 0.f);	GX_TexCoord2f32(1.f, 0.f);
+	GX_Position3f32(640.f, 480.f, 0.f);	GX_TexCoord2f32(1.f, 1.f);
+	GX_Position3f32(  0.f, 480.f, 0.f);	GX_TexCoord2f32(0.f, 1.f);
 	GX_End();
 }
 
@@ -1092,6 +1095,12 @@ const wstringEx CMenu::_fmt(const char *key, const wchar_t *def)
 	return def;
 }
 
+const wstringEx CMenu::_t(const char *key, const wchar_t *def /*= L""*/)
+{
+	return m_loc.getWString(m_curLanguage, key, def);
+}
+
+
 bool CMenu::_loadGameList(void)
 {
 	s32 ret;
@@ -1117,118 +1126,10 @@ bool CMenu::_loadGameList(void)
 	return true;
 }
 
-static void listOGGMP3(const char *path, vector<string> &oggFiles)
-{
-	DIR *d;
-	struct dirent *dir;
-	string fileName;
-	string fileExt;
-
-	oggFiles.clear();
-	d = opendir(path);
-	if (d != 0)
-	{
-		dir = readdir(d);
-		while (dir != 0)
-		{
-			fileName = dir->d_name;
-			for (u32 i = 0; i < fileName.size(); ++i)
-				if (fileName[i] >= 'a' && fileName[i] <= 'z')
-					fileName[i] &= 0xDF;
-			if (fileName.size() > 4)
-			{
-				fileExt = fileName.substr(fileName.size() - 4, 4);
-				if (fileExt == ".OGG" || fileExt == ".MP3")
-					oggFiles.push_back(fileName);
-			}
-			dir = readdir(d);
-		}
-		closedir(d);
-	}
-}
-
-void CMenu::_searchMusic(void)
-{
-	listOGGMP3(m_musicDir.c_str(), music_files);
-	if (music_files.empty())
-		return;
-		
-	if (m_cfg.getBool(" GENERAL", "randomize_music", true))
-		random_shuffle(music_files.begin(), music_files.end());
-		
-	current_music = music_files.begin();
-}
-
-void CMenu::_startMusic(void)
-{
-	SmartBuf buffer;
-
-	if (music_files.empty())
-		return;
-		
-	if (current_music == music_files.end())
-		current_music = music_files.begin();
-
-	_stopMusic();
-
-	ifstream file(sfmt("%s/%s", m_musicDir.c_str(), (*current_music).c_str()).c_str(), ios::in | ios::binary);
-	m_music_ismp3 = (*current_music).substr((*current_music).size() - 4, 4) == ".MP3";
-	if (!file.is_open())
-		return;
-	file.seekg(0, ios::end);
-	m_music_fileSize = file.tellg();
-	file.seekg(0, ios::beg);
-	buffer = smartMem2Alloc(m_music_fileSize);
-	if (!buffer)
-		return;
-	file.read((char *)buffer.get(), m_music_fileSize);
-	if (file.fail())
-		return;
-	file.close();
-	m_music = buffer;
-	if(m_music_ismp3)
-	{
-		MP3Player_PlayBuffer((char *)m_music.get(), m_music_fileSize, NULL);
-	}
-	else
-	{
-		PlayOgg(mem_open((char *)m_music.get(), m_music_fileSize), 0, OGG_INFINITE_TIME);
-	}
-	SetVolumeOgg(m_cfg.getInt(" GENERAL", "sound_volume_music", 255));
-	MP3Player_Volume(m_cfg.getInt(" GENERAL", "sound_volume_music", 255));
-	
-	current_music++;
-}
-
-void CMenu::_stopMusic(void)
-{
-	MP3Player_Stop();
-	StopOgg();
-	m_music.release();
-}
-
-void CMenu::_pauseMusic(void)
-{
-	PauseOgg(1);
-}
-
-void CMenu::_resumeMusic(void)
-{
-	PauseOgg(0);
-}
-
-void CMenu::_loopMusic(void)
-{		
-	if((m_music_ismp3 && !MP3Player_IsPlaying()) || StatusOgg() == OGG_STATUS_EOF)
-	{
-		_startMusic();
-	}
-	return;
-}
 
 void CMenu::_stopSounds(void)
 {
-	_stopMusic();
 	m_btnMgr.stopSounds();
 	m_cf.stopSound();
 }
+

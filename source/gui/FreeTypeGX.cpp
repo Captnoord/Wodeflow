@@ -115,8 +115,9 @@ uint16_t FreeTypeGX::loadFont(const uint8_t* fontBuffer, FT_Long bufferSize, FT_
  * 
  * This routine clears all members of the font map structure and frees all allocated memory back to the system.
  */
-void FreeTypeGX::unloadFont() {
-	for( std::map<wchar_t, ftgxCharData>::iterator i = this->fontData.begin(); i != this->fontData.end(); i++) {
+void FreeTypeGX::unloadFont()
+{
+	for( auto i = this->fontData.begin(); i != this->fontData.end(); i++) {
 		MEM2_free(i->second.glyphDataTexture);
 	}
 	

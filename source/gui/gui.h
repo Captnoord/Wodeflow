@@ -75,8 +75,8 @@ private:
 		int y;
 		int w;
 		int h;
-		Vector3D pos;
-		Vector3D targetPos;
+		vec3 pos;
+		vec3 targetPos;
 		u8 alpha;
 		u8 targetAlpha;
 		float scaleX;

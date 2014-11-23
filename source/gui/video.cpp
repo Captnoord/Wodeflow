@@ -115,23 +115,31 @@ void CVideo::init(void)
 	VIDEO_Init();
 	m_wide = CONF_GetAspectRatio() == CONF_ASPECT_16_9;
 	m_rmode = VIDEO_GetPreferredMode(NULL);
+	/*
 	if (m_wide)
 	{
 		m_rmode->viWidth = 700;
 		m_rmode->viXOrigin = ((VI_MAX_WIDTH_PAL - m_rmode->viWidth) / 2);
 	}
+	*/
 	m_frameBuf[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(m_rmode));
 	m_frameBuf[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(m_rmode));
+
 	VIDEO_Configure(m_rmode);
+	
 	m_curFB = 0;
 	VIDEO_SetNextFramebuffer(m_frameBuf[m_curFB]);
 	VIDEO_SetBlack(FALSE);
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
+	
 	if ((m_rmode->viTVMode & VI_NON_INTERLACE) != 0)
 		VIDEO_WaitVSync();
+	
 	m_fifo = memalign(32, DEFAULT_FIFO_SIZE);
+	
 	memset(m_fifo, 0, DEFAULT_FIFO_SIZE);
+	
 	GX_Init(m_fifo, DEFAULT_FIFO_SIZE);
 	GX_SetCopyClear(CColor(0), 0x00FFFFFF);
 	_setViewPort(0, 0, m_rmode->fbWidth, m_rmode->efbHeight);

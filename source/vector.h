@@ -5,31 +5,31 @@
 #include <gccore.h>
 #include <math.h>
 
-class Vector3D : public guVector
+class vec3 : public guVector
 {
 public:
-	Vector3D(void)
+	vec3(void)
 	{
 		x = 0.f;
 		y = 0.f;
 		z = 0.f;
 	}
 
-	Vector3D(const guVector &v)
+	vec3(const guVector &v)
 	{
 		x = v.x;
 		y = v.y;
 		z = v.z;
 	}
 
-	Vector3D(float px, float py, float pz)
+	vec3(float px, float py, float pz)
 	{
 		x = px;
 		y = py;
 		z = pz;
 	}
 
-	Vector3D(float px, float py)
+	vec3(float px, float py)
 	{
 		x = px;
 		y = py;
@@ -46,27 +46,27 @@ public:
 		return sqrt(sqNorm());
 	}
 
-	Vector3D operator-(const Vector3D &v) const
+	vec3 operator-(const vec3 &v) const
 	{
-		return Vector3D(x - v.x, y - v.y, z - v.z);
+		return vec3(x - v.x, y - v.y, z - v.z);
 	}
 
-	Vector3D operator+(const Vector3D &v) const
+	vec3 operator+(const vec3 &v) const
 	{
-		return Vector3D(x + v.x, y + v.y, z + v.z);
+		return vec3(x + v.x, y + v.y, z + v.z);
 	}
 
-	bool operator!=(const Vector3D &v) const
+	bool operator!=(const vec3 &v) const
 	{
 		return fabs(x - v.x) > 0.f || fabs(y - v.y) > 0.f || fabs(z - v.z) > 0.f;
 	}
 
-	bool operator==(const Vector3D &v) const
+	bool operator==(const vec3 &v) const
 	{
 		return fabs(x - v.x) == 0.f && fabs(y - v.y) == 0.f && fabs(z - v.z) == 0.f;
 	}
 
-	Vector3D &operator-=(const Vector3D &v)
+	vec3 &operator-=(const vec3 &v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -74,7 +74,7 @@ public:
 		return *this;
 	}
 
-	Vector3D &operator+=(const Vector3D &v)
+	vec3 &operator+=(const vec3 &v)
 	{
 		x += v.x;
 		y += v.y;
@@ -82,7 +82,7 @@ public:
 		return *this;
 	}
 
-	Vector3D &operator*=(const Vector3D &v)
+	vec3 &operator*=(const vec3 &v)
 	{
 		x *= v.x;
 		y *= v.y;
@@ -90,78 +90,78 @@ public:
 		return *this;
 	}
 
-	Vector3D operator/(float f) const
+	vec3 operator/(float f) const
 	{
-		return f == 0.f ? *this : Vector3D(x / f, y / f, z / f);
+		return f == 0.f ? *this : vec3(x / f, y / f, z / f);
 	}
 
-	Vector3D operator*(const Vector3D &v) const
+	vec3 operator*(const vec3 &v) const
 	{
-		return Vector3D(x * v.x, y * v.y, z * v.z);
+		return vec3(x * v.x, y * v.y, z * v.z);
 	}
 
-	Vector3D operator*(float f) const
+	vec3 operator*(float f) const
 	{
-		return Vector3D(x * f, y * f, z * f);
+		return vec3(x * f, y * f, z * f);
 	}
 
-	Vector3D unit(void) const
+	vec3 unit(void) const
 	{
 		return operator/(norm());
 	}
 
-	Vector3D operator-(void) const
+	vec3 operator-(void) const
 	{
-		return Vector3D(-x, -y, -z);
+		return vec3(-x, -y, -z);
 	}
 	
-	Vector3D rotateX(float angle) const
+	vec3 rotateX(float angle) const
 	{
 		angle *= 0.01745329251994329577;
 		float c = cos(angle);
 		float s = sin(angle);
-		return Vector3D(x, y * c - z * s, z * c + y * s);
+		return vec3(x, y * c - z * s, z * c + y * s);
 	}
 
-	Vector3D rotateY(float angle) const
+	vec3 rotateY(float angle) const
 	{
 		angle *= 0.01745329251994329577;
 		float c = cos(angle);
 		float s = sin(angle);
-		return Vector3D(x * c + z * s, y, z * c - x * s);
+		return vec3(x * c + z * s, y, z * c - x * s);
 	}
 
-	Vector3D rotateZ(float angle) const
+	vec3 rotateZ(float angle) const
 	{
 		angle *= 0.01745329251994329577;
 		float c = cos(angle);
 		float s = sin(angle);
-		return Vector3D(x * c - y * s, y * c + x * s, z);
+		return vec3(x * c - y * s, y * c + x * s, z);
 	}
 
-	Vector3D rotateX(float c, float s) const
+	vec3 rotateX(float c, float s) const
 	{
-		return Vector3D(x, y * c - z * s, z * c + y * s);
+		return vec3(x, y * c - z * s, z * c + y * s);
 	}
 
-	Vector3D rotateY(float c, float s) const
+	vec3 rotateY(float c, float s) const
 	{
-		return Vector3D(x * c + z * s, y, z * c - x * s);
+		return vec3(x * c + z * s, y, z * c - x * s);
 	}
 
-	Vector3D rotateZ(float c, float s) const
+	vec3 rotateZ(float c, float s) const
 	{
-		return Vector3D(x * c - y * s, y * c + x * s, z);
+		return vec3(x * c - y * s, y * c + x * s, z);
 	}
 
-	float dot(const Vector3D &v) const
+	float dot(const vec3 &v) const
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
 
-	Vector3D cross(const Vector3D &v) const
+	vec3 cross(const vec3 &v) const
 	{
-		return Vector3D(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
+		return vec3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
 	}
 };
 

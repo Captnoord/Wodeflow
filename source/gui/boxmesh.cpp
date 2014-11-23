@@ -12,7 +12,7 @@ static const guVector g_backCoverBL = { g_frontCoverBL.x, g_frontCoverBL.y, g_fr
 static const guVector g_backCoverTR = { g_frontCoverTR.x, g_frontCoverTR.y, g_frontCoverTR.z - 0.16f };
 const float g_boxCoverYCenter = (g_frontCoverTR.y - g_frontCoverBL.y) * 0.5f;
 const float g_coverYCenter = (g_coverTR.y - g_coverBL.y) * 0.5f;
-const Vector3D g_boxSize(
+const vec3 g_boxSize(
 	g_coverTR.x - g_coverBL.x + 2 * g_boxBorderWidth,
 	g_coverTR.y - g_coverBL.y + 2 * g_boxBorderWidth,
 	g_coverTR.z - g_coverBL.z + 2 * g_boxBorderWidth);

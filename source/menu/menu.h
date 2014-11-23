@@ -494,7 +494,7 @@ private:
 	void _setAA(int aa);
 	void _loadCFCfg(void);
 	void _loadCFLayout(int version, bool forceAA = false, bool otherScrnFmt = false);
-	Vector3D _getCFV3D(const std::string &domain, const std::string &key, const Vector3D &def, bool otherScrnFmt = false);
+	vec3 _getCFV3D(const std::string &domain, const std::string &key, const vec3 &def, bool otherScrnFmt = false);
 	int _getCFInt(const std::string &domain, const std::string &key, int def, bool otherScrnFmt = false);
 	float _getCFFloat(const std::string &domain, const std::string &key, float def, bool otherScrnFmt = false);
 	void _cfParam(bool inc, int i, const SCFParamDesc &p, int cfVersion, bool wide);
@@ -517,7 +517,7 @@ private:
 	void _addUserLabels(CMenu::SThemeData &theme, u32 *ids, u32 size, const char *domain);
 
 	// 
-	const wstringEx _t(const char *key, const wchar_t *def = L"") { return m_loc.getWString(m_curLanguage, key, def); }
+	const wstringEx _t(const char *key, const wchar_t *def = L"");
 	const wstringEx _fmt(const char *key, const wchar_t *def);
 	// 
 
@@ -536,12 +536,7 @@ private:
 	static int _gameInstaller(void *obj);
 	wstringEx _optBoolToString(int b);
 	void _listDOL(std::vector<std::string> &v, const std::string &gameId);
-	void _searchMusic(void);
-	void _startMusic(void);
-	void _stopMusic(void);
-	void _pauseMusic(void);
-	void _resumeMusic(void);
-	void _loopMusic(void);
+	
 	void _stopSounds(void);
 	// 
 	struct SOption { const char id[10]; const wchar_t text[16]; };

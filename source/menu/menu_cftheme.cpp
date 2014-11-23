@@ -185,6 +185,7 @@ void CMenu::_showCFTheme(u32 curParam, int version, bool wide)
 	m_btnMgr.show(m_cfThemeBtnCancel);
 	m_btnMgr.show(m_cfThemeBtnAlt);
 	m_btnMgr.setText(m_cfThemeBtnAlt, wstringEx(sfmt("%i", version)));
+
 //	if (p.domain == CMenu::SCFParamDesc::PDD_BOTH)
 		m_btnMgr.show(m_cfThemeBtnSelect);
 //	else
@@ -239,7 +240,7 @@ void CMenu::_showCFTheme(u32 curParam, int version, bool wide)
 				break;
 			case CMenu::SCFParamDesc::PDT_V3D:
 			{
-				Vector3D v(m_theme.getVector3D(domain, key));
+				vec3 v(m_theme.getVector3D(domain, key));
 				m_btnMgr.setText(m_cfThemeLblVal[k + 0], sfmt("%.2f", v.x));
 				m_btnMgr.setText(m_cfThemeLblVal[k + 1], sfmt("%.2f", v.y));
 				m_btnMgr.setText(m_cfThemeLblVal[k + 2], sfmt("%.2f", v.z));
@@ -531,7 +532,7 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 		}
 		case CMenu::SCFParamDesc::PDT_V3D:
 		{
-			Vector3D v(m_theme.getVector3D(domain, key));
+			vec3 v(m_theme.getVector3D(domain, key));
 			switch (i % 4)
 			{
 				case 0:

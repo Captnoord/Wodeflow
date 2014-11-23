@@ -36,6 +36,6 @@ extern const float g_boxCoverYCenter;
 extern const float g_coverYCenter;
 
 // Bounding box size
-extern const Vector3D g_boxSize;
+extern const vec3 g_boxSize;
 
 #endif // !defined(__BOXMESH_HPP)

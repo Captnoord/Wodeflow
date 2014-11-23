@@ -57,8 +57,12 @@ void CMenu::_showConfig(void)
 			m_btnMgr.show(m_configLblUser[i]);
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage + 1 : CMenu::_nbCfgPages));
-	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool(" GENERAL", "rumble") ? _t("on", L"On") : _t("off", L"Off"));
-	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool(" GENERAL", "box_mode") ? _t("on", L"On") : _t("off", L"Off"));
+	
+	//m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool(" GENERAL", "rumble") ? _t("on", L"On") : _t("off", L"Off"));
+	//m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool(" GENERAL", "box_mode") ? _t("on", L"On") : _t("off", L"Off"));
+
+	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool("GENERAL", "rumble") ? wstringEx(" En") : wstringEx(" Eff"));
+	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool("GENERAL", "box_mode") ? wstringEx(" En") : wstringEx(" Eff"));
 }
 
 void CMenu::_config(int page)

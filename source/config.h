@@ -10,7 +10,7 @@
 #include "wstringEx.h"
 
 class CColor;
-class Vector3D;
+class vec3;
 
 class Config
 { 
@@ -22,6 +22,7 @@ public:
 	void save(void);
 	bool loaded(void) const { return m_loaded; }
 	bool has(const std::string &domain, const std::string &key) const;
+
 	// Set
 	void setWString(const std::string &domain, const std::string &key, const wstringEx &val);
 	void setString(const std::string &domain, const std::string &key, const std::string &val);
@@ -29,7 +30,7 @@ public:
 	void setOptBool(const std::string &domain, const std::string &key, int val);
 	void setInt(const std::string &domain, const std::string &key, int val);
 	void setFloat(const std::string &domain, const std::string &key, float val);
-	void setVector3D(const std::string &domain, const std::string &key, const Vector3D &val);
+	void setVector3D(const std::string &domain, const std::string &key, const vec3 &val);
 	void setColor(const std::string &domain, const std::string &key, const CColor &val);
 	// Get
 	wstringEx getWString(const std::string &domain, const std::string &key, const wstringEx &defVal = wstringEx());
@@ -39,11 +40,10 @@ public:
 	bool testOptBool(const std::string &domain, const std::string &key, bool defVal);
 	int getInt(const std::string &domain, const std::string &key, int defVal = 0);
 	float getFloat(const std::string &domain, const std::string &key, float defVal = 0.f);
-	Vector3D getVector3D(const std::string &domain, const std::string &key, const Vector3D &defVal = Vector3D());
+	vec3 getVector3D(const std::string &domain, const std::string &key, const vec3 &defVal = vec3());
 	CColor getColor(const std::string &domain, const std::string &key, const CColor &defVal = CColor());
 	// 
 	const std::string &firstDomain(void);
-	const std::string &nextDomain(void);
 	const std::string &nextDomain(const std::string &start) const;
 	const std::string &prevDomain(const std::string &start) const;
 	bool hasDomain(const std::string &domain) const;
@@ -64,8 +64,8 @@ private:
 	DomainMap::iterator m_iter;
 	static const std::string emptyString;
 private:
-	Config(const Config &);
-	Config &operator=(const Config &);
+	Config(const Config &) = delete;
+	Config &operator=(const Config &) = delete;
 };
 
 #endif // !defined(__CONFIG_HPP)
