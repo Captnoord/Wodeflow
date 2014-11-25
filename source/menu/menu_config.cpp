@@ -31,6 +31,7 @@ void CMenu::_hideConfig(bool instant)
 			m_btnMgr.hide(m_configLblUser[i], instant);
 }
 
+
 void CMenu::_showConfig(void)
 {
 	_setBg(m_configBg, m_configBg);
@@ -56,13 +57,10 @@ void CMenu::_showConfig(void)
 		if (m_configLblUser[i] != -1u)
 			m_btnMgr.show(m_configLblUser[i]);
 	// 
-	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage + 1 : CMenu::_nbCfgPages));
+	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage + 1 : CMenu::_nbCfgPages));
 	
-	//m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool(" GENERAL", "rumble") ? _t("on", L"On") : _t("off", L"Off"));
-	//m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool(" GENERAL", "box_mode") ? _t("on", L"On") : _t("off", L"Off"));
-
-	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool("GENERAL", "rumble") ? wstringEx(" En") : wstringEx(" Eff"));
-	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool("GENERAL", "box_mode") ? wstringEx(" En") : wstringEx(" Eff"));
+	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool("GENERA", "rumble")		? gOn : gOff);
+	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool("GENERA", "box_mode")	? gOn : gOff);
 }
 
 void CMenu::_config(int page)
@@ -106,7 +104,7 @@ void CMenu::_config(int page)
 		}
 	WPAD_Rumble(WPAD_CHAN_0, 0);
 	m_cfg.save();
-	m_cf.setBoxMode(m_cfg.getBool(" GENERAL", "box_mode"));
+	m_cf.setBoxMode(m_cfg.getBool(" GENERA", "box_mode"));
 	_initCF();
 }
 
@@ -158,7 +156,7 @@ int CMenu::_config1(void)
 			{
 				char code[4];
 				_hideConfig();
-				if (_code(code) && memcmp(code, m_cfg.getString(" GENERAL", "parent_code", "").c_str(), 4) == 0)
+				if (_code(code) && memcmp(code, m_cfg.getString(" GENERA", "parent_code", "").c_str(), 4) == 0)
 					m_locked = false;
 				_showConfig();
 			}
@@ -167,18 +165,18 @@ int CMenu::_config1(void)
 				char code[4];
 				_hideConfig();
 				if (_code(code, true))
-					m_cfg.setString(" GENERAL", "parent_code", string(code, 4).c_str());
+					m_cfg.setString(" GENERA", "parent_code", string(code, 4).c_str());
 				_showConfig();
 			}
 			else if (m_btnMgr.selected() == m_configBtnBoxMode)
 			{
-				m_cfg.setBool(" GENERAL", "box_mode", !m_cfg.getBool(" GENERAL", "box_mode"));
+				m_cfg.setBool(" GENERA", "box_mode", !m_cfg.getBool(" GENERA", "box_mode"));
 				_showConfig();
 			}
 			else if (m_btnMgr.selected() == m_configBtnRumble)
 			{
-				m_cfg.setBool(" GENERAL", "rumble", !m_cfg.getBool(" GENERAL", "rumble"));
-				m_btnMgr.setRumble(m_cfg.getBool(" GENERAL", "rumble"));
+				m_cfg.setBool(" GENERA", "rumble", !m_cfg.getBool(" GENERA", "rumble"));
+				m_btnMgr.setRumble(m_cfg.getBool(" GENERA", "rumble"));
 				_showConfig();
 			}
 		}
@@ -193,20 +191,20 @@ void CMenu::_initConfigMenu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_configLblUser, ARRAY_SIZE(m_configLblUser), "CONFIG");
 	m_configBg = _texture(theme.texSet, "CONFIG/BG", "texture", theme.bg);
-	m_configLblTitle = _addLabel(theme, "CONFIG/TITLE", theme.titleFont, L"", 20, 30, 600, 60, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
-	m_configLblDownload = _addLabel(theme, "CONFIG/DOWNLOAD", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configBtnDownload = _addButton(theme, "CONFIG/DOWNLOAD_BTN", theme.btnFont, L"", 400, 130, 200, 56, theme.btnFontColor);
-	m_configLblParental = _addLabel(theme, "CONFIG/PARENTAL", theme.lblFont, L"", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configBtnUnlock = _addButton(theme, "CONFIG/UNLOCK_BTN", theme.btnFont, L"", 400, 190, 200, 56, theme.btnFontColor);
-	m_configBtnSetCode = _addButton(theme, "CONFIG/SETCODE_BTN", theme.btnFont, L"", 400, 190, 200, 56, theme.btnFontColor);
-	m_configLblBoxMode = _addLabel(theme, "CONFIG/BOXMODE", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configBtnBoxMode = _addButton(theme, "CONFIG/BOXMODE_BTN", theme.btnFont, L"", 400, 250, 200, 56, theme.btnFontColor);
-	m_configLblRumble = _addLabel(theme, "CONFIG/RUMBLE", theme.lblFont, L"", 40, 310, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configBtnRumble = _addButton(theme, "CONFIG/RUMBLE_BTN", theme.btnFont, L"", 400, 310, 200, 56, theme.btnFontColor);
-	m_configLblPage = _addLabel(theme, "CONFIG/PAGE_BTN", theme.btnFont, L"", 76, 410, 80, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_configLblTitle = _addLabel(theme, "CONFIG/TITLE", theme.titleFont, "", 20, 30, 600, 60, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	m_configLblDownload = _addLabel(theme, "CONFIG/DOWNLOAD", theme.lblFont, "", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configBtnDownload = _addButton(theme, "CONFIG/DOWNLOAD_BTN", theme.btnFont, "", 400, 130, 200, 56, theme.btnFontColor);
+	m_configLblParental = _addLabel(theme, "CONFIG/PARENTA", theme.lblFont, "", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configBtnUnlock = _addButton(theme, "CONFIG/UNLOCK_BTN", theme.btnFont, "", 400, 190, 200, 56, theme.btnFontColor);
+	m_configBtnSetCode = _addButton(theme, "CONFIG/SETCODE_BTN", theme.btnFont, "", 400, 190, 200, 56, theme.btnFontColor);
+	m_configLblBoxMode = _addLabel(theme, "CONFIG/BOXMODE", theme.lblFont, "", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configBtnBoxMode = _addButton(theme, "CONFIG/BOXMODE_BTN", theme.btnFont, "", 400, 250, 200, 56, theme.btnFontColor);
+	m_configLblRumble = _addLabel(theme, "CONFIG/RUMBLE", theme.lblFont, "", 40, 310, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configBtnRumble = _addButton(theme, "CONFIG/RUMBLE_BTN", theme.btnFont, "", 400, 310, 200, 56, theme.btnFontColor);
+	m_configLblPage = _addLabel(theme, "CONFIG/PAGE_BTN", theme.btnFont, "", 76, 410, 80, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
 	m_configBtnPageM = _addPicButton(theme, "CONFIG/PAGE_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 20, 410, 56, 56);
 	m_configBtnPageP = _addPicButton(theme, "CONFIG/PAGE_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 156, 410, 56, 56);
-	m_configBtnBack = _addButton(theme, "CONFIG/BACK_BTN", theme.btnFont, L"", 420, 410, 200, 56, theme.btnFontColor);
+	m_configBtnBack = _addButton(theme, "CONFIG/BACK_BTN", theme.btnFont, "", 420, 410, 200, 56, theme.btnFontColor);
 	// 
 	_setHideAnim(m_configLblTitle, "CONFIG/TITLE", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_configLblBoxMode, "CONFIG/BOXMODE", 100, 0, -2.f, 0.f);
@@ -215,7 +213,7 @@ void CMenu::_initConfigMenu(CMenu::SThemeData &theme)
 	_setHideAnim(m_configBtnRumble, "CONFIG/RUMBLE_BTN", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_configLblDownload, "CONFIG/DOWNLOAD", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_configBtnDownload, "CONFIG/DOWNLOAD_BTN", 0, 0, -2.f, 0.f);
-	_setHideAnim(m_configLblParental, "CONFIG/PARENTAL", 100, 0, -2.f, 0.f);
+	_setHideAnim(m_configLblParental, "CONFIG/PARENTA", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_configBtnUnlock, "CONFIG/UNLOCK_BTN", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_configBtnSetCode, "CONFIG/SETCODE_BTN", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_configBtnBack, "CONFIG/BACK_BTN", 0, 0, -2.f, 0.f);
@@ -228,13 +226,13 @@ void CMenu::_initConfigMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfig(void)
 {
-	m_btnMgr.setText(m_configLblTitle, _t("cfg1", L"Settings"));
-	m_btnMgr.setText(m_configLblBoxMode, _t("cfg2", L"3D boxes"));
-	m_btnMgr.setText(m_configLblDownload, _t("cfg3", L"Download covers & titles"));
-	m_btnMgr.setText(m_configBtnDownload, _t("cfg4", L"Download"));
-	m_btnMgr.setText(m_configLblParental, _t("cfg5", L"Parental control"));
-	m_btnMgr.setText(m_configBtnUnlock, _t("cfg6", L"Unlock"));
-	m_btnMgr.setText(m_configBtnSetCode, _t("cfg7", L"Set code"));
-	m_btnMgr.setText(m_configBtnBack, _t("cfg10", L"Back"));
-	m_btnMgr.setText(m_configLblRumble, _t("cfg11", L"Rumble"));
+	m_btnMgr.setText(m_configLblTitle, _t("cfg1", "Settings"));
+	m_btnMgr.setText(m_configLblBoxMode, _t("cfg2", "3D boxes"));
+	m_btnMgr.setText(m_configLblDownload, _t("cfg3", "Download covers & titles"));
+	m_btnMgr.setText(m_configBtnDownload, _t("cfg4", "Download"));
+	m_btnMgr.setText(m_configLblParental, _t("cfg5", "Parental contro"));
+	m_btnMgr.setText(m_configBtnUnlock, _t("cfg6", "Unlock"));
+	m_btnMgr.setText(m_configBtnSetCode, _t("cfg7", "Set code"));
+	m_btnMgr.setText(m_configBtnBack, _t("cfg10", "Back"));
+	m_btnMgr.setText(m_configLblRumble, _t("cfg11", "Rumble"));
 }

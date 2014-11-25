@@ -26,7 +26,7 @@ public:
 	// Cover list management
 	void clear(void);
 	void reserve(u32 capacity);
-	void addItem(const char *id, unsigned long idx, unsigned long part, const wchar_t *title, const char *picPath, const char *boxPicPath, int playcount, int type);
+	void addItem(const char *id, unsigned long idx, unsigned long part, const char *title, const char *picPath, const char *boxPicPath, int playcount, int type);
 	bool empty(void) const { return m_items.empty(); }
 	// 
 	bool start(const char *id = 0);
@@ -39,8 +39,8 @@ public:
 	bool findId(const char *id, bool instant = false);
 	void pageUp(void);
 	void pageDown(void);
-	wchar_t nextLetter(void);
-	wchar_t prevLetter(void);
+	char nextLetter(void);
+	char prevLetter(void);
 	void left(void);
 	void right(void);
 	void up(void);
@@ -160,43 +160,48 @@ private:
 	enum TexState { STATE_Loading, STATE_Ready, STATE_NoCover };
 	struct CItem
 	{
-		std::string id;
-		unsigned long game_idx;
-		unsigned long game_part;
-		wstringEx title;
-		std::string picPath;
-		std::string boxPicPath;
-		std::string discPicPath;
-		int playcount;
-		int type;
-		STexture texture;
-		volatile bool boxTexture;
-		volatile enum TexState state;
-		// 
-		CItem(const char *itemId, unsigned long idx, unsigned long part, const wchar_t *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
+		std::string			id_;
+		unsigned long		game_idx_;
+		unsigned long		game_part_;
+		std::string			title_;
+		std::string			title_compare_cache_; // only cache
+
+
+		std::string			picPath_;
+		std::string			boxPicPath_;
+		std::string			discPicPath_;
+		int					playcount_;
+		int					type_;
+		STexture			texture_;
+		volatile bool		boxTexture_;
+		volatile enum TexState state_;
+		
+		//
+		CItem(const char *itemId, unsigned long idx, unsigned long part, const char *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
+		
 		bool operator<(const CItem &i) const;
 	};
 	
 	struct CCover
 	{
-		u32			index_;
+		u32		index_;
 		vec3	scale_;
 		vec3	targetScale_;
 		vec3	angle;
 		vec3	targetAngle;
 		vec3	pos;
 		vec3	targetPos;
-		CColor		color_;
-		CColor		targetColor_;
-		float		txtAngle_;
-		float		txtTargetAngle_;
+		CColor	color_;
+		CColor	targetColor_;
+		float	txtAngle_;
+		float	txtTargetAngle_;
 		vec3	txtPos;
 		vec3	txtTargetPos;
-		u8			txtColor_;
-		u8			txtTargetColor_;
-		CText		title;
-		CColor		shadowColor_;
-		CColor		targetShadowColor_;
+		u8		txtColor_;
+		u8		txtTargetColor_;
+		CText	title;
+		CColor	shadowColor_;
+		CColor	targetShadowColor_;
 		// 
 		CCover(void);
 	};

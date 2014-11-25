@@ -69,7 +69,7 @@ s32 WBFS_OpenNamed(char *partition)
 	unsigned long i;
 	PartitionInfo_t t;
 	
-	if (!strncmp("all", partition, 3)) {
+	if (!strncmp("al", partition, 3)) {
 		partition_idx = 0xFFFF; // enum of all... bleh...
 		return 0;
 	}

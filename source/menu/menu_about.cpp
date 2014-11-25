@@ -61,11 +61,11 @@ void CMenu::_initAboutMenu(CMenu::SThemeData &theme)
 	STexture emptyTex;
 	_addUserLabels(theme, m_aboutLblUser, ARRAY_SIZE(m_aboutLblUser), "ABOUT");
 	m_aboutBg = _texture(theme.texSet, "ABOUT/BG", "texture", theme.bg);
-	m_aboutLblTitle = _addLabel(theme, "ABOUT/TITLE", theme.titleFont, L"", 170, 25, 300, 75, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, emptyTex);
-	m_aboutLblOrigAuthor = _addLabel(theme, "ABOUT/ORIG_AUTHOR", theme.lblFont, L"", 40, 110, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_aboutLblAuthor = _addLabel(theme, "ABOUT/AUTHOR", theme.lblFont, L"", 40, 150, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_aboutLblInfo = _addLabel(theme, "ABOUT/INFO", theme.lblFont, L"", 40, 210, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
-	m_aboutLblIOS = _addLabel(theme, "ABOUT/IOS", theme.lblFont, L"", 40, 400, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_RIGHT | FTGX_ALIGN_BOTTOM);
+	m_aboutLblTitle = _addLabel(theme, "ABOUT/TITLE", theme.titleFont, "", 170, 25, 300, 75, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, emptyTex);
+	m_aboutLblOrigAuthor = _addLabel(theme, "ABOUT/ORIG_AUTHOR", theme.lblFont, "", 40, 110, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_aboutLblAuthor = _addLabel(theme, "ABOUT/AUTHOR", theme.lblFont, "", 40, 150, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_aboutLblInfo = _addLabel(theme, "ABOUT/INFO", theme.lblFont, "", 40, 210, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
+	m_aboutLblIOS = _addLabel(theme, "ABOUT/IOS", theme.lblFont, "", 40, 400, 560, 56, theme.txtFontColor, FTGX_JUSTIFY_RIGHT | FTGX_ALIGN_BOTTOM);
 	// 
 	_setHideAnim(m_aboutLblTitle, "ABOUT/TITLE", 0, 100, 0.f, 0.f);
 	_setHideAnim(m_aboutLblOrigAuthor, "ABOUT/ORIG_AUTHOR", -100, 0, 0.f, 0.f);
@@ -79,15 +79,16 @@ void CMenu::_initAboutMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textAbout(void)
 {
-	m_btnMgr.setText(m_aboutLblTitle, wfmt(_fmt("appname", L"%s v%s%s"), APP_NAME, APP_VERSION, SVN_REV), true);
-	m_btnMgr.setText(m_aboutLblOrigAuthor, wfmt(_fmt("about1", L"Loader by %s"), LOADER_AUTHOR), true);
-	m_btnMgr.setText(m_aboutLblAuthor, wfmt(_fmt("about2", L"GUI by %s"), GUI_AUTHOR), true);
-	wstringEx thanksTo(m_cfg.getWString(" GENERAL", "insertnamehere"));
+	m_btnMgr.setText(m_aboutLblTitle, wfmt(_fmt("appname", "%s v%s%s"), APP_NAME, APP_VERSION, SVN_REV), true);
+	m_btnMgr.setText(m_aboutLblOrigAuthor, wfmt(_fmt("about1", "Loader by %s"), LOADER_AUTHOR), true);
+	m_btnMgr.setText(m_aboutLblAuthor, wfmt(_fmt("about2", "GUI by %s"), GUI_AUTHOR), true);
+	
+	std::string thanksTo(m_cfg.getString("GENERAL", "insertnamehere"));
 	if (!thanksTo.empty())
-		thanksTo.append(L", ");
-	wstringEx translator(m_loc.getWString(m_curLanguage, "translation_author"));
+		thanksTo.append(", ");
+	std::string translator(m_loc.getString(m_curLanguage, "translation_author"));
 	if (!translator.empty())
-		translator.append(L", ");
-	m_btnMgr.setText(m_aboutLblInfo, wfmt(_fmt("about3", L"Thanks to :\n\n%s%s%s\n\n%s\n%s"), thanksTo.toUTF8().c_str(), translator.toUTF8().c_str(), THANKS, THANKS_SITES, THANKS_CODE), true);
-	m_btnMgr.setText(m_aboutLblIOS, wfmt(_fmt("ios", L"IOS%i rev%i"), IOS_GetVersion(), IOS_GetRevision()), true);
+		translator.append(", ");
+	m_btnMgr.setText(m_aboutLblInfo, wfmt(_fmt("about3", "Thanks to :\n\n%s%s%s\n\n%s\n%s"), thanksTo.c_str(), translator.c_str(), THANKS, THANKS_SITES, THANKS_CODE), true);
+	m_btnMgr.setText(m_aboutLblIOS, wfmt(_fmt("ios", "IOS%i rev%i"), IOS_GetVersion(), IOS_GetRevision()), true);
 }

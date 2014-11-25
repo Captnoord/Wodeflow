@@ -67,7 +67,7 @@ static string countryCode(const string &gameId)
 		case CONF_LANG_ITALIAN:
 			return "IT";
 		case CONF_LANG_DUTCH:
-			return "NL";
+			return "N";
 	}
 	return "EN";
 }
@@ -111,7 +111,7 @@ static string makeURL(const string &format, const string &gameId, const string &
 						url += "ntscj";
 						break;
 					default:
-						url += "pal";
+						url += "pa";
 					}
 			}
 			i = j + 1;
@@ -159,11 +159,11 @@ void CMenu::_showDownload(void)
 			m_btnMgr.show(m_downloadLblUser[i]);
 }
 
-void CMenu::_setThrdMsg(const wstringEx &msg, float progress)
+void CMenu::_setThrdMsg(const std::string &msg, float progress)
 {
 	LWP_MutexLock(m_mutex);
 	if (!m_thrdStop) {
-		if (msg != L"...")
+		if (msg != "...")
 			m_thrdMessage = msg;
 		m_thrdMessageAdded = true;
 		m_thrdProgress = progress;
@@ -174,7 +174,7 @@ void CMenu::_setThrdMsg(const wstringEx &msg, float progress)
 bool CMenu::_downloadProgress(void *obj, int size, int position)
 {
 	CMenu *m = (CMenu *)obj;
-	m->_setThrdMsg(L"...", m->m_thrdStep + m->m_thrdStepLen * ((float)position / (float)size));
+	m->_setThrdMsg("...", m->m_thrdStep + m->m_thrdStepLen * ((float)position / (float)size));
 	return !m->m_thrdStop;
 }
 
@@ -264,13 +264,13 @@ int CMenu::_coverDownloader(bool missingOnly)
 	buffer = smartCoverAlloc(bufferSize);
 	if (!buffer)
 	{
-		_setThrdMsg(L"Not enough memory", 1.f);
+		_setThrdMsg("Not enough memory", 1.f);
 		m_thrdWorking = false;
 		return 0;
 	}
-	savePNG = m_cfg.getBool(" GENERAL", "keep_png", true);
-	fmtURLBox = stringToVector(m_cfg.getString(" GENERAL", "url_full_covers", FMT_BPIC_URL), '|');
-	fmtURLFlat = stringToVector(m_cfg.getString(" GENERAL", "url_flat_covers", FMT_PIC_URL), '|');
+	savePNG = m_cfg.getBool(" GENERA", "keep_png", true);
+	fmtURLBox = stringToVector(m_cfg.getString(" GENERA", "url_full_covers", FMT_BPIC_URL), '|');
+	fmtURLFlat = stringToVector(m_cfg.getString(" GENERA", "url_flat_covers", FMT_PIC_URL), '|');
 	nbSteps = m_gameList.size();
 	step = 0;
 	if (m_coverDLGameId.empty())
@@ -278,7 +278,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 		coverList.reserve(m_gameList.size());
 		for (u32 i = 0; i < m_gameList.size() && !m_thrdStop; ++i)
 		{
-			_setThrdMsg(_t("dlmsg7", L"Listing covers to download..."), listWeight * (float)step / (float)nbSteps);
+			_setThrdMsg(_t("dlmsg7", "Listing covers to download..."), listWeight * (float)step / (float)nbSteps);
 			++step;
 			string id((const char *)m_gameList[i].id, sizeof m_gameList[i].id);
 			path = sfmt("%s/%s.png", m_boxPicDir.c_str(), id.c_str());
@@ -293,10 +293,10 @@ int CMenu::_coverDownloader(bool missingOnly)
 	{
 		step = 0;
 		nbSteps = 1 + n * 2;
-		_setThrdMsg(_t("dlmsg1", L"Initializing network..."), listWeight + dlWeight * (float)step / (float)nbSteps);
+		_setThrdMsg(_t("dlmsg1", "Initializing network..."), listWeight + dlWeight * (float)step / (float)nbSteps);
 		if (!m_networkInit && _initNetwork(ip) < 0)
 		{
-			_setThrdMsg(_t("dlmsg2", L"Network initialization failed"), 1.f);
+			_setThrdMsg(_t("dlmsg2", "Network initialization failed"), 1.f);
 			m_thrdWorking = false;
 			return 0;
 		}
@@ -315,7 +315,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 				if (j == 0)
 					++step;
 				m_thrdStep = listWeight + dlWeight * (float)step / (float)nbSteps;
-				_setThrdMsg(wfmt(_fmt("dlmsg3", L"Downloading from %s"), url.c_str()), m_thrdStep);
+				_setThrdMsg(wfmt(_fmt("dlmsg3", "Downloading from %s"), url.c_str()), m_thrdStep);
 				
 				png = downloadfile(buffer.get(), bufferSize, url.c_str(), CMenu::_downloadProgress, this);
 				if (png.data != NULL)
@@ -323,7 +323,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 					if (savePNG)
 					{
 						path = sfmt("%s/%s.png", m_boxPicDir.c_str(), coverList[i].c_str());
-						_setThrdMsg(wfmt(_fmt("dlmsg4", L"Saving %s"), path.c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
+						_setThrdMsg(wfmt(_fmt("dlmsg4", "Saving %s"), path.c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
 						file = fopen(path.c_str(), "wb");
 						if (file != NULL)
 						{
@@ -332,7 +332,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 						}
 					}
 					
-					_setThrdMsg(wfmt(_fmt("dlmsg10", L"Making %s"), sfmt("%s.wfc", coverList[i].c_str()).c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
+					_setThrdMsg(wfmt(_fmt("dlmsg10", "Making %s"), sfmt("%s.wfc", coverList[i].c_str()).c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
 					if (m_cf.preCacheCover(coverList[i].c_str(), png.data, true))
 					{
 						++count;
@@ -353,14 +353,14 @@ int CMenu::_coverDownloader(bool missingOnly)
 					for (u32 j = 0; !success && j < fmtURLFlat.size() && !m_thrdStop; ++j)
 					{
 						url = makeURL(fmtURLFlat[j], coverList[i], countryCode(coverList[i]));
-						_setThrdMsg(wfmt(_fmt("dlmsg8", L"Full cover not found. Downloading from %s"), url.c_str()), listWeight + dlWeight * (float)step / (float)nbSteps);
+						_setThrdMsg(wfmt(_fmt("dlmsg8", "Full cover not found. Downloading from %s"), url.c_str()), listWeight + dlWeight * (float)step / (float)nbSteps);
 
 						png = downloadfile(buffer.get(), bufferSize, url.c_str(), CMenu::_downloadProgress, this);
 						if (png.data != NULL)
 						{
 							if (savePNG)
 							{
-								_setThrdMsg(wfmt(_fmt("dlmsg4", L"Saving %s"), path.c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
+								_setThrdMsg(wfmt(_fmt("dlmsg4", "Saving %s"), path.c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
 								file = fopen(path.c_str(), "wb");
 								if (file != NULL)
 								{
@@ -369,7 +369,7 @@ int CMenu::_coverDownloader(bool missingOnly)
 								}
 							}
 
-							_setThrdMsg(wfmt(_fmt("dlmsg10", L"Making %s"), sfmt("%s.wfc", coverList[i].c_str()).c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
+							_setThrdMsg(wfmt(_fmt("dlmsg10", "Making %s"), sfmt("%s.wfc", coverList[i].c_str()).c_str()), listWeight + dlWeight * (float)(step + 1) / (float)nbSteps);
 							if (m_cf.preCacheCover(coverList[i].c_str(), png.data, false))
 							{
 								++countFlat;
@@ -384,9 +384,9 @@ int CMenu::_coverDownloader(bool missingOnly)
 		gprintf("Finished downloading covers\n");
 	}
 	if (countFlat == 0)
-		_setThrdMsg(wfmt(_fmt("dlmsg5", L"%i/%i files downloaded."), count, n), 1.f);
+		_setThrdMsg(wfmt(_fmt("dlmsg5", "%i/%i files downloaded."), count, n), 1.f);
 	else
-		_setThrdMsg(wfmt(_fmt("dlmsg9", L"%i/%i files downloaded. %i are front covers only."), count + countFlat, n, countFlat), 1.f);
+		_setThrdMsg(wfmt(_fmt("dlmsg9", "%i/%i files downloaded. %i are front covers only."), count + countFlat, n, countFlat), 1.f);
 	m_thrdWorking = false;
 	return 0;
 }
@@ -398,11 +398,11 @@ void CMenu::_download(string gameId)
 	u32 btn;
 	lwp_t thread = 0;
 	int msg = 0;
-	wstringEx prevMsg;
+	std::string prevMsg;
 
 	WPAD_Rumble(WPAD_CHAN_0, 0);
 	_showDownload();
-	m_btnMgr.setText(m_downloadBtnCancel, _t("dl1", L"Cancel"));
+	m_btnMgr.setText(m_downloadBtnCancel, _t("dl1", "Cance"));
 	m_thrdStop = false;
 	m_thrdMessageAdded = false;
 	m_coverDLGameId = gameId;
@@ -465,7 +465,7 @@ void CMenu::_download(string gameId)
 				LockMutex lock(m_mutex);
 				m_thrdStop = true;
 				m_thrdMessageAdded = true;
-				m_thrdMessage = _t("dlmsg6", L"Canceling...");
+				m_thrdMessage = _t("dlmsg6", "Canceling...");
 			}
 		}
 		if (Sys_Exiting())
@@ -473,7 +473,7 @@ void CMenu::_download(string gameId)
 			LockMutex lock(m_mutex);
 			m_thrdStop = true;
 			m_thrdMessageAdded = true;
-			m_thrdMessage = _t("dlmsg6", L"Canceling...");
+			m_thrdMessage = _t("dlmsg6", "Canceling...");
 		}
 		// 
 		if (m_thrdMessageAdded)
@@ -482,7 +482,7 @@ void CMenu::_download(string gameId)
 			m_thrdMessageAdded = false;
 			m_btnMgr.setProgress(m_downloadPBar, m_thrdProgress);
 			if (m_thrdProgress == 1.f)
-				m_btnMgr.setText(m_downloadBtnCancel, _t("dl2", L"Back"));
+				m_btnMgr.setText(m_downloadBtnCancel, _t("dl2", "Back"));
 			if (prevMsg != m_thrdMessage)
 			{
 				prevMsg = m_thrdMessage;
@@ -505,18 +505,18 @@ void CMenu::_initDownloadMenu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_downloadLblUser, ARRAY_SIZE(m_downloadLblUser), "DOWNLOAD");
 	m_downloadBg = _texture(theme.texSet, "DOWNLOAD/BG", "texture", theme.bg);
-	m_downloadLblTitle = _addLabel(theme, "DOWNLOAD/TITLE", theme.titleFont, L"", 20, 30, 600, 60, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	m_downloadLblTitle = _addLabel(theme, "DOWNLOAD/TITLE", theme.titleFont, "", 20, 30, 600, 60, theme.titleFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
 	m_downloadPBar = _addProgressBar(theme, "DOWNLOAD/PROGRESS_BAR", 40, 200, 560, 20);
-	m_downloadBtnCancel = _addButton(theme, "DOWNLOAD/CANCEL_BTN", theme.btnFont, L"", 420, 410, 200, 56, theme.btnFontColor);
-	m_downloadLblCovers = _addLabel(theme, "DOWNLOAD/COVERS", theme.btnFont, L"", 40, 150, 320, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_downloadBtnAll = _addButton(theme, "DOWNLOAD/ALL_BTN", theme.btnFont, L"", 370, 150, 230, 56, theme.btnFontColor);
-	m_downloadBtnMissing = _addButton(theme, "DOWNLOAD/MISSING_BTN", theme.btnFont, L"", 370, 210, 230, 56, theme.btnFontColor);
-	m_downloadLblGameTitles = _addLabel(theme, "DOWNLOAD/GAME_TITLES", theme.btnFont, L"", 40, 270, 320, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_downloadBtnAllTitles = _addButton(theme, "DOWNLOAD/ALL_TITLES_BTN", theme.btnFont, L"", 370, 270, 230, 56, theme.btnFontColor);
-	m_downloadBtnMissingTitles = _addButton(theme, "DOWNLOAD/MISSING_TITLES_BTN", theme.btnFont, L"", 370, 330, 230, 56, theme.btnFontColor);
-	m_downloadLblWiiTDB = _addLabel(theme, "DOWNLOAD/WIITDB", theme.btnFont, L"", 40, 400, 370, 60, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_downloadLblMessage[0] = _addLabel(theme, "DOWNLOAD/MESSAGE1", theme.lblFont, L"", 40, 228, 560, 100, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
-	m_downloadLblMessage[1] = _addLabel(theme, "DOWNLOAD/MESSAGE2", theme.lblFont, L"", 40, 228, 560, 100, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
+	m_downloadBtnCancel = _addButton(theme, "DOWNLOAD/CANCEL_BTN", theme.btnFont, "", 420, 410, 200, 56, theme.btnFontColor);
+	m_downloadLblCovers = _addLabel(theme, "DOWNLOAD/COVERS", theme.btnFont, "", 40, 150, 320, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_downloadBtnAll = _addButton(theme, "DOWNLOAD/ALL_BTN", theme.btnFont, "", 370, 150, 230, 56, theme.btnFontColor);
+	m_downloadBtnMissing = _addButton(theme, "DOWNLOAD/MISSING_BTN", theme.btnFont, "", 370, 210, 230, 56, theme.btnFontColor);
+	m_downloadLblGameTitles = _addLabel(theme, "DOWNLOAD/GAME_TITLES", theme.btnFont, "", 40, 270, 320, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_downloadBtnAllTitles = _addButton(theme, "DOWNLOAD/ALL_TITLES_BTN", theme.btnFont, "", 370, 270, 230, 56, theme.btnFontColor);
+	m_downloadBtnMissingTitles = _addButton(theme, "DOWNLOAD/MISSING_TITLES_BTN", theme.btnFont, "", 370, 330, 230, 56, theme.btnFontColor);
+	m_downloadLblWiiTDB = _addLabel(theme, "DOWNLOAD/WIITDB", theme.btnFont, "", 40, 400, 370, 60, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_downloadLblMessage[0] = _addLabel(theme, "DOWNLOAD/MESSAGE1", theme.lblFont, "", 40, 228, 560, 100, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
+	m_downloadLblMessage[1] = _addLabel(theme, "DOWNLOAD/MESSAGE2", theme.lblFont, "", 40, 228, 560, 100, theme.txtFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP);
 	// 
 	_setHideAnim(m_downloadLblTitle, "DOWNLOAD/TITLE", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_downloadPBar, "DOWNLOAD/PROGRESS_BAR", 0, 0, -2.f, 0.f);
@@ -534,15 +534,15 @@ void CMenu::_initDownloadMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textDownload(void)
 {
-	m_btnMgr.setText(m_downloadLblTitle, _t("dl5", L"Download"));
-	m_btnMgr.setText(m_downloadBtnCancel, _t("dl1", L"Cancel"));
-	m_btnMgr.setText(m_downloadBtnAll, _t("dl3", L"All"));
-	m_btnMgr.setText(m_downloadBtnMissing, _t("dl4", L"Missing"));
-	m_btnMgr.setText(m_downloadBtnAllTitles, _t("dl6", L"All"));
-	m_btnMgr.setText(m_downloadBtnMissingTitles, _t("dl7", L"Missing"));
-	m_btnMgr.setText(m_downloadLblCovers, _t("dl8", L"Covers"));
-	m_btnMgr.setText(m_downloadLblGameTitles, _t("dl9", L"Game titles"));
-	m_btnMgr.setText(m_downloadLblWiiTDB, _t("dl10", L"Please donate\nto WiiTDB.com"));
+	m_btnMgr.setText(m_downloadLblTitle, _t("dl5", "Download"));
+	m_btnMgr.setText(m_downloadBtnCancel, _t("dl1", "Cance"));
+	m_btnMgr.setText(m_downloadBtnAll, _t("dl3", "Al"));
+	m_btnMgr.setText(m_downloadBtnMissing, _t("dl4", "Missing"));
+	m_btnMgr.setText(m_downloadBtnAllTitles, _t("dl6", "Al"));
+	m_btnMgr.setText(m_downloadBtnMissingTitles, _t("dl7", "Missing"));
+	m_btnMgr.setText(m_downloadLblCovers, _t("dl8", "Covers"));
+	m_btnMgr.setText(m_downloadLblGameTitles, _t("dl9", "Game titles"));
+	m_btnMgr.setText(m_downloadLblWiiTDB, _t("dl10", "Please donate\nto WiiTDB.com"));
 }
 
 int CMenu::_titleDownloaderAll(CMenu *m)
@@ -565,7 +565,7 @@ int CMenu::_titleDownloader(bool missingOnly)
 	Config titles;
 	char ip[16];
 	string langCode;
-	wstringEx ws;
+	std::string ws;
 	bool ok = false;
 	SmartBuf buffer;
 	const char *p;
@@ -576,26 +576,26 @@ int CMenu::_titleDownloader(bool missingOnly)
 	buffer = smartCoverAlloc(bufferSize);
 	if (!buffer)
 	{
-		_setThrdMsg(L"Not enough memory", 1.f);
+		_setThrdMsg("Not enough memory", 1.f);
 		return 0;
 	}
 	titles.load(sfmt("%s/titles.ini", m_dataDir.c_str()).c_str());
 	langCode = m_loc.getString(m_curLanguage, "wiitdb_code", "EN");
-	_setThrdMsg(_t("dlmsg1", L"Initializing network..."), 0.f);
+	_setThrdMsg(_t("dlmsg1", "Initializing network..."), 0.f);
 	if (!m_networkInit && _initNetwork(ip) < 0)
 	{
-		_setThrdMsg(_t("dlmsg2", L"Network initialization failed"), 1.f);
+		_setThrdMsg(_t("dlmsg2", "Network initialization failed"), 1.f);
 	}
 	else
 	{
 		m_networkInit = true;
-		_setThrdMsg(_t("dlmsg11", L"Downloading..."), 0.1f);
+		_setThrdMsg(_t("dlmsg11", "Downloading..."), 0.1f);
 		m_thrdStep = 0.1f;
 		m_thrdStepLen = 0.9f - 0.1f;
 		txt = downloadfile(buffer.get(), bufferSize, sfmt(TITLES_URL, langCode.c_str()).c_str(), CMenu::_downloadProgress, this);
 		if (txt.data == 0 || txt.size < 42)
 		{
-			_setThrdMsg(_t("dlmsg12", L"Download failed"), 1.f);
+			_setThrdMsg(_t("dlmsg12", "Download failed"), 1.f);
 		}
 		else
 		{
@@ -617,12 +617,12 @@ int CMenu::_titleDownloader(bool missingOnly)
 						if (m != string::npos)
 						{
 							ok = true;
-							wstringEx w;
-							w.fromUTF8(l.substr(m, l[l.size() - 1] == '\r' ? l.size() - 1 - m : l.size() - m).c_str());
+							std::string w;
+							w = l.substr(m, l[l.size() - 1] == '\r' ? l.size() - 1 - m : l.size() - m);
 							if (missingOnly)
-								titles.getWString("TITLES", l.substr(0, n), w);
+								titles.getString("TITLES", l.substr(0, n), w);
 							else
-								titles.setWString("TITLES", l.substr(0, n), w);
+								titles.setString("TITLES", l.substr(0, n), w);
 						}
 					}
 				}
@@ -630,15 +630,15 @@ int CMenu::_titleDownloader(bool missingOnly)
 			}
 			if (!ok)
 			{
-				_setThrdMsg(_t("dlmsg16", L"Couldn't read file"), 1.f);
+				_setThrdMsg(_t("dlmsg16", "Couldn't read file"), 1.f);
 			}
 		}
 	}
 	if (ok)
 	{
-		_setThrdMsg(_t("dlmsg13", L"Saving..."), 0.9f);
+		_setThrdMsg(_t("dlmsg13", "Saving..."), 0.9f);
 		titles.save();
-		_setThrdMsg(_t("dlmsg14", L"Done."), 1.f);
+		_setThrdMsg(_t("dlmsg14", "Done."), 1.f);
 	}
 	m_thrdWorking = false;
 	return 0;

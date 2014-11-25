@@ -3,7 +3,7 @@
 #include <cstdio>
 
 
-static const wchar_t *g_whitespaces = L" \f\n\r\t\v";
+static const char *g_whitespaces = " \f\n\r\t\v";
 
 // Simplified use of sprintf
 const char *fmt(const char *format, ...)
@@ -46,7 +46,7 @@ std::string sfmt(const char *format, ...)
 	return s;
 }
 
-static inline bool fmtCount(const wstringEx &format, int &i, int &s)
+static inline bool fmtCount(const std::string &format, int &i, int &s)
 {
 	int state = 0;
 
@@ -84,7 +84,7 @@ static inline bool fmtCount(const wstringEx &format, int &i, int &s)
 }
 
 // Only handles the cases i need for translations : plain %i and %s
-bool checkFmt(const wstringEx &ref, const wstringEx &format)
+bool checkFmt(const std::string &ref, const std::string &format)
 {
 	int s;
 	int i;
@@ -97,11 +97,11 @@ bool checkFmt(const wstringEx &ref, const wstringEx &format)
 	return i == refi && s == refs;
 }
 
-wstringEx wfmt(const wstringEx &format, ...)
+std::string wfmt(const std::string &format, ...)
 {
 	// Don't care about performance
 	va_list va;
-	std::string f(format.toUTF8());
+	std::string f(format);
 	u32 length;
 	char *tmp;
 
@@ -112,15 +112,15 @@ wstringEx wfmt(const wstringEx &format, ...)
 	va_start(va, format);
 	vsnprintf(tmp, length, f.c_str(), va);
 	va_end(va);
-	wstringEx ws;
-	ws.fromUTF8(tmp);
+	std::string ws;
+	ws = tmp;
 	delete[] tmp;
 	return ws;
 }
 
-wstringEx vectorToString(const std::vector<wstringEx> &vect, char sep)
+std::string vectorToString(const std::vector<std::string> &vect, char sep)
 {
-	wstringEx s;
+	std::string s;
 
 	for (u32 i = 0; i < vect.size(); ++i)
 	{
@@ -158,32 +158,6 @@ std::vector<std::string> stringToVector(const std::string &text, char sep)
 	return v;
 }
 
-std::vector<wstringEx> stringToVector(const wstringEx &text, char sep)
-{
-	std::vector<wstringEx> v;
-	if (text.empty())
-		return v;
-	u32 count = 1;
-	for (u32 i = 0; i < text.size(); ++i)
-		if (text[i] == sep)
-			++count;
-	v.reserve(count);
-	wstringEx::size_type off = 0;
-	wstringEx::size_type i = 0;
-	do
-	{
-		i = text.find_first_of(sep, off);
-		if (i != wstringEx::npos)
-		{
-			wstringEx ws(text.substr(off, i - off));
-			v.push_back(ws);
-			off = i + 1;
-		}
-		else
-			v.push_back(text.substr(off));
-	} while (i != wstringEx::npos);
-	return v;
-}
 
 bool SFont::fromBuffer(const u8 *buffer, u32 bufferSize, u32 size, u32 lspacing)
 {
@@ -261,10 +235,10 @@ bool SFont::fromFile(const char *filename, u32 size, u32 lspacing)
 	return true;
 }
 
-void CText::setText(SFont font, const wstringEx &t)
+void CText::setText(SFont font, const std::string &t)
 {
 	CText::SWord w;
-	std::vector<wstringEx> lines;
+	std::vector<std::string> lines;
 
 	m_lines.clear();
 	m_font = font;
@@ -276,25 +250,25 @@ void CText::setText(SFont font, const wstringEx &t)
 	// 
 	for (u32 k = 0; k < lines.size(); ++k)
 	{
-		wstringEx &l = lines[k];
+		std::string &l = lines[k];
 		m_lines.push_back(CText::CLine());
 		m_lines.back().reserve(32);
-		wstringEx::size_type i = l.find_first_not_of(g_whitespaces);
-		wstringEx::size_type j;
-		while (i != wstringEx::npos)
+		std::string::size_type i = l.find_first_not_of(g_whitespaces);
+		std::string::size_type j;
+		while (i != std::string::npos)
 		{
 			j = l.find_first_of(g_whitespaces, i);
-			if (j != wstringEx::npos && j > i)
+			if (j != std::string::npos && j > i)
 			{
 				w.text.assign(l, i, j - i);
 				m_lines.back().push_back(w);
 				i = l.find_first_not_of(g_whitespaces, j);
 			}
-			else if (j == wstringEx::npos)
+			else if (j == std::string::npos)
 			{
 				w.text.assign(l, i, l.size() - i);
 				m_lines.back().push_back(w);
-				i = wstringEx::npos;
+				i = std::string::npos;
 			}
 		}
 	}
@@ -312,6 +286,7 @@ void CText::setFrame(float width, u16 style, bool ignoreNewlines, bool instant)
 	if (!m_font.font)
 		return;
 	space = m_font.font->getWidth(L" ");
+
 	posX = 0.f;
 	posY = 0.f;
 	lineBeg = 0;
@@ -323,7 +298,9 @@ void CText::setFrame(float width, u16 style, bool ignoreNewlines, bool instant)
 		
 		for (u32 i = 0; i < words.size(); ++i)
 		{
-			wordWidth = m_font.font->getWidth(words[i].text.c_str());
+			std::wstring test(words[i].text.begin(), words[i].text.end());
+			wordWidth = m_font.font->getWidth(test.c_str());
+
 			if (posX == 0.f || posX + (float)wordWidth <= width)
 			{
 				words[i].targetPos = vec3(posX, posY, 0.f);
@@ -391,7 +368,10 @@ void CText::draw(void)
 		{
 			m_font.font->setX(m_lines[k][i].pos.x);
 			m_font.font->setY(m_lines[k][i].pos.y);
-			m_font.font->drawText(0, m_font.lineSpacing, m_lines[k][i].text.c_str(), m_color);
+
+			//m_font.font->drawText(0, m_font.lineSpacing, m_lines[k][i].text.c_str(), m_color);
+			std::wstring test(m_lines[k][i].text.begin(), m_lines[k][i].text.end());
+			m_font.font->drawText(0, m_font.lineSpacing, test.c_str(), m_color);
 		}
 	}
 }

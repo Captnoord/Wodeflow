@@ -13,6 +13,9 @@
 
 #include "gct.h"
 
+static std::string gOff("Off");
+static std::string gOn("On");
+
 namespace menu
 {
 class rect
@@ -38,7 +41,7 @@ public:
 	CMenu(CVideo &vid);
 	~CMenu(void) { cleanup(); }
 	void init(bool fromHBC);
-	void error(const wstringEx &msg);
+	void error(const std::string &msg);
 	int main(void);
 	void cleanup(void);
 private:
@@ -325,7 +328,7 @@ private:
 	float m_thrdStepLen;
 	std::string m_coverDLGameId;
 	mutex_t m_mutex;
-	wstringEx m_thrdMessage;
+	std::string m_thrdMessage;
 	volatile float m_thrdProgress;
 	volatile bool m_thrdMessageAdded;
 	SSoundEffect m_gameSound;
@@ -503,25 +506,25 @@ private:
 	STexture _texture(TexSet &texSet, const char *domain, const char *key, STexture def);
 	SSoundEffect _sound(CMenu::SoundSet &soundSet, const char *domain, const char *key, SSoundEffect def);
 	u16 _textStyle(const char *domain, const char *key, u16 def);
-	u32 _addButton(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color);
+	u32 _addButton(SThemeData &theme, const char *domain, SFont font, const std::string &text, int x, int y, u32 width, u32 height, const CColor &color);
 	u32 _addPicButton(SThemeData &theme, const char *domain, STexture &texNormal, STexture &texSelected, int x, int y, u32 width, u32 height);
 	
 	
-	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, menu::rect rect, const CColor &color, u16 style);
+	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const std::string &text, menu::rect rect, const CColor &color, u16 style);
 
-	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style);
-	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, STexture &bg);
+	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const std::string &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style);
+	u32 _addLabel(SThemeData &theme, const char *domain, SFont font, const std::string &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, STexture &bg);
 	
 	u32 _addProgressBar(SThemeData &theme, const char *domain, int x, int y, u32 width, u32 height);
 	void _setHideAnim(u32 id, const char *domain, int dx, int dy, float scaleX, float scaleY);
 	void _addUserLabels(CMenu::SThemeData &theme, u32 *ids, u32 size, const char *domain);
 
 	// 
-	const wstringEx _t(const char *key, const wchar_t *def = L"");
-	const wstringEx _fmt(const char *key, const wchar_t *def);
+	const std::string _t(const char *key, const char *def = "");
+	const std::string _fmt(const char *key, const char *def);
 	// 
 
-	void _setThrdMsg(const wstringEx &msg, float progress);
+	void _setThrdMsg(const std::string &msg, float progress);
 	int _coverDownloader(bool missingOnly);
 	static int _coverDownloaderAll(CMenu *m);
 	static int _coverDownloaderMissing(CMenu *m);
@@ -534,12 +537,17 @@ private:
 	int _initNetwork(char *ip);
 	static void _addDiscProgress(int status, int total, void *user_data);
 	static int _gameInstaller(void *obj);
-	wstringEx _optBoolToString(int b);
+	std::string _optBoolToString(int b);
 	void _listDOL(std::vector<std::string> &v, const std::string &gameId);
 	
 	void _stopSounds(void);
 	// 
-	struct SOption { const char id[10]; const wchar_t text[16]; };
+	
+	struct SOption
+	{
+		const char id[10]; const char text[16];
+	};
+
 	static const SOption _languages[11];
 	static const SOption _videoModes[7];
 	static const SOption _vidModePatch[4];

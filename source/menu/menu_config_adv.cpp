@@ -71,9 +71,9 @@ void CMenu::_showConfigAdv(void)
 		if (m_configAdvLblUser[i] != -1u)
 			m_btnMgr.show(m_configAdvLblUser[i]);
 	// 
-	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
+	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
 	m_btnMgr.setText(m_configAdvLblCurLanguage, m_curLanguage);
-	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString(" GENERAL", "theme"));
+	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString(" GENERA", "theme"));
 }
 
 static string upperCase(string text)
@@ -124,7 +124,7 @@ int CMenu::_configAdv(void)
 	int nextPage = 0;
 	vector<string> themes;
 	int curTheme;
-	string prevTheme = m_cfg.getString(" GENERAL", "theme");
+	string prevTheme = m_cfg.getString(" GENERA", "theme");
 
 	listThemes(m_themeDir.c_str(), themes);
 	curTheme = 0;
@@ -176,32 +176,32 @@ int CMenu::_configAdv(void)
 				}
 				else
 				{
-					error(_t("wbfsop10", L"This filesystem is read-only. You cannot install games or remove them."));
+					error(_t("wbfsop10", "This filesystem is read-only. You cannot install games or remove them."));
 				}
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurThemeP)
 			{
 				curTheme = loopNum(curTheme + 1, (int)themes.size());
-				m_cfg.setString(" GENERAL", "theme", themes[curTheme]);
+				m_cfg.setString(" GENERA", "theme", themes[curTheme]);
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurThemeM)
 			{
 				curTheme = loopNum(curTheme - 1, (int)themes.size());
-				m_cfg.setString(" GENERAL", "theme", themes[curTheme]);
+				m_cfg.setString(" GENERA", "theme", themes[curTheme]);
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurLanguageP)
 			{
 				m_curLanguage = m_loc.nextDomain(m_curLanguage);
-				m_cfg.setString(" GENERAL", "language", m_curLanguage);
+				m_cfg.setString(" GENERA", "language", m_curLanguage);
 				_updateText();
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurLanguageM)
 			{
 				m_curLanguage = m_loc.prevDomain(m_curLanguage);
-				m_cfg.setString(" GENERAL", "language", m_curLanguage);
+				m_cfg.setString(" GENERA", "language", m_curLanguage);
 				_updateText();
 				_showConfigAdv();
 			}
@@ -224,18 +224,18 @@ void CMenu::_initConfigAdvMenu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_configAdvLblUser, ARRAY_SIZE(m_configAdvLblUser), "CONFIG_ADV");
 	m_configAdvBg = _texture(theme.texSet, "CONFIG_ADV/BG", "texture", theme.bg);
-	m_configAdvLblTheme = _addLabel(theme, "CONFIG_ADV/THEME", theme.lblFont, L"", 40, 130, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configAdvLblCurTheme = _addLabel(theme, "CONFIG_ADV/THEME_BTN", theme.btnFont, L"", 386, 130, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_configAdvLblTheme = _addLabel(theme, "CONFIG_ADV/THEME", theme.lblFont, "", 40, 130, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configAdvLblCurTheme = _addLabel(theme, "CONFIG_ADV/THEME_BTN", theme.btnFont, "", 386, 130, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
 	m_configAdvBtnCurThemeM = _addPicButton(theme, "CONFIG_ADV/THEME_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 330, 130, 56, 56);
 	m_configAdvBtnCurThemeP = _addPicButton(theme, "CONFIG_ADV/THEME_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 130, 56, 56);
-	m_configAdvLblLanguage = _addLabel(theme, "CONFIG_ADV/LANGUAGE", theme.lblFont, L"", 40, 190, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configAdvLblCurLanguage = _addLabel(theme, "CONFIG_ADV/LANGUAGE_BTN", theme.btnFont, L"", 386, 190, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_configAdvLblLanguage = _addLabel(theme, "CONFIG_ADV/LANGUAGE", theme.lblFont, "", 40, 190, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configAdvLblCurLanguage = _addLabel(theme, "CONFIG_ADV/LANGUAGE_BTN", theme.btnFont, "", 386, 190, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
 	m_configAdvBtnCurLanguageM = _addPicButton(theme, "CONFIG_ADV/LANGUAGE_MINUS", theme.btnTexMinus, theme.btnTexMinusS, 330, 190, 56, 56);
 	m_configAdvBtnCurLanguageP = _addPicButton(theme, "CONFIG_ADV/LANGUAGE_PLUS", theme.btnTexPlus, theme.btnTexPlusS, 544, 190, 56, 56);
-	m_configAdvLblCFTheme = _addLabel(theme, "CONFIG_ADV/CUSTOMIZE_CF", theme.lblFont, L"", 40, 250, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configAdvBtnCFTheme = _addButton(theme, "CONFIG_ADV/CUSTOMIZE_CF_BTN", theme.btnFont, L"", 330, 250, 270, 56, theme.btnFontColor);
-	m_configAdvLblInstall = _addLabel(theme, "CONFIG_ADV/INSTALL", theme.lblFont, L"", 40, 310, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_configAdvBtnInstall = _addButton(theme, "CONFIG_ADV/INSTALL_BTN", theme.btnFont, L"", 330, 310, 270, 56, theme.btnFontColor);
+	m_configAdvLblCFTheme = _addLabel(theme, "CONFIG_ADV/CUSTOMIZE_CF", theme.lblFont, "", 40, 250, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configAdvBtnCFTheme = _addButton(theme, "CONFIG_ADV/CUSTOMIZE_CF_BTN", theme.btnFont, "", 330, 250, 270, 56, theme.btnFontColor);
+	m_configAdvLblInstall = _addLabel(theme, "CONFIG_ADV/INSTAL", theme.lblFont, "", 40, 310, 290, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_configAdvBtnInstall = _addButton(theme, "CONFIG_ADV/INSTALL_BTN", theme.btnFont, "", 330, 310, 270, 56, theme.btnFontColor);
 	// 
 	_setHideAnim(m_configAdvLblTheme, "CONFIG_ADV/THEME", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_configAdvLblCurTheme, "CONFIG_ADV/THEME_BTN", 0, 0, 1.f, -1.f);
@@ -247,7 +247,7 @@ void CMenu::_initConfigAdvMenu(CMenu::SThemeData &theme)
 	_setHideAnim(m_configAdvBtnCurLanguageP, "CONFIG_ADV/LANGUAGE_PLUS", 0, 0, 1.f, -1.f);
 	_setHideAnim(m_configAdvLblCFTheme, "CONFIG_ADV/CUSTOMIZE_CF", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_configAdvBtnCFTheme, "CONFIG_ADV/CUSTOMIZE_CF_BTN", 0, 0, 1.f, -1.f);
-	_setHideAnim(m_configAdvLblInstall, "CONFIG_ADV/INSTALL", 100, 0, -2.f, 0.f);
+	_setHideAnim(m_configAdvLblInstall, "CONFIG_ADV/INSTAL", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_configAdvBtnInstall, "CONFIG_ADV/INSTALL_BTN", 0, 0, 1.f, -1.f);
 	_hideConfigAdv(true);
 	_textConfigAdv();
@@ -255,10 +255,10 @@ void CMenu::_initConfigAdvMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfigAdv(void)
 {
-	m_btnMgr.setText(m_configAdvLblTheme,	_t("cfga7", L"Theme"));
-	m_btnMgr.setText(m_configAdvLblLanguage,_t("cfga6", L"Language"));
-	m_btnMgr.setText(m_configAdvLblCFTheme, _t("cfgc4", L"Adjust Coverflow"));
-	m_btnMgr.setText(m_configAdvBtnCFTheme, _t("cfgc5", L"Go"));
-	m_btnMgr.setText(m_configAdvLblInstall, _t("cfga2", L"Install game"));
-	m_btnMgr.setText(m_configAdvBtnInstall, _t("cfga3", L"Install"));
+	m_btnMgr.setText(m_configAdvLblTheme,	_t("cfga7", "Theme"));
+	m_btnMgr.setText(m_configAdvLblLanguage,_t("cfga6", "Language"));
+	m_btnMgr.setText(m_configAdvLblCFTheme, _t("cfgc4", "Adjust Coverflow"));
+	m_btnMgr.setText(m_configAdvBtnCFTheme, _t("cfgc5", "Go"));
+	m_btnMgr.setText(m_configAdvLblInstall, _t("cfga2", "Install game"));
+	m_btnMgr.setText(m_configAdvBtnInstall, _t("cfga3", "Instal"));
 }

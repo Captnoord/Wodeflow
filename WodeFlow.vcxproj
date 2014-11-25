@@ -69,7 +69,15 @@
     <NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">make clean &amp;&amp; make -r 2&gt;&amp;1 | sed -e 's/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeReBuildCommandLine>
     <NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">make -r 2&gt;&amp;1 | sed -e 's/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/</NMakeBuildCommandLine>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='DevKitPro|Win32'">C:\devkitPro\libogc\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\dev\wodeflow_dev\trunk\wodeflow\source\libs\libfat;D:\dev\wodeflow_dev\trunk\wodeflow\source\libs\;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\tremor;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\pngu;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include\freetype;D:\dev\wodeflow_dev\trunk\wodeflow\portlibs\include;D:\dev\wodeflow_dev\trunk\wodeflow\source\;D:\dev\wodeflow_dev\trunk\wodeflow\source\cheats;D:\dev\wodeflow_dev\trunk\wodeflow\source\data;D:\dev\wodeflow_dev\trunk\wodeflow\source\gui;D:\dev\wodeflow_dev\trunk\wodeflow\source\loader;D:\dev\wodeflow_dev\trunk\wodeflow\source\menu;D:\dev\wodeflow_dev\trunk\wodeflow\source\music;D:\dev\wodeflow_dev\trunk\wodeflow\source\network;D:\dev\wodeflow_dev\trunk\wodeflow\source\memory;C:\devkitPro\devkitPPC\powerpc-eabi\include;C:\devkitPro\devkitPPC\lib\gcc\powerpc-eabi\4.6.3\include;C:\devkitPro\devkitPPC\include;C:\devkitPro\insight\include;C:\devkitPro\libogc\include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">source\libs\libfat;source\libs\;portlibs\include\tremor;portlibs\include\pngu;portlibs\include\freetype;portlibs\include;source\;source\cheats;source\data;source\gui;source\loader;source\menu;source\music;source\network;source\memory;C:\devkitPro\devkitPPC\powerpc-eabi\include;C:\devkitPro\devkitPPC\lib\gcc\powerpc-eabi\4.8.2\include;C:\devkitPro\devkitPPC\include;C:\devkitPro\insight\include;C:\devkitPro\libogc\include;C:\devkitPro\devkitPPC\powerpc-eabi\include\c++\4.8.2</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ExecutablePath>$(PATH)</ExecutablePath>
+    <SourcePath>source;C:\devkitPro\devkitPPC\powerpc-eabi\include;C:\devkitPro\devkitPPC\lib\gcc\powerpc-eabi\4.8.2\include;C:\devkitPro\devkitPPC\include;C:\devkitPro\insight\include;C:\devkitPro\libogc\include;C:\devkitPro\devkitPPC\powerpc-eabi\include\c++\4.8.2</SourcePath>
+    <ReferencePath />
+    <LibraryPath />
+    <LibraryWPath />
+    <ExcludePath />
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,7 +139,6 @@
     <ClCompile Include="source\music\sound.cpp" />
     <ClCompile Include="source\network\dns.cpp" />
     <ClCompile Include="source\network\http.cpp" />
-    <ClCompile Include="source\wstringEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cheats\cheat.h" />
@@ -178,7 +185,6 @@
     <ClInclude Include="source\network\http.h" />
     <ClInclude Include="source\svnrev.h" />
     <ClInclude Include="source\vector.h" />
-    <ClInclude Include="source\wstringEx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

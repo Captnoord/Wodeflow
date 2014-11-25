@@ -29,7 +29,6 @@
   <ItemGroup>
     <ClCompile Include="source\config.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\wstringEx.cpp" />
     <ClCompile Include="source\logger.cpp" />
     <ClCompile Include="source\gecko.cpp" />
     <ClCompile Include="source\network\http.cpp">
@@ -188,7 +187,6 @@
     <ClInclude Include="source\logger.h" />
     <ClInclude Include="source\svnrev.h" />
     <ClInclude Include="source\config.h" />
-    <ClInclude Include="source\wstringEx.h" />
     <ClInclude Include="source\vector.h" />
     <ClInclude Include="source\network\http.h">
       <Filter>network</Filter>

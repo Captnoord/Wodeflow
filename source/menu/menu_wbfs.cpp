@@ -26,13 +26,13 @@ void CMenu::_showWBFS(CMenu::WBFS_OP op)
 	switch (op)
 	{
 		case CMenu::WO_ADD_GAME:
-				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop1", L"Install Game"));
+				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop1", "Install Game"));
 				break;
 		case CMenu::WO_REMOVE_GAME:
-				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop2", L"Delete Game"));
+				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop2", "Delete Game"));
 				break;
 		case CMenu::WO_FORMAT:
-//				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop3", L"Format"));
+//				m_btnMgr.setText(m_wbfsLblTitle, _t("wbfsop3", "Format"));
 				break;
 	};
 	m_btnMgr.show(m_wbfsLblTitle);
@@ -59,7 +59,7 @@ void CMenu::_addDiscProgress(int status, int total, void *user_data)
 	// Don't synchronize too often
 	if (progress - m.m_thrdProgress >= 0.01f)
 	{
-		m._setThrdMsg(L"", progress);
+		m._setThrdMsg("", progress);
 	}
 }
 
@@ -95,10 +95,10 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 	switch (op)
 	{
 		case CMenu::WO_ADD_GAME:
-			m_btnMgr.setText(m_wbfsLblDialog, _t("wbfsadddlg", L"Please insert the disc you want to copy, then click on Go."));
+			m_btnMgr.setText(m_wbfsLblDialog, _t("wbfsadddlg", "Please insert the disc you want to copy, then click on Go."));
 			break;
 		case CMenu::WO_REMOVE_GAME:
-			m_btnMgr.setText(m_wbfsLblDialog, wfmt(_fmt("wbfsremdlg", L"To permanently remove the game : %s, click on Go."), m_cf.getTitle().c_str()));
+			m_btnMgr.setText(m_wbfsLblDialog, wfmt(_fmt("wbfsremdlg", "To permanently remove the game : %s, click on Go."), m_cf.getTitle().c_str()));
 			break;
 		case CMenu::WO_FORMAT:
 			break;
@@ -137,29 +137,29 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 						m_btnMgr.hide(m_wbfsBtnGo);
 						m_btnMgr.hide(m_wbfsBtnBack);
 						m_btnMgr.show(m_wbfsLblMessage);
-						m_btnMgr.setText(m_wbfsLblMessage, L"");
+						m_btnMgr.setText(m_wbfsLblMessage, "");
 						
 						if (Disc_Wait() < 0)
 						{
-							error(_t("wbfsoperr1", L"Disc_Wait failed"));
+							error(_t("wbfsoperr1", "Disc_Wait failed"));
 							out = true;
 							break;
 						}
 						if (Disc_Open() < 0)
 						{
-							error(_t("wbfsoperr2", L"Disc_Open failed"));
+							error(_t("wbfsoperr2", "Disc_Open failed"));
 							out = true;
 							break;
 						}
 						if (Disc_IsWii() < 0)
 						{
-							error(_t("wbfsoperr3", L"This is not a Wii disc!"));
+							error(_t("wbfsoperr3", "This is not a Wii disc!"));
 							out = true;
 							break;
 						}
 						Disc_ReadHeader(&header);
 						
-						m_btnMgr.setText(m_wbfsLblDialog, wfmt(_fmt("wbfsop6", L"Installing [%s] %s..."), string((const char *)header.id, sizeof header.id).c_str(), string((const char *)header.title, sizeof header.title).c_str()));
+						m_btnMgr.setText(m_wbfsLblDialog, wfmt(_fmt("wbfsop6", "Installing [%s] %s..."), string((const char *)header.id, sizeof header.id).c_str(), string((const char *)header.title, sizeof header.title).c_str()));
 						done = true;
 						m_thrdWorking = true;
 						m_thrdProgress = 0.f;
@@ -173,7 +173,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 						m_btnMgr.hide(m_wbfsLblDialog);
 						m_btnMgr.hide(m_wbfsBtnGo);
 						m_btnMgr.show(m_wbfsLblMessage);
-						m_btnMgr.setText(m_wbfsLblMessage, _t("wbfsop7", L"Game deleted"));
+						m_btnMgr.setText(m_wbfsLblMessage, _t("wbfsop7", "Game deleted"));
 						done = true;
 						break;
 					case CMenu::WO_FORMAT:
@@ -191,7 +191,7 @@ bool CMenu::_wbfsOp(CMenu::WBFS_OP op)
 			if (!m_thrdMessage.empty())
 				m_btnMgr.setText(m_wbfsLblDialog, m_thrdMessage);
 			m_btnMgr.setProgress(m_wbfsPBar, m_thrdProgress);
-			m_btnMgr.setText(m_wbfsLblMessage, wfmt(_fmt("wbfsprogress", L"%i%%"), (int)(m_thrdProgress * 100.f)));
+			m_btnMgr.setText(m_wbfsLblMessage, wfmt(_fmt("wbfsprogress", "%i%%"), (int)(m_thrdProgress * 100.f)));
 			if (!m_thrdWorking)
 				m_btnMgr.show(m_wbfsBtnBack);
 		}
@@ -217,12 +217,12 @@ void CMenu::_initWBFSMenu(CMenu::SThemeData &theme)
 
 	_addUserLabels(theme, m_wbfsLblUser, ARRAY_SIZE(m_wbfsLblUser), "WBFS");
 	m_wbfsBg = _texture(theme.texSet, "WBFS/BG", "texture", theme.bg);
-	m_wbfsLblTitle = _addLabel(theme, "WBFS/TITLE", theme.titleFont, L"", 20, 30, 600, 60, fontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
-	m_wbfsLblDialog = _addLabel(theme, "WBFS/DIALOG", theme.lblFont, L"", 40, 90, 560, 200, CColor(0xFFDFDFDF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_wbfsLblMessage = _addLabel(theme, "WBFS/MESSAGE", theme.lblFont, L"", 40, 300, 560, 100, CColor(0xFFDFDFDF), FTGX_JUSTIFY_CENTER | FTGX_ALIGN_TOP);
+	m_wbfsLblTitle = _addLabel(theme, "WBFS/TITLE", theme.titleFont, "", 20, 30, 600, 60, fontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	m_wbfsLblDialog = _addLabel(theme, "WBFS/DIALOG", theme.lblFont, "", 40, 90, 560, 200, CColor(0xFFDFDFDF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_wbfsLblMessage = _addLabel(theme, "WBFS/MESSAGE", theme.lblFont, "", 40, 300, 560, 100, CColor(0xFFDFDFDF), FTGX_JUSTIFY_CENTER | FTGX_ALIGN_TOP);
 	m_wbfsPBar = _addProgressBar(theme, "WBFS/PROGRESS_BAR", 40, 270, 560, 20);
-	m_wbfsBtnBack = _addButton(theme, "WBFS/BACK_BTN", theme.btnFont, L"", 420, 410, 200, 56, fontColor);
-	m_wbfsBtnGo = _addButton(theme, "WBFS/GO_BTN", theme.btnFont, L"", 245, 260, 150, 56, fontColor);
+	m_wbfsBtnBack = _addButton(theme, "WBFS/BACK_BTN", theme.btnFont, "", 420, 410, 200, 56, fontColor);
+	m_wbfsBtnGo = _addButton(theme, "WBFS/GO_BTN", theme.btnFont, "", 245, 260, 150, 56, fontColor);
 	// 
 	_setHideAnim(m_wbfsLblTitle, "WBFS/TITLE", 0, 0, -2.f, 0.f);
 	_setHideAnim(m_wbfsLblDialog, "WBFS/DIALOG", 0, 0, -2.f, 0.f);
@@ -236,6 +236,6 @@ void CMenu::_initWBFSMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textWBFS(void)
 {
-	m_btnMgr.setText(m_wbfsBtnBack, _t("wbfsop4", L"Back"));
-	m_btnMgr.setText(m_wbfsBtnGo, _t("wbfsop5", L"Go"));
+	m_btnMgr.setText(m_wbfsBtnBack, _t("wbfsop4", "Back"));
+	m_btnMgr.setText(m_wbfsBtnGo, _t("wbfsop5", "Go"));
 }

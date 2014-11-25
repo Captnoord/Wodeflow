@@ -69,10 +69,10 @@ int CMenu::main(void)
 	s32 padsState;
 	WPADData *wd;
 	u32 btn;
-	wstringEx curLetter;
+	std::string curLetter;
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;
-	string prevTheme = m_cfg.getString(" GENERAL", "theme", "default");
+	string prevTheme = m_cfg.getString(" GENERA", "theme", "default");
 	bool reload = false;
 	float angle = 0;
 	float mag = 0;
@@ -127,17 +127,17 @@ int CMenu::main(void)
 
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERAL", "last_cf_mode", 1), m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1), m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERAL", "last_cf_mode", cfVersion);
+			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
 		}
 		else if ((padsState & WPAD_BUTTON_2) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERAL", "last_cf_mode", 1) - 2, m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1) - 2, m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERAL", "last_cf_mode", cfVersion);
+			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
 		}
 		if (((padsState & (WPAD_BUTTON_DOWN | WPAD_BUTTON_RIGHT)) != 0 && (wd->btns_h & WPAD_BUTTON_B) != 0)
 			|| ((padsState & WPAD_BUTTON_PLUS) != 0 && m_alphaSearch == ((wd->btns_h & WPAD_BUTTON_B) == 0)))
@@ -180,7 +180,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(2);
-				if (prevTheme != m_cfg.getString(" GENERAL", "theme"))
+				if (prevTheme != m_cfg.getString(" GENERA", "theme"))
 				{
 					reload = true;
 					break;
@@ -191,7 +191,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(1);
-				if (prevTheme != m_cfg.getString(" GENERAL", "theme"))
+				if (prevTheme != m_cfg.getString(" GENERA", "theme"))
 				{
 					reload = true;
 					break;
@@ -225,7 +225,7 @@ int CMenu::main(void)
 			else if (m_btnMgr.selected() == m_mainBtnFavoritesOn || m_btnMgr.selected() == m_mainBtnFavoritesOff)
 			{
 				m_favorites = !m_favorites;
-				m_cfg.setInt(" GENERAL", "favorites", m_favorites);
+				m_cfg.setInt(" GENERA", "favorites", m_favorites);
 				m_curGameId = m_cf.getId();
 				_initCF();
 			}
@@ -338,11 +338,11 @@ void CMenu::_initMainMenu(CMenu::SThemeData &theme)
 	m_mainBtnQuit = _addPicButton(theme, "MAIN/QUIT_BTN", texQuit, texQuitS, 570, 412, 48, 48);
 	m_mainBtnNext = _addPicButton(theme, "MAIN/NEXT_BTN", texNext, texNextS, 540, 146, 80, 80);
 	m_mainBtnPrev = _addPicButton(theme, "MAIN/PREV_BTN", texPrev, texPrevS, 20, 146, 80, 80);
-	m_mainBtnInit = _addButton(theme, "MAIN/BIG_SETTINGS_BTN", theme.titleFont, L"", 60, 180, 520, 120, CColor(0xFFFFFFFF));
-	m_mainLblInit = _addLabel(theme, "MAIN/MESSAGE", theme.lblFont, L"", 40, 40, 560, 140, CColor(0xFFFFFFFF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_mainBtnInit = _addButton(theme, "MAIN/BIG_SETTINGS_BTN", theme.titleFont, "", 60, 180, 520, 120, CColor(0xFFFFFFFF));
+	m_mainLblInit = _addLabel(theme, "MAIN/MESSAGE", theme.lblFont, "", 40, 40, 560, 140, CColor(0xFFFFFFFF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
 	m_mainBtnFavoritesOn = _addPicButton(theme, "MAIN/FAVORITES_ON", texFavOn, texFavOnS, 300, 412, 56, 56);
 	m_mainBtnFavoritesOff = _addPicButton(theme, "MAIN/FAVORITES_OFF", texFavOff, texFavOffS, 300, 412, 56, 56);
-	m_mainLblLetter = _addLabel(theme, "MAIN/LETTER", theme.titleFont, L"", 540, 40, 80, 80, CColor(0xFFFFFFFF), FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, emptyTex);
+	m_mainLblLetter = _addLabel(theme, "MAIN/LETTER", theme.titleFont, "", 540, 40, 80, 80, CColor(0xFFFFFFFF), FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, emptyTex);
 	// 
 	m_mainPrevZone.x = m_theme.getInt("MAIN/ZONES", "prev_x", -32);
 	m_mainPrevZone.y = m_theme.getInt("MAIN/ZONES", "prev_y", -32);
@@ -373,6 +373,6 @@ void CMenu::_initMainMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textMain(void)
 {
-	m_btnMgr.setText(m_mainBtnInit, _t("main1", L"Settings"));
-	m_btnMgr.setText(m_mainLblInit, _t("main2", L"Welcome to WodeFlow. I have not found any game."), true);
+	m_btnMgr.setText(m_mainBtnInit, _t("main1", "Settings"));
+	m_btnMgr.setText(m_mainLblInit, _t("main2", "Welcome to WodeFlow. I have not found any game."), true);
 }

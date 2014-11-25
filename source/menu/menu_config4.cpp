@@ -49,11 +49,11 @@ void CMenu::_showConfig4(void)
 		if (m_config4LblUser[i] != -1u)
 			m_btnMgr.show(m_config4LblUser[i]);
 	// 
-	m_btnMgr.setText(m_configLblPage, wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
-	m_alphaSearch = m_cfg.getBool(" GENERAL", "alphabetic_search_on_plus_minus", false);
-	m_btnMgr.setText(m_config4BtnHome, m_cfg.getBool(" GENERAL", "exit_to_wii_menu") ? _t("on", L"On") : _t("off", L"Off"));
-	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool(" GENERAL", "favorites_on_startup") ? _t("on", L"On") : _t("off", L"Off"));
-	m_btnMgr.setText(m_config4BtnSearchMode, m_cfg.getBool(" GENERAL", "alphabetic_search_on_plus_minus") ? _t("smalpha", L"Alphabetic") : _t("smpage", L"Pages"));
+	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
+	m_alphaSearch = m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus", false);
+	m_btnMgr.setText(m_config4BtnHome, m_cfg.getBool(" GENERA", "exit_to_wii_menu") ? gOn : gOff);
+	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool(" GENERA", "favorites_on_startup") ? gOn : gOff);
+	m_btnMgr.setText(m_config4BtnSearchMode, m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus") ? _t("smalpha", "Alphabetic") : _t("smpage", "Pages"));
 }
 
 int CMenu::_config4(void)
@@ -98,19 +98,19 @@ int CMenu::_config4(void)
 				break;
 			else if (m_btnMgr.selected() == m_config4BtnHome)
 			{
-				m_cfg.setBool(" GENERAL", "exit_to_wii_menu", !m_cfg.getBool(" GENERAL", "exit_to_wii_menu"));
-				Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool(" GENERAL", "exit_to_wii_menu", false));
+				m_cfg.setBool(" GENERA", "exit_to_wii_menu", !m_cfg.getBool(" GENERA", "exit_to_wii_menu"));
+				Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool(" GENERA", "exit_to_wii_menu", false));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected() == m_config4BtnSaveFavMode)
 			{
-				m_cfg.setBool(" GENERAL", "favorites_on_startup", !m_cfg.getBool(" GENERAL", "favorites_on_startup"));
+				m_cfg.setBool(" GENERA", "favorites_on_startup", !m_cfg.getBool(" GENERA", "favorites_on_startup"));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected() == m_config4BtnSearchMode)
 			{
-				m_alphaSearch = !m_cfg.getBool(" GENERAL", "alphabetic_search_on_plus_minus", false);
-				m_cfg.setBool(" GENERAL", "alphabetic_search_on_plus_minus", m_alphaSearch);
+				m_alphaSearch = !m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus", false);
+				m_cfg.setBool(" GENERA", "alphabetic_search_on_plus_minus", m_alphaSearch);
 				_showConfig4();
 			}
 		}
@@ -124,12 +124,12 @@ void CMenu::_initConfig4Menu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_config4LblUser, ARRAY_SIZE(m_config4LblUser), "CONFIG4");
 	m_config4Bg				= _texture(theme.texSet, "CONFIG4/BG", "texture", theme.bg);
-	m_config4LblHome		= _addLabel(theme, "CONFIG4/WIIMENU", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config4BtnHome		= _addButton(theme, "CONFIG4/WIIMENU_BTN", theme.btnFont, L"", 400, 130, 200, 56, theme.btnFontColor);
-	m_config4LblSaveFavMode = _addLabel(theme, "CONFIG4/SAVE_FAVMODE", theme.lblFont, L"", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config4BtnSaveFavMode = _addButton(theme, "CONFIG4/SAVE_FAVMODE_BTN", theme.btnFont, L"", 400, 190, 200, 56, theme.btnFontColor);
-	m_config4LblSearchMode	= _addLabel(theme, "CONFIG4/SEARCH_MODE", theme.lblFont, L"", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config4BtnSearchMode	= _addButton(theme, "CONFIG4/SEARCH_MODE_BTN", theme.btnFont, L"", 400, 250, 200, 56, theme.btnFontColor);
+	m_config4LblHome		= _addLabel(theme, "CONFIG4/WIIMENU", theme.lblFont, "", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config4BtnHome		= _addButton(theme, "CONFIG4/WIIMENU_BTN", theme.btnFont, "", 400, 130, 200, 56, theme.btnFontColor);
+	m_config4LblSaveFavMode = _addLabel(theme, "CONFIG4/SAVE_FAVMODE", theme.lblFont, "", 40, 190, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config4BtnSaveFavMode = _addButton(theme, "CONFIG4/SAVE_FAVMODE_BTN", theme.btnFont, "", 400, 190, 200, 56, theme.btnFontColor);
+	m_config4LblSearchMode	= _addLabel(theme, "CONFIG4/SEARCH_MODE", theme.lblFont, "", 40, 250, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config4BtnSearchMode	= _addButton(theme, "CONFIG4/SEARCH_MODE_BTN", theme.btnFont, "", 400, 250, 200, 56, theme.btnFontColor);
 	// 
 	_setHideAnim(m_config4LblHome, "CONFIG4/WIIMENU", 100, 0, -2.f, 0.f);
 	_setHideAnim(m_config4BtnHome, "CONFIG4/WIIMENU_BTN", 0, 0, -2.f, 0.f);
@@ -143,7 +143,7 @@ void CMenu::_initConfig4Menu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfig4(void)
 {
-	m_btnMgr.setText(m_config4LblHome, _t("cfgc1", L"Exit to Wii Menu"));
-	m_btnMgr.setText(m_config4LblSaveFavMode, _t("cfgd5", L"Save favorite mode state"));
-	m_btnMgr.setText(m_config4LblSearchMode, _t("cfgd6", L"Default search mode"));
+	m_btnMgr.setText(m_config4LblHome, _t("cfgc1", "Exit to Wii Menu"));
+	m_btnMgr.setText(m_config4LblSaveFavMode, _t("cfgd5", "Save favorite mode state"));
+	m_btnMgr.setText(m_config4LblSearchMode, _t("cfgd6", "Default search mode"));
 }

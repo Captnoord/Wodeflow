@@ -186,6 +186,7 @@ void CVideo::setup2DProjection(bool setViewPort, bool noScale)
 
 	if (setViewPort)
 		_setViewPort(0, 0, m_rmode->fbWidth, m_rmode->efbHeight);
+
 	guOrtho(projMtx, y, height2D + y, x, width2D + x, 0.f, 1000.0f);
 	GX_LoadProjectionMtx(projMtx, GX_ORTHOGRAPHIC);
 }
@@ -258,7 +259,13 @@ void CVideo::prepareAAPass(int aaStep)
 			y += CVideo::_jitter8[aaStep][1];
 			break;
 	}
-	GX_SetPixelFmt(m_aaAlpha ? GX_PF_RGBA6_Z24 : GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+	//GX_SetPixelFmt(m_aaAlpha ? GX_PF_RGBA6_Z24 : GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+	
+	if (m_aaAlpha)
+		GX_SetPixelFmt(GX_PF_RGBA6_Z24,		GX_ZC_LINEAR);
+	else
+		GX_SetPixelFmt(GX_PF_RGB8_Z24,		GX_ZC_LINEAR);
+
 	_setViewPort(x, y, (float)w, (float)h);
 	GX_SetScissor(0, 0, w, h);
 	GX_InvVtxCache();
@@ -278,8 +285,10 @@ void CVideo::renderAAPass(int aaStep)
 		if (!!m_aaBuffer[aaStep])
 			m_aaBufferSize[aaStep] = bufLen;
 	}
+
 	if (!m_aaBuffer[aaStep] || m_aaBufferSize[aaStep] < bufLen)
 		return;
+
 	GX_SetZMode(GX_DISABLE, GX_ALWAYS, GX_TRUE);
 	GX_DrawDone();
 	GX_SetCopyFilter(GX_FALSE, NULL, GX_FALSE, NULL);
@@ -309,6 +318,7 @@ void CVideo::drawAAScene(bool fs)
 	for (aa = 0; aa < m_aa; ++aa)
 		if (!m_aaBuffer[aa])
 			break;
+
 	if (aa == 7)
 		aa = 6;
 	// 
@@ -318,12 +328,14 @@ void CVideo::drawAAScene(bool fs)
 		GX_InitTexObj(&texObj[i], m_aaBuffer[i].get(), tw , th, texFmt, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		GX_LoadTexObj(&texObj[i], GX_TEXMAP0 + i);
 	}
+
 	GX_SetNumTexGens(1);
 	GX_SetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
 	GX_SetTevKColor(GX_KCOLOR0, CColor(0xFF / 1, 0xFF / 5, 0xFF, 0xFF));	// Renders better gradients than 0xFF / aa
 	GX_SetTevKColor(GX_KCOLOR1, CColor(0xFF / 2, 0xFF / 6, 0xFF, 0xFF));
 	GX_SetTevKColor(GX_KCOLOR2, CColor(0xFF / 3, 0xFF / 7, 0xFF, 0xFF));
 	GX_SetTevKColor(GX_KCOLOR3, CColor(0xFF / 4, 0xFF / 8, 0xFF, 0xFF));
+
 	for (int i = 0; i < aa; ++i)
 	{
 		GX_SetTevKColorSel(GX_TEVSTAGE0 + i, GX_TEV_KCSEL_K0_R + i);
@@ -348,16 +360,14 @@ void CVideo::drawAAScene(bool fs)
 	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 	guMtxIdentity(modelViewMtx);
 	GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
+	
 	GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
-	GX_Position3f32(x, y, 0.f);
-	GX_TexCoord2f32(0.f, 0.f);
-	GX_Position3f32(x + w, y, 0.f);
-	GX_TexCoord2f32(1.f, 0.f);
-	GX_Position3f32(x + w, y + h, 0.f);
-	GX_TexCoord2f32(1.f, 1.f);
-	GX_Position3f32(x, y + h, 0.f);
-	GX_TexCoord2f32(0.f, 1.f);
+	GX_Position3f32(x, y, 0.f);			GX_TexCoord2f32(0.f, 0.f);
+	GX_Position3f32(x + w, y, 0.f);		GX_TexCoord2f32(1.f, 0.f);
+	GX_Position3f32(x + w, y + h, 0.f);	GX_TexCoord2f32(1.f, 1.f);
+	GX_Position3f32(x, y + h, 0.f);		GX_TexCoord2f32(0.f, 1.f);
 	GX_End();
+
 	GX_SetNumChans(1);
 	GX_SetNumTexGens(1);
 	GX_SetNumTevStages(1);
@@ -365,11 +375,14 @@ void CVideo::drawAAScene(bool fs)
 
 void CVideo::_setViewPort(float x, float y, float w, float h)
 {
-	m_vpX = x;
-	m_vpY = y;
-	m_vpW = w;
-	m_vpH = h;
-	GX_SetViewport(x, y, w, h, 0.f, 1.f);
+	if (m_vpX != x && m_vpY != y && m_vpW != w && m_vpH != h)
+	{
+		m_vpX = x;
+		m_vpY = y;
+		m_vpW = w;
+		m_vpH = h;
+		GX_SetViewport(x, y, w, h, 0.f, 1.f);
+	}
 }
 
 void CVideo::shiftViewPort(float x, float y)
@@ -386,11 +399,15 @@ int CVideo::stencilVal(int x, int y)
 {
 	if ((u32)x >= m_rmode->fbWidth || (u32)y >= m_rmode->efbHeight)
 		return 0;
+
 	x = x * CVideo::_stencilWidth / 640;
 	y = y * CVideo::_stencilHeight / 480;
+	
 	u32 i = coordsI8(x, y, (u32)CVideo::_stencilWidth);
+	
 	if (i >= (u32)(CVideo::_stencilWidth * CVideo::_stencilHeight))
 		return 0;
+	
 	return m_stencil.get()[i];
 }
 
@@ -426,7 +443,7 @@ void CVideo::render(void)
 	DCFlushRange(m_frameBuf[m_curFB], 2 * m_rmode->fbWidth * m_rmode->xfbHeight);
 	VIDEO_SetNextFramebuffer(m_frameBuf[m_curFB]);
 	VIDEO_Flush();
-	VIDEO_WaitVSync();
+	//VIDEO_WaitVSync();
 	m_curFB ^= 1;
 	GX_InvalidateTexAll();
 }
@@ -461,6 +478,7 @@ void CVideo::waitMessage(const STexture &tex)
 		GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
 		GX_InitTexObj(&texObj, tex.data.get(), tex.width, tex.height, tex.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		GX_LoadTexObj(&texObj, GX_TEXMAP0);
+		
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
 		GX_Position3f32((float)((640 - tex.width) / 2), (float)((480 - tex.height) / 2), 0.f);
 		GX_TexCoord2f32(0.f, 0.f);
@@ -471,6 +489,7 @@ void CVideo::waitMessage(const STexture &tex)
 		GX_Position3f32((float)((640 - tex.width) / 2), (float)((480 + tex.height) / 2), 0.f);
 		GX_TexCoord2f32(0.f, 1.f);
 		GX_End();
+		
 		render();
 	}
 	GX_SetNumChans(1);

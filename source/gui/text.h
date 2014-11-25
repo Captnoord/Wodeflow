@@ -1,11 +1,9 @@
-
 #ifndef __TEXT_HPP
 #define __TEXT_HPP
 
 #include <vector>
 #include <string>
 
-#include "wstringEx.h"
 #include "FreeTypeGX.h"
 #include "video.h"
 
@@ -27,7 +25,7 @@ public:
 class CText
 {
 public:
-	void setText(SFont font, const wstringEx &t);
+	void setText(SFont font, const std::string &t);
 	void setColor(const CColor &c);
 	void setFrame(float width, u16 style, bool ignoreNewlines = false, bool instant = false);
 	void tick(void);
@@ -35,7 +33,7 @@ public:
 private:
 	struct SWord
 	{
-		wstringEx text;
+		std::string text;
 		vec3 pos;
 		vec3 targetPos;
 	};
@@ -50,10 +48,10 @@ private:
 // Nothing to do with CText. Q&D helpers for string formating.
 const char *fmt(const char *format, ...);
 std::string sfmt(const char *format, ...);
-wstringEx wfmt(const wstringEx &format, ...);
-bool checkFmt(const wstringEx &ref, const wstringEx &format);
-wstringEx vectorToString(const std::vector<wstringEx> &vect, char sep);
-std::vector<wstringEx> stringToVector(const wstringEx &text, char sep);
+std::string wfmt(const std::string &format, ...);
+bool checkFmt(const std::string &ref, const std::string &format);
+std::string vectorToString(const std::vector<std::string> &vect, char sep);
+std::vector<std::string> stringToVector(const std::string &text, char sep);
 std::vector<std::string> stringToVector(const std::string &text, char sep);
 
 #endif // !defined(__TEXT_HPP)

@@ -1898,7 +1898,7 @@ extern PNG_EXPORT(void,png_set_filter_heuristics) PNGARG((png_structp png_ptr,
 
 /* Set the library compression level.  Currently, valid values range from
  * 0 - 9, corresponding directly to the zlib compression levels 0 - 9
- * (0 - no compression, 9 - "maximal" compression).  Note that tests have
+ * (0 - no compression, 9 - "maxima" compression).  Note that tests have
  * shown that zlib compression levels 3-6 usually perform as well as level 9
  * for PNG images, and do considerably fewer caclulations.  In the future,
  * these values may not correspond directly to the zlib compression levels.
@@ -2857,7 +2857,7 @@ extern PNG_EXPORT(void,png_save_uint_16)
 
 /* PNG_OUT_OF_RANGE returns true if value is outside the range
    ideal-delta..ideal+delta.  Each argument is evaluated twice.
-   "ideal" and "delta" should be constants, normally simple
+   "idea" and "delta" should be constants, normally simple
    integers, "value" a variable. Added to libpng-1.2.6 JB */
 #define PNG_OUT_OF_RANGE(value, ideal, delta) \
         ( (value) < (ideal)-(delta) || (value) > (ideal)+(delta) )

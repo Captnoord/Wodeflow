@@ -263,14 +263,6 @@ void Config::__set(const std::string &domain, const std::string & key, const std
 	m_domains[temp_domain][temp_key] = value;
 }
 
-void Config::setWString(const std::string &domain, const string &key, const wstringEx &val)
-{
-	if (domain.empty() || key.empty())
-		return;
-
-	__set(domain, key, val.toUTF8());
-}
-
 void Config::setString(const string &domain, const string &key, const std::string &val)
 {
 	if (domain.empty() || key.empty())
@@ -352,24 +344,7 @@ std::string &Config::__get(const std::string &domain, const std::string & key)
 	return m_domains[temp_domain][temp_key];
 }
 
-wstringEx Config::getWString(const std::string &domain, const std::string &key, const wstringEx defVal)
-{
-	if (domain.empty() || key.empty())
-		return defVal;
-
-	std::string &data = __get(domain, key);
-
-	if (data.empty())
-	{
-		data = defVal.toUTF8();
-		return defVal;
-	}
-	wstringEx ws;
-	ws.fromUTF8(data.c_str());
-	return ws;
-}
-
-string Config::getString(const string &domain, const string &key, string defVal)
+std::string Config::getString(const string &domain, const string &key, const std::string &defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;

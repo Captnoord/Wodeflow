@@ -32,34 +32,34 @@ extern const u8 deletes_png[];
 extern int mainIOS;
 
 const CMenu::SOption CMenu::_languages[11] = {
-	{ "lngdef", L"Default" },
-	{ "lngjap", L"Japanese" },
-	{ "lngeng", L"English" },
-	{ "lngger", L"German" },
-	{ "lngfre", L"French" },
-	{ "lngspa", L"Spanish" },
-	{ "lngita", L"Italian" },
-	{ "lngdut", L"Dutch" },
-	{ "lngsch", L"S. Chinese" },
-	{ "lngtch", L"T. Chinese" },
-	{ "lngkor", L"Korean" }
+	{ "lngdef", "Default" },
+	{ "lngjap", "Japanese" },
+	{ "lngeng", "English" },
+	{ "lngger", "German" },
+	{ "lngfre", "French" },
+	{ "lngspa", "Spanish" },
+	{ "lngita", "Italian" },
+	{ "lngdut", "Dutch" },
+	{ "lngsch", "S. Chinese" },
+	{ "lngtch", "T. Chinese" },
+	{ "lngkor", "Korean" }
 };
 
 const CMenu::SOption CMenu::_videoModes[7] = {
-	{ "viddef", L"Default" },
-	{ "vidp50", L"PAL 50Hz" },
-	{ "vidp60", L"PAL 60Hz" },
-	{ "vidntsc", L"NTSC" },
-	{ "vidpatch", L"Auto Patch" },
-	{ "vidsys", L"System" },	
-	{ "vidprog", L"Progressive" }
+	{ "viddef", "Default" },
+	{ "vidp50", "PAL 50Hz" },
+	{ "vidp60", "PAL 60Hz" },
+	{ "vidntsc", "NTSC" },
+	{ "vidpatch", "Auto Patch" },
+	{ "vidsys", "System" },	
+	{ "vidprog", "Progressive" }
 };
 
 const CMenu::SOption CMenu::_vidModePatch[4] = {
-	{ "vmpnone", L"None" },
-	{ "vmpnormal", L"Normal" },
-	{ "vmpmore", L"More" },
-	{ "vmpall", L"All" }
+	{ "vmpnone", "None" },
+	{ "vmpnorma", "Norma" },
+	{ "vmpmore", "More" },
+	{ "vmpal", "Al" }
 };
 
 extern "C" {
@@ -144,17 +144,17 @@ void CMenu::_game(bool launch)
 			m_btnMgr.down();
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERAL", "last_cf_mode", 1), m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1), m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERAL", "last_cf_mode", cfVersion);
+			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
 		}
 		else if ((padsState & WPAD_BUTTON_2) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERAL", "last_cf_mode", 1) - 2, m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1) - 2, m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERAL", "last_cf_mode", cfVersion);
+			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
 		}
 		if (launch || (padsState & WPAD_BUTTON_A) != 0)
 		{
@@ -172,7 +172,7 @@ void CMenu::_game(bool launch)
 				}
 				else
 				{
-					error(_t("wbfsop10", L"This filesystem is read-only. You cannot install games or remove them."));
+					error(_t("wbfsop10", "This filesystem is read-only. You cannot install games or remove them."));
 				}
 			}
 			else if (m_btnMgr.selected() == m_gameBtnFavoriteOn || m_btnMgr.selected() == m_gameBtnFavoriteOff)
@@ -254,9 +254,9 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
 
-	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERAL", "vipatch", false));
-	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool(" GENERAL", "cheat", false));
-	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERAL", "country_patch", false));
+	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERA", "vipatch", false));
+	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool(" GENERA", "cheat", false));
+	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERA", "country_patch", false));
 	
 	int videoMode		= m_cfg.getInt(id, "video_mode", 0);
 	videoMode			= std::min<int>(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
@@ -272,12 +272,12 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	u32 cheatSize = 0;
 
 	if (videoMode == 0)
-		videoMode = (u8)min((u32)m_cfg.getInt(" GENERAL", "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1);
+		videoMode = (u8)min((u32)m_cfg.getInt(" GENERA", "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1);
 
 	if (language == 0)
-		language = min((u32)m_cfg.getInt(" GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
+		language = min((u32)m_cfg.getInt(" GENERA", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
 
-	m_cfg.setString(" GENERAL", "current_game", id);
+	m_cfg.setString(" GENERA", "current_game", id);
 	m_cfg.setInt(id, "playcount", m_cfg.getInt(id, "playcount", 0) + 1);
 	
 	m_cfg.save();
@@ -367,8 +367,8 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 	m_gameBg = _texture(theme.texSet, "GAME/BG", "texture", theme.bg);
 	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("GAME/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
 		m_gameBgLQ = bgLQ;
-	m_gameBtnPlay = _addButton(theme, "GAME/PLAY_BTN", theme.btnFont, L"", 420, 354, 200, 56, fontColor);
-	m_gameBtnBack = _addButton(theme, "GAME/BACK_BTN", theme.btnFont, L"", 420, 410, 200, 56, fontColor);
+	m_gameBtnPlay = _addButton(theme, "GAME/PLAY_BTN", theme.btnFont, "", 420, 354, 200, 56, fontColor);
+	m_gameBtnBack = _addButton(theme, "GAME/BACK_BTN", theme.btnFont, "", 420, 410, 200, 56, fontColor);
 	m_gameBtnFavoriteOn = _addPicButton(theme, "GAME/FAVORITE_ON", texFavOn, texFavOnSel, 460, 170, 48, 48);
 	m_gameBtnFavoriteOff = _addPicButton(theme, "GAME/FAVORITE_OFF", texFavOff, texFavOffSel, 460, 170, 48, 48);
 	m_gameBtnAdultOn = _addPicButton(theme, "GAME/ADULTONLY_ON", texAdultOn, texAdultOnSel, 532, 170, 48, 48);
@@ -390,6 +390,6 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textGame(void)
 {
-	m_btnMgr.setText(m_gameBtnPlay, _t("gm1", L"Play"));
-	m_btnMgr.setText(m_gameBtnBack, _t("gm2", L"Back"));
+	m_btnMgr.setText(m_gameBtnPlay, _t("gm1", "Play"));
+	m_btnMgr.setText(m_gameBtnBack, _t("gm2", "Back"));
 }

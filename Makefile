@@ -61,8 +61,8 @@ INCLUDES	:=	source \
 #WALLFLAGS = -Wall -Wextra
 WALLFLAGS = 
 
-CFLAGS	 =	-g -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
-CXXFLAGS =	-g -std=gnu++11 -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+CFLAGS	 =	-g -std=gnu11 -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
+CXXFLAGS =	-g -std=c++11 -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
  
 LDFLAGS	 =	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size	-T../rvl.ld
 

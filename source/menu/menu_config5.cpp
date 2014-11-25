@@ -73,12 +73,12 @@ void CMenu::_showConfig5(void)
 	u32 defaultPartitionNr = WBFS_GetDefaultPartition();
 	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
 	
-	m_btnMgr.setText(m_configLblPage,				wfmt(L"%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
-	m_btnMgr.setText(m_config5LblPartition,			m_cfg.getString(" GENERAL", "partition", defaultPartition));
+	m_btnMgr.setText(m_configLblPage,				wfmt("%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
+	m_btnMgr.setText(m_config5LblPartition,			m_cfg.getString(" GENERA", "partition", defaultPartition));
 	
-//	i = std::min(std::max(0, m_cfg.getInt(" GENERAL", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
-//	m_btnMgr.setText(m_config2LblLanguage, _t(CMenu::_languages[i].id, CMenu::_languages[i].text));
-//	m_btnMgr.setText(m_config2BtnOcarina, m_cfg.getBool(" GENERAL", "cheat") ? _t("on", L"On") : _t("off", L"Off"));
+	int i = std::min(std::max(0, m_cfg.getInt(" GENERA", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
+	m_btnMgr.setText(m_config2LblLanguage, _t(CMenu::_languages[i].id, CMenu::_languages[i].text));
+	m_btnMgr.setText(m_config2BtnOcarina, m_cfg.getBool(" GENERA", "cheat") ? gOn : gOff);
 }
 
 int CMenu::_config5(void)
@@ -151,9 +151,9 @@ int CMenu::_config5(void)
 					WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
 					gprintf("Which is: %s\n", buf);
 				} else {
-					sprintf(buf, "all");
+					sprintf(buf, "al");
 				}
-				m_cfg.setString(" GENERAL", "partition", buf);
+				m_cfg.setString(" GENERA", "partition", buf);
 				_showConfig5();
 			}
 			/* prev partition */
@@ -166,14 +166,14 @@ int CMenu::_config5(void)
 					WBFS_GetPartitionName(currentPartition, (char *) buf, &buflen);
 					gprintf("Which is: %s\n", buf);
 				} else {
-					sprintf(buf, "all");
+					sprintf(buf, "al");
 				}
-				m_cfg.setString(" GENERAL", "partition", buf);
+				m_cfg.setString(" GENERA", "partition", buf);
 				_showConfig5();
 			}
 			else if (m_btnMgr.selected() == m_config5BtnInstallDirectory)
 			{
-				m_cfg.setBool(" GENERAL", "install_directory", !m_cfg.getBool(" GENERAL", "install_directory", true));
+				m_cfg.setBool(" GENERA", "install_directory", !m_cfg.getBool(" GENERA", "install_directory", true));
 				_showConfig5();
 			}
 		}
@@ -181,7 +181,7 @@ int CMenu::_config5(void)
 	}
 	if (bCurrentPartition != currentPartition)
 	{
-		gprintf("Switching partition to %s\n", m_cfg.getString(" GENERAL", "partition").c_str());
+		gprintf("Switching partition to %s\n", m_cfg.getString(" GENERA", "partition").c_str());
 		_loadGameList();
 	}
 	
@@ -193,8 +193,8 @@ void CMenu::_initConfig5Menu(CMenu::SThemeData &theme)
 {
 	_addUserLabels(theme, m_config5LblUser, ARRAY_SIZE(m_config5LblUser), "CONFIG5");
 	m_config5Bg = _texture(theme.texSet, "CONFIG5/BG", "texture", theme.bg);
-	m_config5LblPartitionName = _addLabel(theme, "CONFIG5/PARTITION", theme.lblFont, L"", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_config5LblPartition = _addLabel(theme, "CONFIG5/PARTITION_BTN", theme.lblFont, L"", 386, 130, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
+	m_config5LblPartitionName = _addLabel(theme, "CONFIG5/PARTITION", theme.lblFont, "", 40, 130, 340, 56, theme.lblFontColor, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_config5LblPartition = _addLabel(theme, "CONFIG5/PARTITION_BTN", theme.lblFont, "", 386, 130, 158, 56, theme.btnFontColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE, theme.btnTexC);
 	m_config5BtnPartitionM = _addPicButton(theme, "CONFIG5/PARTITION_MINUS",	theme.btnTexMinus,	theme.btnTexMinusS, 330, 130, 56, 56);
 	m_config5BtnPartitionP = _addPicButton(theme, "CONFIG5/PARTITION_PLUS",		theme.btnTexPlus,	theme.btnTexPlusS, 544, 130, 56, 56);
 	// 
@@ -208,5 +208,5 @@ void CMenu::_initConfig5Menu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfig5(void)
 {
-	m_btnMgr.setText(m_config5LblPartitionName, _t("cfgp1", L"Game Partition"));
+	m_btnMgr.setText(m_config5LblPartitionName, _t("cfgp1", "Game Partition"));
 }

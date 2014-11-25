@@ -111,9 +111,9 @@ int old_main()
 		menu.init(hbc);
 
 		if (!dipOK)
-			menu.error(L"Could not initialize DIP module!");
+			menu.error("Could not initialize DIP module!");
 		else if (!wodeOK)
-			menu.error(L"Wode not found.");
+			menu.error("Wode not found.");
 		else
 		{
 			ret = menu.main();

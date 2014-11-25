@@ -200,12 +200,14 @@ uint16_t FreeTypeGX::adjustTextureHeight(uint16_t textureHeight, uint8_t texture
  * @param charCode	The requested glyph's character code.
  * @return A pointer to the allocated font structure.
  */
-ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode) {
+ftgxCharData *FreeTypeGX::cacheGlyphData(wchar_t charCode)
+{
 	FT_UInt gIndex;
 	uint16_t textureWidth = 0, textureHeight = 0;
 
 	gIndex = FT_Get_Char_Index( this->ftFace, charCode );
-	if (!FT_Load_Glyph(this->ftFace, gIndex, FT_LOAD_DEFAULT )) {
+	if (!FT_Load_Glyph(this->ftFace, gIndex, FT_LOAD_DEFAULT ))
+	{
 		FT_Render_Glyph( this->ftSlot, FT_RENDER_MODE_NORMAL );
 		
 		if(this->ftSlot->format == FT_GLYPH_FORMAT_BITMAP) {
@@ -482,23 +484,29 @@ void FreeTypeGX::drawTextFeature(uint16_t x, uint16_t y, uint16_t width,  ftgxDa
  * @param text	NULL terminated string to calculate.
  * @return The width of the text string in pixels.
  */
-uint16_t FreeTypeGX::getWidth(wchar_t *text) {
+uint16_t FreeTypeGX::getWidth(wchar_t *text)
+{
 	uint16_t strLength = wcslen(text);
 	uint16_t strWidth = 0;
 	FT_Vector pairDelta;
 	
-	for (uint16_t i = 0; i < strLength; i++) {
-		
+	for (uint16_t i = 0; i < strLength; i++)
+	{
 		ftgxCharData* glyphData = NULL;
-		if( this->fontData.find(text[i]) != this->fontData.end() ) {
+		//if( this->fontData.count(text[i]) > 0 )
+		if (this->fontData.find(text[i]) != this->fontData.end())
+		{
 			glyphData = &this->fontData[text[i]];
 		}
-		else {
+		else
+		{
 			glyphData = this->cacheGlyphData(text[i]);
 		}
 		
-		if(glyphData != NULL) {
-			if(this->ftKerningEnabled && (i > 0)) {
+		if(glyphData != NULL)
+		{
+			if(this->ftKerningEnabled && (i > 0))
+			{
 				FT_Get_Kerning( this->ftFace, this->fontData[text[i - 1]].glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta );
 				strWidth += pairDelta.x >> 6;
 			}

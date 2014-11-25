@@ -250,7 +250,7 @@ void app_loadgameconfig(char *discid)
 							DCFlushRange((void *) (gameconf + (gameconfsize / 4) - 5), 20);
 						}
 					}
-					if (strncasecmp("pokeifequal", parsebuffer, strlen(parsebuffer)) == 0 && strlen(parsebuffer) == 11)
+					if (strncasecmp("pokeifequa", parsebuffer, strlen(parsebuffer)) == 0 && strlen(parsebuffer) == 11)
 					{
 						ret = sscanf((char *)(tempgameconf + i), "( %x , %x , %x , %x", &codeaddr, &codeval, &codeaddr2, &codeval2);
 						if (ret == 4)
@@ -401,7 +401,7 @@ void app_loadgameconfig(char *discid)
 							if (temp >= 0 && temp <= 1)
 								applyfwritepatch = temp;
 					}
-					if (strncasecmp("dumpmaindol", parsebuffer, strlen(parsebuffer)) == 0 && strlen(parsebuffer) == 11)
+					if (strncasecmp("dumpmaindo", parsebuffer, strlen(parsebuffer)) == 0 && strlen(parsebuffer) == 11)
 					{
 						ret = sscanf(tempgameconf + i, " = %u", &temp);
 						if (ret == 1)

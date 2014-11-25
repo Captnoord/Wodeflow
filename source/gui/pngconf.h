@@ -48,7 +48,7 @@
  *        distinguish your DLL from those of the official release. These
  *        correspond to the trailing letters that come after the version
  *        number and must match your private DLL name>
- *  e.g. // private DLL "libpng13gx.dll"
+ *  e.g. // private DLL "libpng13gx.dl"
  *       #define PNG_USER_DLLFNAME_POSTFIX "gx"
  * 
  * The following macros are also at your disposal if you want to complete the 
@@ -1308,7 +1308,7 @@ typedef z_stream FAR *  png_zstreamp;
 #  define PNG_IMPEXP
 #endif  
 
-/* If you define PNGAPI, e.g., with compiler option "-DPNGAPI=__stdcall",
+/* If you define PNGAPI, e.g., with compiler option "-DPNGAPI=__stdcal",
  * you may get warnings regarding the linkage of png_zalloc and png_zfree.
  * Don't ignore those warnings; you must also reset the default calling
  * convention in your compiler to match your PNGAPI, and you must build

@@ -25,7 +25,7 @@ bool CButtonsMgr::init(void)
 	return true;
 }
 
-u32 CButtonsMgr::addButton(SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color,
+u32 CButtonsMgr::addButton(SFont font, const std::string &text, int x, int y, u32 width, u32 height, const CColor &color,
 	const SButtonTextureSet &texSet, const SSoundEffect &clickSound, const SSoundEffect &hoverSound)
 {
 	CButtonsMgr::SButton *b = new CButtonsMgr::SButton;
@@ -283,7 +283,7 @@ void CButtonsMgr::tick(void)
 		WPAD_Rumble(WPAD_CHAN_0, 0);
 }
 
-u32 CButtonsMgr::addLabel(SFont font, const wstringEx &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, const STexture &bg)
+u32 CButtonsMgr::addLabel(SFont font, const std::string &text, int x, int y, u32 width, u32 height, const CColor &color, u16 style, const STexture &bg)
 {
 	CButtonsMgr::SLabel *b = new CButtonsMgr::SLabel;
 	SmartPtr<CButtonsMgr::SElement> elt(b);
@@ -339,7 +339,7 @@ u32 CButtonsMgr::addPicButton(STexture &texNormal, STexture &texSelected, int x,
 
 	texSet.center = texNormal;
 	texSet.centerSel = texSelected;
-	i = addButton(SFont(), wstringEx(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
+	i = addButton(SFont(), std::string(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
 	return i;
 }
 
@@ -350,11 +350,11 @@ u32 CButtonsMgr::addPicButton(const u8 *pngNormal, const u8 *pngSelected, int x,
 
 	texSet.center.fromPNG(pngNormal);
 	texSet.centerSel.fromPNG(pngSelected);
-	i = addButton(SFont(), wstringEx(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
+	i = addButton(SFont(), std::string(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
 	return i;
 }
 
-void CButtonsMgr::setText(u32 id, const wstringEx &text, bool unwrap)
+void CButtonsMgr::setText(u32 id, const std::string &text, bool unwrap)
 {
 	CButtonsMgr::SLabel *lbl;
 
@@ -410,8 +410,8 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 		scaleY = (1.f - b.click) * 1.6f;
 	}
 
-	//if (alpha == 0 || scaleX <= 0.000001f || scaleY <= 0.000001f)
-	if (alpha == 0 || scaleX == 0.f || scaleY <= 0.f)
+	if (alpha == 0 || scaleX <= 0.00000001f || scaleY <= 0.00000001f)
+	//if (alpha == 0 || scaleX == 0.f || scaleY <= 0.f)
 		return;
 
 	guMtxIdentity(modelViewMtx);
@@ -514,7 +514,10 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 	b.font.font->reset();
 	CColor txtColor(b.textColor.r, b.textColor.g, b.textColor.b, (u8)((int)b.textColor.a * (int)alpha / 0xFF));
     b.font.font->setScale(scaleX, scaleY);
-	b.font.font->drawText(0, 0, b.text.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	//b.font.font->drawText(0, 0, b.text.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	
+	std::wstring test(b.text.begin(), b.text.end());
+	b.font.font->drawText(0, 0, test.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
 }
 
 void CButtonsMgr::_drawLbl(CButtonsMgr::SLabel &b)

@@ -5,7 +5,7 @@
 
 extern const u8 error_png[];
 
-void CMenu::error(const wstringEx &msg)
+void CMenu::error(const std::string &msg)
 {
 	s32 padsState;
 	WPADData *wd;
@@ -60,8 +60,8 @@ void CMenu::_initErrorMenu(CMenu::SThemeData &theme)
 	texIcon.fromPNG(error_png);
 	_addUserLabels(theme, m_errorLblUser, ARRAY_SIZE(m_errorLblUser), "ERROR");
 	m_errorBg = _texture(theme.texSet, "ERROR/BG", "texture", theme.bg);
-	m_errorLblMessage = _addLabel(theme, "ERROR/MESSAGE", theme.lblFont, L"", 112, 20, 500, 440, CColor(0xFFFFFFFF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
-	m_errorLblIcon = _addLabel(theme, "ERROR/ICON", theme.lblFont, L"", 40, 200, 64, 64, CColor(0xFFFFFFFF), 0, texIcon);
+	m_errorLblMessage = _addLabel(theme, "ERROR/MESSAGE", theme.lblFont, "", 112, 20, 500, 440, CColor(0xFFFFFFFF), FTGX_JUSTIFY_LEFT | FTGX_ALIGN_MIDDLE);
+	m_errorLblIcon = _addLabel(theme, "ERROR/ICON", theme.lblFont, "", 40, 200, 64, 64, CColor(0xFFFFFFFF), 0, texIcon);
 	// 
 	_setHideAnim(m_errorLblMessage, "ERROR/MESSAGE", 0, 0, 0.f, 0.f);
 	_setHideAnim(m_errorLblIcon, "ERROR/ICON", -50, 0, 0.f, 0.f);
