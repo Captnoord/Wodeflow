@@ -268,9 +268,9 @@ int CMenu::_coverDownloader(bool missingOnly)
 		m_thrdWorking = false;
 		return 0;
 	}
-	savePNG = m_cfg.getBool(" GENERA", "keep_png", true);
-	fmtURLBox = stringToVector(m_cfg.getString(" GENERA", "url_full_covers", FMT_BPIC_URL), '|');
-	fmtURLFlat = stringToVector(m_cfg.getString(" GENERA", "url_flat_covers", FMT_PIC_URL), '|');
+	savePNG = m_cfg.getBool("GENERAL", "keep_png", true);
+	fmtURLBox = stringToVector(m_cfg.getString("GENERAL", "url_full_covers", FMT_BPIC_URL), '|');
+	fmtURLFlat = stringToVector(m_cfg.getString("GENERAL", "url_flat_covers", FMT_PIC_URL), '|');
 	nbSteps = m_gameList.size();
 	step = 0;
 	if (m_coverDLGameId.empty())

@@ -59,8 +59,8 @@ void CMenu::_showConfig(void)
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage + 1 : CMenu::_nbCfgPages));
 	
-	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool("GENERA", "rumble")		? gOn : gOff);
-	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool("GENERA", "box_mode")	? gOn : gOff);
+	m_btnMgr.setText(m_configBtnRumble, m_cfg.getBool("GENERAL", "rumble")		? gOn : gOff);
+	m_btnMgr.setText(m_configBtnBoxMode, m_cfg.getBool("GENERAL", "box_mode")	? gOn : gOff);
 }
 
 void CMenu::_config(int page)
@@ -104,7 +104,7 @@ void CMenu::_config(int page)
 		}
 	WPAD_Rumble(WPAD_CHAN_0, 0);
 	m_cfg.save();
-	m_cf.setBoxMode(m_cfg.getBool(" GENERA", "box_mode"));
+	m_cf.setBoxMode(m_cfg.getBool("GENERAL", "box_mode"));
 	_initCF();
 }
 
@@ -156,7 +156,7 @@ int CMenu::_config1(void)
 			{
 				char code[4];
 				_hideConfig();
-				if (_code(code) && memcmp(code, m_cfg.getString(" GENERA", "parent_code", "").c_str(), 4) == 0)
+				if (_code(code) && memcmp(code, m_cfg.getString("GENERAL", "parent_code", "").c_str(), 4) == 0)
 					m_locked = false;
 				_showConfig();
 			}
@@ -165,18 +165,18 @@ int CMenu::_config1(void)
 				char code[4];
 				_hideConfig();
 				if (_code(code, true))
-					m_cfg.setString(" GENERA", "parent_code", string(code, 4).c_str());
+					m_cfg.setString("GENERAL", "parent_code", string(code, 4).c_str());
 				_showConfig();
 			}
 			else if (m_btnMgr.selected() == m_configBtnBoxMode)
 			{
-				m_cfg.setBool(" GENERA", "box_mode", !m_cfg.getBool(" GENERA", "box_mode"));
+				m_cfg.setBool("GENERAL", "box_mode", !m_cfg.getBool("GENERAL", "box_mode"));
 				_showConfig();
 			}
 			else if (m_btnMgr.selected() == m_configBtnRumble)
 			{
-				m_cfg.setBool(" GENERA", "rumble", !m_cfg.getBool(" GENERA", "rumble"));
-				m_btnMgr.setRumble(m_cfg.getBool(" GENERA", "rumble"));
+				m_cfg.setBool("GENERAL", "rumble", !m_cfg.getBool("GENERAL", "rumble"));
+				m_btnMgr.setRumble(m_cfg.getBool("GENERAL", "rumble"));
 				_showConfig();
 			}
 		}

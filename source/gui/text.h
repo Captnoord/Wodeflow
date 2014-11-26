@@ -34,6 +34,7 @@ private:
 	struct SWord
 	{
 		std::string text;
+		std::wstring text_render_cache_;
 		vec3 pos;
 		vec3 targetPos;
 	};

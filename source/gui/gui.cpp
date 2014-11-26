@@ -339,7 +339,7 @@ u32 CButtonsMgr::addPicButton(STexture &texNormal, STexture &texSelected, int x,
 
 	texSet.center = texNormal;
 	texSet.centerSel = texSelected;
-	i = addButton(SFont(), std::string(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
+	i = addButton(SFont(), "", x, y, width, height, CColor(), texSet, clickSound, hoverSound);
 	return i;
 }
 
@@ -350,7 +350,7 @@ u32 CButtonsMgr::addPicButton(const u8 *pngNormal, const u8 *pngSelected, int x,
 
 	texSet.center.fromPNG(pngNormal);
 	texSet.centerSel.fromPNG(pngSelected);
-	i = addButton(SFont(), std::string(), x, y, width, height, CColor(), texSet, clickSound, hoverSound);
+	i = addButton(SFont(), "", x, y, width, height, CColor(), texSet, clickSound, hoverSound);
 	return i;
 }
 
@@ -433,9 +433,9 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 			GX_InitTexObj(&texObjRight, b.tex.right.data.get(),		b.tex.right.width,		b.tex.right.height,		b.tex.right.format,		GX_CLAMP, GX_CLAMP, GX_FALSE);
 		}
 		
-		w = (float)(b.w / 2) * scaleX;
-		h = (float)(b.h / 2) * scaleY;
-		wh = (float)(b.h / 2) * scaleX;
+		w = (float)(b.w / 2.f) * scaleX;
+		h = (float)(b.h / 2.f) * scaleY;
+		wh = (float)(b.h / 2.f) * scaleX;
 
 		GX_LoadTexObj(&texObjLeft, GX_TEXMAP0);
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
@@ -489,8 +489,8 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 			GX_InitTexObj(&texObjLeft, b.tex.centerSel.data.get(), b.tex.centerSel.width, b.tex.centerSel.height, b.tex.centerSel.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		else
 			GX_InitTexObj(&texObjLeft, b.tex.center.data.get(), b.tex.center.width, b.tex.center.height, b.tex.center.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
-		w = (float)(b.w / 2) * scaleX;
-		h = (float)(b.h / 2) * scaleY;
+		w = (float)(b.w / 2.f) * scaleX;
+		h = (float)(b.h / 2.f) * scaleY;
 
 		GX_LoadTexObj(&texObjLeft, GX_TEXMAP0);
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
@@ -514,10 +514,7 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 	b.font.font->reset();
 	CColor txtColor(b.textColor.r, b.textColor.g, b.textColor.b, (u8)((int)b.textColor.a * (int)alpha / 0xFF));
     b.font.font->setScale(scaleX, scaleY);
-	//b.font.font->drawText(0, 0, b.text.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
-	
-	std::wstring test(b.text.begin(), b.text.end());
-	b.font.font->drawText(0, 0, test.c_str(), txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
+	b.font.font->drawText(0, 0, b.text, txtColor, FTGX_JUSTIFY_CENTER | FTGX_ALIGN_MIDDLE);
 }
 
 void CButtonsMgr::_drawLbl(CButtonsMgr::SLabel &b)
@@ -729,6 +726,7 @@ void CButtonsMgr::draw(void)
 {
 	if (m_elements.empty())
 		return;
+
 	GX_SetNumChans(1);
 	GX_ClearVtxDesc();
 	GX_SetVtxDesc(GX_VA_POS, GX_DIRECT);

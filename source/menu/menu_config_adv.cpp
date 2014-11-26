@@ -73,7 +73,7 @@ void CMenu::_showConfigAdv(void)
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
 	m_btnMgr.setText(m_configAdvLblCurLanguage, m_curLanguage);
-	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString(" GENERA", "theme"));
+	m_btnMgr.setText(m_configAdvLblCurTheme, m_cfg.getString("GENERAL", "theme"));
 }
 
 static string upperCase(string text)
@@ -124,7 +124,7 @@ int CMenu::_configAdv(void)
 	int nextPage = 0;
 	vector<string> themes;
 	int curTheme;
-	string prevTheme = m_cfg.getString(" GENERA", "theme");
+	string prevTheme = m_cfg.getString("GENERAL", "theme");
 
 	listThemes(m_themeDir.c_str(), themes);
 	curTheme = 0;
@@ -182,26 +182,26 @@ int CMenu::_configAdv(void)
 			else if (m_btnMgr.selected() == m_configAdvBtnCurThemeP)
 			{
 				curTheme = loopNum(curTheme + 1, (int)themes.size());
-				m_cfg.setString(" GENERA", "theme", themes[curTheme]);
+				m_cfg.setString("GENERAL", "theme", themes[curTheme]);
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurThemeM)
 			{
 				curTheme = loopNum(curTheme - 1, (int)themes.size());
-				m_cfg.setString(" GENERA", "theme", themes[curTheme]);
+				m_cfg.setString("GENERAL", "theme", themes[curTheme]);
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurLanguageP)
 			{
 				m_curLanguage = m_loc.nextDomain(m_curLanguage);
-				m_cfg.setString(" GENERA", "language", m_curLanguage);
+				m_cfg.setString("GENERAL", "language", m_curLanguage);
 				_updateText();
 				_showConfigAdv();
 			}
 			else if (m_btnMgr.selected() == m_configAdvBtnCurLanguageM)
 			{
 				m_curLanguage = m_loc.prevDomain(m_curLanguage);
-				m_cfg.setString(" GENERA", "language", m_curLanguage);
+				m_cfg.setString("GENERAL", "language", m_curLanguage);
 				_updateText();
 				_showConfigAdv();
 			}

@@ -558,6 +558,7 @@ void CCoverFlow::setBlur(u32 blurResolution, u32 blurRadius, float blurFactor)
 	static const struct { u32 x; u32 y; } blurRes[] = {
 		{ 64, 48 }, { 96, 72 }, { 128, 96 }, { 192, 144 }
 	};
+
 	u32 i = std::min(std::max(0u, blurResolution), sizeof blurRes / sizeof blurRes[0] - 1u);
 	m_effectTex.width = blurRes[i].x;
 	m_effectTex.height = blurRes[i].y;
@@ -884,6 +885,7 @@ void CCoverFlow::drawEffect(void)
 {
 	if (m_covers.empty())
 		return;
+
 	if (_effectVisible())
 	{
 		Mtx modelViewMtx;
@@ -892,6 +894,7 @@ void CCoverFlow::drawEffect(void)
 		float h = 480.f;
 		float x = 0.f;
 		float y = 0.f;
+		float z = -999.f; // this seems pointless
 
 		GX_SetNumTevStages(1);
 		GX_SetNumChans(0);
@@ -911,21 +914,20 @@ void CCoverFlow::drawEffect(void)
 		GX_SetAlphaUpdate(GX_FALSE);
 		GX_SetCullMode(GX_CULL_NONE);
 		GX_SetZMode(GX_ENABLE, GX_LEQUAL, GX_FALSE);
+		
 		guMtxIdentity(modelViewMtx);
 		GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
 		GX_InitTexObj(&texObj, m_effectTex.data.get(), m_effectTex.width, m_effectTex.height, m_effectTex.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		GX_LoadTexObj(&texObj, GX_TEXMAP0);
+
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
-		GX_Position3f32(x, y, -999.f);
-		GX_TexCoord2f32(0.f, 0.f);
-		GX_Position3f32(x + w, y, -999.f);
-		GX_TexCoord2f32(1.f, 0.f);
-		GX_Position3f32(x + w, y + h, -999.f);
-		GX_TexCoord2f32(1.f, 1.f);
-		GX_Position3f32(x, y + h, -999.f);
-		GX_TexCoord2f32(0.f, 1.f);
+		GX_Position3f32(x, y, z);			GX_TexCoord2f32(0.f, 0.f);
+		GX_Position3f32(x + w, y, z);		GX_TexCoord2f32(1.f, 0.f);
+		GX_Position3f32(x + w, y + h, z);	GX_TexCoord2f32(1.f, 1.f);
+		GX_Position3f32(x, y + h, z);		GX_TexCoord2f32(0.f, 1.f);
 		GX_End();
 	}
+
 	if (!m_mirrorBlur)
 		_draw(CCoverFlow::CFDR_NORMAL, true, true);
 }
@@ -2084,15 +2086,27 @@ void CCoverFlow::_setJump(int j)
 
 void CCoverFlow::_completeJump(void)
 {
+	int index = 0;
 	if (m_rows >= 3)
-		_loadAllCovers((int)m_covers[m_range / 2].index_ + m_jump);
+	{
+		//_loadAllCovers((int)m_covers[m_range / 2].index_ + m_jump);
+		index = (int)m_covers[m_range / 2].index_ + m_jump;
+	}
 	else
 	{
 		if (m_jump < 0)
-			_loadAllCovers((int)m_covers[0].index_ + m_jump + (int)m_range / 2);
+		{
+			//_loadAllCovers((int)m_covers[0].index_ + m_jump + (int)m_range / 2);
+			index = (int)m_covers[0].index_ + m_jump + (int)m_range / 2;
+		}
 		else
-			_loadAllCovers((int)m_covers[m_range - 1].index_ + m_jump - ((int)m_range - 1) / 2);
+		{
+			//_loadAllCovers((int)m_covers[m_range - 1].index_ + m_jump - ((int)m_range - 1) / 2);
+			index = (int)m_covers[m_range - 1].index_ + m_jump - ((int)m_range - 1) / 2;
+		}
 	}
+
+	_loadAllCovers(index);
 }
 
 char CCoverFlow::nextLetter(void)
@@ -2107,10 +2121,10 @@ char CCoverFlow::nextLetter(void)
 		return '\0';
 	_completeJump();
 	curPos = _currentPos();
-	c = std::toupper(m_items[curPos].title_.c_str()[0]);
+	c = std::toupper(m_items[curPos].title_[0]);
 	for (i = 1; i < n; ++i)
 	{
-		if (std::toupper(m_items[loopNum(curPos + i, n)].title_.c_str()[0]) != c)
+		if (std::toupper(m_items[loopNum(curPos + i, n)].title_[0]) != c)
 		{
 			break;
 		}
@@ -2118,7 +2132,7 @@ char CCoverFlow::nextLetter(void)
 	if (i < n)
 	{
 		_setJump(i);
-		c = std::toupper(m_items[loopNum(curPos + i, n)].title_.c_str()[0]);
+		c = std::toupper(m_items[loopNum(curPos + i, n)].title_[0]);
 	}
 	_updateAllTargets();
 	return c;
@@ -2151,34 +2165,45 @@ char CCoverFlow::prevLetter(void)
 
 void CCoverFlow::_coverTick(int i)
 {
-	float speed = m_selected ? 0.07f : 0.1f;
-	vec3 posDist(m_covers[i].targetPos - m_covers[i].pos);
+	float speed;
+	if (m_selected)
+		speed = 0.07f;
+	else
+		speed = 0.1f;
+
+	CCover & cover = m_covers[i];
+
+	vec3 posDist(cover.targetPos - cover.pos);
 	int colorDist;
 
 	if (posDist.sqNorm() < 0.5f)
 		speed *= 0.5f;
-	m_covers[i].angle += (m_covers[i].targetAngle - m_covers[i].angle) * speed;
-	m_covers[i].pos += posDist * speed;
-	m_covers[i].scale_ += (m_covers[i].targetScale_ - m_covers[i].scale_) * speed;
-	if (m_covers[i].color_ != m_covers[i].targetColor_)
+
+	cover.angle		+= (cover.targetAngle - cover.angle) * speed;
+	cover.scale_	+= (cover.targetScale_ - cover.scale_) * speed;
+	cover.pos		+= posDist * speed;
+
+	if (cover.color_ != cover.targetColor_)
 	{
-		CColor c(m_covers[i].color_);
-		m_covers[i].color_ = CColor::interpolate(c, m_covers[i].targetColor_, 0x20);
-		if (m_covers[i].color_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
-			m_covers[i].color_ = m_covers[i].targetColor_;
+		CColor c(cover.color_);
+		cover.color_ = CColor::interpolate(c, cover.targetColor_, 0x20);
+		if (cover.color_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
+			cover.color_ = cover.targetColor_;
 	}
-	if (m_covers[i].shadowColor_ != m_covers[i].targetShadowColor_)
+
+	if (cover.shadowColor_ != cover.targetShadowColor_)
 	{
-		CColor c(m_covers[i].shadowColor_);
-		m_covers[i].shadowColor_ = CColor::interpolate(c, m_covers[i].targetShadowColor_, 0x20);
-		if (m_covers[i].shadowColor_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
-			m_covers[i].shadowColor_ = m_covers[i].targetShadowColor_;
+		CColor c(cover.shadowColor_);
+		cover.shadowColor_ = CColor::interpolate(c, cover.targetShadowColor_, 0x20);
+		if (cover.shadowColor_ == c)	// If the interpolation doesn't do anything because of numerical approximation, force the target color
+			cover.shadowColor_ = cover.targetShadowColor_;
 	}
-	m_covers[i].txtAngle_ += (m_covers[i].txtTargetAngle_ - m_covers[i].txtAngle_) * speed;
-	m_covers[i].txtPos += (m_covers[i].txtTargetPos - m_covers[i].txtPos) * speed;
-	colorDist = (int)m_covers[i].txtTargetColor_ - (int)m_covers[i].txtColor_;
-	m_covers[i].txtColor_ += abs(colorDist) >= 8 ? (u8)(colorDist / 8) : (u8)colorDist;
-	m_covers[i].title.tick();
+
+	cover.txtAngle_ += (cover.txtTargetAngle_ - cover.txtAngle_) * speed;
+	cover.txtPos	+= (cover.txtTargetPos - cover.txtPos) * speed;
+	colorDist = (int)cover.txtTargetColor_ - (int)cover.txtColor_;
+	cover.txtColor_ += abs(colorDist) >= 8 ? (u8)(colorDist / 8) : (u8)colorDist;
+	cover.title.tick();
 }
 
 void CCoverFlow::_unselect(void)
@@ -2222,18 +2247,24 @@ void CCoverFlow::_jump(void)
 
 void CCoverFlow::tick(void)
 {
-	LockMutex lock(m_mutex);
 	if (m_covers.empty())
 		return;
-	++m_tickCount;
-	if (m_delay > 0)
-		--m_delay;
-	else
-		_jump();
-	for (u32 i = 0; i < m_range; ++i)
-		_coverTick(i);
-	m_cameraPos += (m_targetCameraPos - m_cameraPos) * 0.2f;
-	m_cameraAim += (m_targetCameraAim - m_cameraAim) * 0.2f;
+
+	{
+		LockMutex lock(m_mutex);
+
+		++m_tickCount;
+		if (m_delay > 0)
+			--m_delay;
+		else
+			_jump();
+
+		for (u32 i = 0; i < m_range; ++i)
+			_coverTick(i);
+
+		m_cameraPos += (m_targetCameraPos - m_cameraPos) * 0.15f;
+		m_cameraAim += (m_targetCameraAim - m_cameraAim) * 0.15f;
+	}	
 }
 
 struct SWFCHeader
@@ -2345,11 +2376,13 @@ bool CCoverFlow::_loadCoverTexPNG(u32 i, bool box, bool hq)
 		return false;
 	if (m_waitingToClear)
 		return false;
+	
 	LWP_MutexLock(m_mutex);
 	m_items[i].texture_ = tex;
 	m_items[i].boxTexture_ = box;
 	m_items[i].state_ = CCoverFlow::STATE_Ready;
 	LWP_MutexUnlock(m_mutex);
+
 	// Save the texture to the cache folder for the next time
 	if (!m_cachePath.empty())
 	{

@@ -72,7 +72,7 @@ int CMenu::main(void)
 	std::string curLetter;
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;
-	string prevTheme = m_cfg.getString(" GENERA", "theme", "default");
+	string prevTheme = m_cfg.getString("GENERAL", "theme", "default");
 	bool reload = false;
 	float angle = 0;
 	float mag = 0;
@@ -127,17 +127,17 @@ int CMenu::main(void)
 
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1), m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt("GENERAL", "last_cf_mode", 1), m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
+			m_cfg.setInt("GENERAL", "last_cf_mode", cfVersion);
 		}
 		else if ((padsState & WPAD_BUTTON_2) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1) - 2, m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt("GENERAL", "last_cf_mode", 1) - 2, m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
+			m_cfg.setInt("GENERAL", "last_cf_mode", cfVersion);
 		}
 		if (((padsState & (WPAD_BUTTON_DOWN | WPAD_BUTTON_RIGHT)) != 0 && (wd->btns_h & WPAD_BUTTON_B) != 0)
 			|| ((padsState & WPAD_BUTTON_PLUS) != 0 && m_alphaSearch == ((wd->btns_h & WPAD_BUTTON_B) == 0)))
@@ -180,7 +180,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(2);
-				if (prevTheme != m_cfg.getString(" GENERA", "theme"))
+				if (prevTheme != m_cfg.getString("GENERAL", "theme"))
 				{
 					reload = true;
 					break;
@@ -191,7 +191,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(1);
-				if (prevTheme != m_cfg.getString(" GENERA", "theme"))
+				if (prevTheme != m_cfg.getString("GENERAL", "theme"))
 				{
 					reload = true;
 					break;
@@ -225,7 +225,7 @@ int CMenu::main(void)
 			else if (m_btnMgr.selected() == m_mainBtnFavoritesOn || m_btnMgr.selected() == m_mainBtnFavoritesOff)
 			{
 				m_favorites = !m_favorites;
-				m_cfg.setInt(" GENERA", "favorites", m_favorites);
+				m_cfg.setInt("GENERAL", "favorites", m_favorites);
 				m_curGameId = m_cf.getId();
 				_initCF();
 			}

@@ -341,7 +341,7 @@ void CMenu::_cfTheme(void)
 		if ((padsState & WPAD_BUTTON_HOME) != 0)
 		{
 			m_theme.clear();
-			m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString(" GENERA", "theme", "defaut").c_str()).c_str());
+			m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "defaut").c_str()).c_str());
 			break;
 		}
 		if (wd->ir.valid)
@@ -437,7 +437,7 @@ void CMenu::_cfTheme(void)
 				else if (m_btnMgr.selected() == m_cfThemeBtnCancel)
 				{
 					m_theme.clear();
-					m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString(" GENERA", "theme", "defaut").c_str()).c_str());
+					m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "defaut").c_str()).c_str());
 					break;
 				}
 				else if (m_btnMgr.selected() == m_cfThemeBtnAlt)

@@ -50,10 +50,10 @@ void CMenu::_showConfig4(void)
 			m_btnMgr.show(m_config4LblUser[i]);
 	// 
 	m_btnMgr.setText(m_configLblPage, wfmt("%i / %i", g_curPage, m_locked ? g_curPage : CMenu::_nbCfgPages));
-	m_alphaSearch = m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus", false);
-	m_btnMgr.setText(m_config4BtnHome, m_cfg.getBool(" GENERA", "exit_to_wii_menu") ? gOn : gOff);
-	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool(" GENERA", "favorites_on_startup") ? gOn : gOff);
-	m_btnMgr.setText(m_config4BtnSearchMode, m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus") ? _t("smalpha", "Alphabetic") : _t("smpage", "Pages"));
+	m_alphaSearch = m_cfg.getBool("GENERAL", "alphabetic_search_on_plus_minus", false);
+	m_btnMgr.setText(m_config4BtnHome, m_cfg.getBool("GENERAL", "exit_to_wii_menu") ? gOn : gOff);
+	m_btnMgr.setText(m_config4BtnSaveFavMode, m_cfg.getBool("GENERAL", "favorites_on_startup") ? gOn : gOff);
+	m_btnMgr.setText(m_config4BtnSearchMode, m_cfg.getBool("GENERAL", "alphabetic_search_on_plus_minus") ? _t("smalpha", "Alphabetic") : _t("smpage", "Pages"));
 }
 
 int CMenu::_config4(void)
@@ -98,19 +98,19 @@ int CMenu::_config4(void)
 				break;
 			else if (m_btnMgr.selected() == m_config4BtnHome)
 			{
-				m_cfg.setBool(" GENERA", "exit_to_wii_menu", !m_cfg.getBool(" GENERA", "exit_to_wii_menu"));
-				Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool(" GENERA", "exit_to_wii_menu", false));
+				m_cfg.setBool("GENERAL", "exit_to_wii_menu", !m_cfg.getBool("GENERAL", "exit_to_wii_menu"));
+				Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool("GENERAL", "exit_to_wii_menu", false));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected() == m_config4BtnSaveFavMode)
 			{
-				m_cfg.setBool(" GENERA", "favorites_on_startup", !m_cfg.getBool(" GENERA", "favorites_on_startup"));
+				m_cfg.setBool("GENERAL", "favorites_on_startup", !m_cfg.getBool("GENERAL", "favorites_on_startup"));
 				_showConfig4();
 			}
 			else if (m_btnMgr.selected() == m_config4BtnSearchMode)
 			{
-				m_alphaSearch = !m_cfg.getBool(" GENERA", "alphabetic_search_on_plus_minus", false);
-				m_cfg.setBool(" GENERA", "alphabetic_search_on_plus_minus", m_alphaSearch);
+				m_alphaSearch = !m_cfg.getBool("GENERAL", "alphabetic_search_on_plus_minus", false);
+				m_cfg.setBool("GENERAL", "alphabetic_search_on_plus_minus", m_alphaSearch);
 				_showConfig4();
 			}
 		}

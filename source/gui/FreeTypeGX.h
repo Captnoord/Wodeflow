@@ -162,6 +162,7 @@
 #include <wchar.h>
 #include <map>
 #include <unordered_map>
+#include <string>
 
 /*! \struct ftgxCharData_
  * 
@@ -223,15 +224,16 @@ class FreeTypeGX {
 		FT_GlyphSlot ftSlot;	/**< FreeType reusable FT_GlyphSlot glyph container object. */
 		FT_UInt ftPointSize;	/**< Requested size of the rendered font. */
 		bool ftKerningEnabled;	/**< Flag indicating the availability of font kerning data. */
-		float xScale;
-		float yScale;
+		float xScale_;
+		float yScale_;
 		float xPos;
 		float yPos;
 
 		uint8_t textureFormat;		/**< Defined texture format of the target EFB. */
 		uint8_t positionFormat;		/**< Defined position format of the texture. */
 
-		std::unordered_map<wchar_t, ftgxCharData> fontData; /**< Map which holds the glyph data structures for the corresponding characters. */
+		//-std::unordered_map<wchar_t, ftgxCharData> fontData; /**< Map which holds the glyph data structures for the corresponding characters. */
+		ftgxCharData *fontData[0xFFFF];
 
 		static uint16_t adjustTextureWidth(uint16_t textureWidth, uint8_t textureFormat);
 		static uint16_t adjustTextureHeight(uint16_t textureHeight, uint8_t textureFormat);
@@ -259,33 +261,36 @@ class FreeTypeGX {
 		
 		uint16_t drawText(uint16_t x, uint16_t y, wchar_t *text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
 		uint16_t drawText(uint16_t x, uint16_t y, wchar_t const *text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
+		uint16_t drawText(uint16_t x, uint16_t y, const std::string & text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
 
+		uint16_t getWidth(const std::string &text);
 		uint16_t getWidth(wchar_t *text);
 		uint16_t getWidth(wchar_t const *text);
 		uint16_t getHeight(wchar_t *text);
 		uint16_t getHeight(wchar_t const *text);
 		ftgxDataOffset getOffset(wchar_t *text);
 		ftgxDataOffset getOffset(wchar_t const *text);
+		ftgxDataOffset getOffset(const std::string &text);
 		
 		//float getXScale(void) const { return xScale; }
 		//float getYScale(void) const { return yScale; }
         
         void setScale(float x_scale, float y_scale)
 		{
-			xScale = x_scale;
-			yScale = y_scale;
+			xScale_ = x_scale;
+			yScale_ = y_scale;
 		}
 
-		void setXScale(float f) { xScale = f; }
-		void setYScale(float f) { yScale = f; }
+		void setXScale(float f) { xScale_ = f; }
+		void setYScale(float f) { yScale_ = f; }
 		float getX(void) const { return xPos; }
 		float getY(void) const { return yPos; }
 		void setX(float f) { xPos = f; }
 		void setY(float f) { yPos = f; }
 		void reset(void)
 		{
-			xScale = 1.f;
-			yScale = 1.f;
+			xScale_ = 1.f;
+			yScale_ = 1.f;
 			xPos = 0.f;
 			yPos = 0.f;
 		};

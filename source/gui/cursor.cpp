@@ -28,6 +28,7 @@ bool CCursor::init(const char *png, bool wideFix, CColor shadowColor, float shad
 	m_y = -1;
 	if (STexture::TE_OK != m_texture.fromPNGFile(png, GX_TF_RGBA8))
 		ok = STexture::TE_OK == m_texture.fromPNG(generic_point_png, GX_TF_RGBA8);
+
 	if (ok && shadow)
 	{
 		m_shadowColor = shadowColor;
@@ -67,12 +68,9 @@ void CCursor::draw(int x, int y, float a)
 	// 
 	GX_SetNumChans(1);
 	GX_ClearVtxDesc();
-	GX_SetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-	GX_SetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-	GX_SetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+	GX_SetVtxDesc(GX_VA_POS,  GX_DIRECT);	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS,	 GX_POS_XYZ,  GX_F32, 0);
+	GX_SetVtxDesc(GX_VA_CLR0, GX_DIRECT);	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+	GX_SetVtxDesc(GX_VA_TEX0, GX_DIRECT);	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST,   GX_F32, 0);
 	GX_SetNumTexGens(1);
 	GX_SetTevOp(GX_TEVSTAGE0, GX_MODULATE);
 	GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
@@ -81,6 +79,7 @@ void CCursor::draw(int x, int y, float a)
 	GX_SetAlphaUpdate(GX_TRUE);
 	GX_SetCullMode(GX_CULL_NONE);
 	GX_SetZMode(GX_DISABLE, GX_LEQUAL, GX_TRUE);
+	
 	// Shadow
 	if (!!m_shadow.data)
 	{
@@ -89,6 +88,7 @@ void CCursor::draw(int x, int y, float a)
 		GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
 		GX_InitTexObj(&texObj, m_shadow.data.get(), m_shadow.width, m_shadow.height, m_shadow.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 		GX_LoadTexObj(&texObj, GX_TEXMAP0);
+	
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
 		v = vec3(w, h, 0.f).rotateZ(a);
 		GX_Position3f32(v.x * xScale, v.y, v.z);
@@ -114,23 +114,16 @@ void CCursor::draw(int x, int y, float a)
 	GX_LoadPosMtxImm(modelViewMtx, GX_PNMTX0);
 	GX_InitTexObj(&texObj, m_texture.data.get(), m_texture.width, m_texture.height, m_texture.format, GX_CLAMP, GX_CLAMP, GX_FALSE);
 	GX_LoadTexObj(&texObj, GX_TEXMAP0);
+
 	GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
 	v = vec3(w, h, 0.f).rotateZ(a);
-	GX_Position3f32(v.x * xScale, v.y, v.z);
-	GX_Color4u8(0xFF, 0xFF, 0xFF, 0xFF);
-	GX_TexCoord2f32(1.f, 1.f);
+	GX_Position3f32(v.x * xScale, v.y, v.z);	GX_Color1u32(0xFFFFFFFF);	GX_TexCoord2f32(1.f, 1.f);
 	v = vec3(-w, h, 0.f).rotateZ(a);
-	GX_Position3f32(v.x * xScale, v.y, v.z);
-	GX_Color4u8(0xFF, 0xFF, 0xFF, 0xFF);
-	GX_TexCoord2f32(0.f, 1.f);
+	GX_Position3f32(v.x * xScale, v.y, v.z);	GX_Color1u32(0xFFFFFFFF);	GX_TexCoord2f32(0.f, 1.f);
 	v = vec3(-w, -h, 0.f).rotateZ(a);
-	GX_Position3f32(v.x * xScale, v.y, v.z);
-	GX_Color4u8(0xFF, 0xFF, 0xFF, 0xFF);
-	GX_TexCoord2f32(0.f, 0.f);
+	GX_Position3f32(v.x * xScale, v.y, v.z);	GX_Color1u32(0xFFFFFFFF);	GX_TexCoord2f32(0.f, 0.f);
 	v = vec3(w, -h, 0.f).rotateZ(a);
-	GX_Position3f32(v.x * xScale, v.y, v.z);
-	GX_Color4u8(0xFF, 0xFF, 0xFF, 0xFF);
-	GX_TexCoord2f32(1.f, 0.f);
+	GX_Position3f32(v.x * xScale, v.y, v.z);	GX_Color1u32(0xFFFFFFFF);	GX_TexCoord2f32(1.f, 0.f);
 	GX_End();
 }
 
@@ -150,9 +143,10 @@ void CCursor::_blur(void)
 	SmartBuf xMaxBuf = smartAnyAlloc(w * sizeof (int));
 	SmartBuf yMinBuf = smartAnyAlloc(h * sizeof (int));
 	SmartBuf yMaxBuf = smartAnyAlloc(h * sizeof (int));
-	SmartBuf buf = smartMem2Alloc(m_shadow.width * m_shadow.height);
+	SmartBuf buf	= smartMem2Alloc(m_shadow.width * m_shadow.height);
 	if (!xMinBuf || !xMaxBuf || !yMinBuf || !yMaxBuf || !buf)
 		return;
+
 	int *xmin = (int *)xMinBuf.get();
 	int *xmax = (int *)xMaxBuf.get();
 	int *ymin = (int *)yMinBuf.get();

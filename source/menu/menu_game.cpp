@@ -144,17 +144,17 @@ void CMenu::_game(bool launch)
 			m_btnMgr.down();
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1), m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt("GENERAL", "last_cf_mode", 1), m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
+			m_cfg.setInt("GENERAL", "last_cf_mode", cfVersion);
 		}
 		else if ((padsState & WPAD_BUTTON_2) != 0)
 		{
-			int cfVersion = 1 + loopNum(m_cfg.getInt(" GENERA", "last_cf_mode", 1) - 2, m_numCFVersions);
+			int cfVersion = 1 + loopNum(m_cfg.getInt("GENERAL", "last_cf_mode", 1) - 2, m_numCFVersions);
 			_loadCFLayout(cfVersion);
 			m_cf.applySettings();
-			m_cfg.setInt(" GENERA", "last_cf_mode", cfVersion);
+			m_cfg.setInt("GENERAL", "last_cf_mode", cfVersion);
 		}
 		if (launch || (padsState & WPAD_BUTTON_A) != 0)
 		{
@@ -254,9 +254,9 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
 
-	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool(" GENERA", "vipatch", false));
-	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool(" GENERA", "cheat", false));
-	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool(" GENERA", "country_patch", false));
+	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool("GENERAL", "vipatch", false));
+	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool("GENERAL", "cheat", false));
+	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool("GENERAL", "country_patch", false));
 	
 	int videoMode		= m_cfg.getInt(id, "video_mode", 0);
 	videoMode			= std::min<int>(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
@@ -272,12 +272,12 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	u32 cheatSize = 0;
 
 	if (videoMode == 0)
-		videoMode = (u8)min((u32)m_cfg.getInt(" GENERA", "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1);
+		videoMode = (u8)min((u32)m_cfg.getInt("GENERAL", "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1);
 
 	if (language == 0)
-		language = min((u32)m_cfg.getInt(" GENERA", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
+		language = min((u32)m_cfg.getInt("GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
 
-	m_cfg.setString(" GENERA", "current_game", id);
+	m_cfg.setString("GENERAL", "current_game", id);
 	m_cfg.setInt(id, "playcount", m_cfg.getInt(id, "playcount", 0) + 1);
 	
 	m_cfg.save();

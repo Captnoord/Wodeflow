@@ -354,14 +354,23 @@ void CText::setColor(const CColor &c)
 void CText::tick(void)
 {
 	for (u32 k = 0; k < m_lines.size(); ++k)
+	{
 		for (u32 i = 0; i < m_lines[k].size(); ++i)
+		{
 			m_lines[k][i].pos += (m_lines[k][i].targetPos - m_lines[k][i].pos) * 0.05f;
+			//m_lines[k][i].pos += (m_lines[k][i].targetPos - m_lines[k][i].pos) * 0.0001f;
+		}
+	}
 }
 
 void CText::draw(void)
 {
 	if (!m_font.font)
 		return;
+
+	std::wstring test;
+	test.reserve(1024);
+
 	for (u32 k = 0; k < m_lines.size(); ++k)
 	{
 		for (u32 i = 0; i < m_lines[k].size(); ++i)
@@ -370,8 +379,13 @@ void CText::draw(void)
 			m_font.font->setY(m_lines[k][i].pos.y);
 
 			//m_font.font->drawText(0, m_font.lineSpacing, m_lines[k][i].text.c_str(), m_color);
-			std::wstring test(m_lines[k][i].text.begin(), m_lines[k][i].text.end());
-			m_font.font->drawText(0, m_font.lineSpacing, test.c_str(), m_color);
+
+			m_font.font->drawText(0, m_font.lineSpacing, m_lines[k][i].text, m_color);
+
+			//test();
+			//test.assign(m_lines[k][i].text.begin(), m_lines[k][i].text.end());
+
+			//m_font.font->drawText(0, m_font.lineSpacing, test.c_str(), m_color);
 		}
 	}
 }
