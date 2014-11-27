@@ -245,6 +245,8 @@ class FreeTypeGX {
 		static void copyFeatureToFramebuffer(uint8_t positionFormat, uint16_t featureWidth, uint16_t featureHeight, int16_t screenX, int16_t screenY, GXColor color);
 
 		void unloadFont();
+public:
+
 		ftgxCharData *cacheGlyphData(wchar_t charCode);
 		uint16_t cacheGlyphDataComplete();
 		void loadGlyphData(FT_Bitmap *bmp, ftgxCharData *charData);
@@ -261,7 +263,7 @@ class FreeTypeGX {
 		
 		uint16_t drawText(uint16_t x, uint16_t y, wchar_t *text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
 		uint16_t drawText(uint16_t x, uint16_t y, wchar_t const *text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
-		uint16_t drawText(uint16_t x, uint16_t y, const std::string & text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
+		uint16_t drawText(int x, int y, const std::string text, GXColor color = ftgxWhite, uint16_t textStyling = FTGX_NULL);
 
 		uint16_t getWidth(const std::string &text);
 		uint16_t getWidth(wchar_t *text);

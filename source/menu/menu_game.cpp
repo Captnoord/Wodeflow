@@ -76,7 +76,6 @@ static inline int loopNum(int i, int s)
 void CMenu::_hideGame(bool instant)
 {
 	m_btnMgr.hide(m_gameBtnPlay, instant);
-	m_btnMgr.hide(m_gameBtnDelete, instant);
 	m_btnMgr.hide(m_gameBtnSettings, instant);
 	m_btnMgr.hide(m_gameBtnBack, instant);
 	m_btnMgr.hide(m_gameBtnFavoriteOn, instant);
@@ -91,11 +90,14 @@ void CMenu::_hideGame(bool instant)
 void CMenu::_showGame(void)
 {
 	_setBg(m_gameBg, m_gameBgLQ);
+
 	m_btnMgr.show(m_gameBtnPlay);
 	m_btnMgr.show(m_gameBtnBack);
 	for (u32 i = 0; i < ARRAY_SIZE(m_gameLblUser); ++i)
 		if (m_gameLblUser[i] != -1u)
 			m_btnMgr.show(m_gameLblUser[i]);
+
+	_textGame();
 }
 
 static void setLanguage(int l)
@@ -119,6 +121,7 @@ void CMenu::_game(bool launch)
 		WPAD_ScanPads();
 		_showGame();
 	}
+
 	while (true)
 	{
 		std::string id(m_cf.getId());
@@ -131,17 +134,22 @@ void CMenu::_game(bool launch)
 			WPAD_ScanPads();
 		else
 			first = false;
-		padsState = WPAD_ButtonsDown(0);
-		wd = WPAD_Data(0);
+
+		padsState	= WPAD_ButtonsDown(0);
+		wd			= WPAD_Data(0);
+
 		(void)_btnRepeat(wd->btns_h);
+		
 		if ((padsState & (WPAD_BUTTON_HOME | WPAD_BUTTON_B)) != 0)
 			break;
+
 		if (wd->ir.valid)
 			m_btnMgr.mouse(wd->ir.x - m_cur.width() / 2, wd->ir.y - m_cur.height() / 2);
 		else if ((padsState & WPAD_BUTTON_UP) != 0)
 			m_btnMgr.up();
 		else if ((padsState & WPAD_BUTTON_DOWN) != 0)
 			m_btnMgr.down();
+
 		if ((padsState & WPAD_BUTTON_1) != 0)
 		{
 			int cfVersion = 1 + loopNum(m_cfg.getInt("GENERAL", "last_cf_mode", 1), m_numCFVersions);
@@ -161,20 +169,6 @@ void CMenu::_game(bool launch)
 			m_btnMgr.click();
 			if (m_btnMgr.selected() == m_mainBtnQuit)
 				break;
-			else if (m_btnMgr.selected() == m_gameBtnDelete)
-			{
-				if (!WBFS_IsReadOnly())
-				{
-					_hideGame();
-					if (_wbfsOp(CMenu::WO_REMOVE_GAME))
-						break;
-					_showGame();
-				}
-				else
-				{
-					error(_t("wbfsop10", "This filesystem is read-only. You cannot install games or remove them."));
-				}
-			}
 			else if (m_btnMgr.selected() == m_gameBtnFavoriteOn || m_btnMgr.selected() == m_gameBtnFavoriteOff)
 				m_cfg.setBool(id, "favorite", !m_cfg.getBool(id, "favorite", false));
 			else if (m_btnMgr.selected() == m_gameBtnAdultOn || m_btnMgr.selected() == m_gameBtnAdultOff)
@@ -213,7 +207,6 @@ void CMenu::_game(bool launch)
 			else // ((padsState & WPAD_BUTTON_RIGHT) != 0)
 				m_cf.right();
 			_showGame();
-//			_playGameSound();
 		}
 		// 
 		if (wd->ir.valid)
@@ -228,7 +221,6 @@ void CMenu::_game(bool launch)
 				m_btnMgr.show(b ? m_gameBtnAdultOn : m_gameBtnAdultOff);
 				m_btnMgr.hide(b ? m_gameBtnAdultOff : m_gameBtnAdultOn);
 				
-//				m_btnMgr.show(m_gameBtnDelete);
 				if (type == TYPE_WII) {
 					m_btnMgr.show(m_gameBtnSettings);
 				}
@@ -240,7 +232,6 @@ void CMenu::_game(bool launch)
 			m_btnMgr.hide(m_gameBtnFavoriteOff);
 			m_btnMgr.hide(m_gameBtnAdultOn);
 			m_btnMgr.hide(m_gameBtnAdultOff);
-			m_btnMgr.hide(m_gameBtnDelete);
 			m_btnMgr.hide(m_gameBtnSettings);
 		}
 		_mainLoopCommon(wd, true);
@@ -363,10 +354,15 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 	texDeleteSel.fromPNG(deletes_png);
 	texSettings.fromPNG(btngamecfg_png);
 	texSettingsSel.fromPNG(btngamecfgs_png);
+
 	_addUserLabels(theme, m_gameLblUser, ARRAY_SIZE(m_gameLblUser), "GAME");
 	m_gameBg = _texture(theme.texSet, "GAME/BG", "texture", theme.bg);
 	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("GAME/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
 		m_gameBgLQ = bgLQ;
+
+	theme.btnFont.font->cacheGlyphData((wchar_t)'y');
+	theme.btnFont.font->cacheGlyphData((wchar_t)'k');
+
 	m_gameBtnPlay = _addButton(theme, "GAME/PLAY_BTN", theme.btnFont, "", 420, 354, 200, 56, fontColor);
 	m_gameBtnBack = _addButton(theme, "GAME/BACK_BTN", theme.btnFont, "", 420, 410, 200, 56, fontColor);
 	m_gameBtnFavoriteOn = _addPicButton(theme, "GAME/FAVORITE_ON", texFavOn, texFavOnSel, 460, 170, 48, 48);
@@ -374,7 +370,6 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 	m_gameBtnAdultOn = _addPicButton(theme, "GAME/ADULTONLY_ON", texAdultOn, texAdultOnSel, 532, 170, 48, 48);
 	m_gameBtnAdultOff = _addPicButton(theme, "GAME/ADULTONLY_OFF", texAdultOff, texAdultOffSel, 532, 170, 48, 48);
 	m_gameBtnSettings = _addPicButton(theme, "GAME/SETTINGS_BTN", texSettings, texSettingsSel, 460, 242, 48, 48);
-	m_gameBtnDelete = _addPicButton(theme, "GAME/DELETE_BTN", texDelete, texDeleteSel, 532, 242, 48, 48);
 	// 
 	_setHideAnim(m_gameBtnPlay, "GAME/PLAY_BTN", 200, 0, 1.f, 0.f);
 	_setHideAnim(m_gameBtnBack, "GAME/BACK_BTN", 200, 0, 1.f, 0.f);
@@ -383,13 +378,15 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 	_setHideAnim(m_gameBtnAdultOn, "GAME/ADULTONLY_ON", 0, 0, -1.5f, -1.5f);
 	_setHideAnim(m_gameBtnAdultOff, "GAME/ADULTONLY_OFF", 0, 0, -1.5f, -1.5f);
 	_setHideAnim(m_gameBtnSettings, "GAME/SETTINGS_BTN", 0, 0, -1.5f, -1.5f);
-	_setHideAnim(m_gameBtnDelete, "GAME/DELETE_BTN", 0, 0, -1.5f, -1.5f);
 	_hideGame(true);
-	_textGame();
+	//_textGame();
 }
+
+static const std::string gPlay = "Play";
+static const std::string gBack = "Back";
 
 void CMenu::_textGame(void)
 {
-	m_btnMgr.setText(m_gameBtnPlay, _t("gm1", "Play"));
-	m_btnMgr.setText(m_gameBtnBack, _t("gm2", "Back"));
+	m_btnMgr.setText(m_gameBtnPlay, gPlay);
+	m_btnMgr.setText(m_gameBtnBack, gBack);
 }

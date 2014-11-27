@@ -226,7 +226,7 @@ void CMenu::_initConfigMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textConfig(void)
 {
-	m_btnMgr.setText(m_configLblTitle, _t("cfg1", "Settings"));
+	m_btnMgr.setText(m_configLblTitle, _t("cfg1", "SettingsYYyy"));
 	m_btnMgr.setText(m_configLblBoxMode, _t("cfg2", "3D boxes"));
 	m_btnMgr.setText(m_configLblDownload, _t("cfg3", "Download covers & titles"));
 	m_btnMgr.setText(m_configBtnDownload, _t("cfg4", "Download"));

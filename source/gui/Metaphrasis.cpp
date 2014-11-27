@@ -220,7 +220,7 @@ uint32_t* Metaphrasis::convertBufferToIA8(uint32_t* rgbaBuffer, uint16_t bufferW
 
 uint32_t* Metaphrasis::convertBufferToRGBA8(uint32_t* rgbaBuffer, uint16_t bufferWidth, uint16_t bufferHeight) {
 	uint32_t bufferSize = (bufferWidth * bufferHeight) << 2;
-	uint32_t* dataBufferRGBA8 = (uint32_t *)MEM2_alloc(bufferSize);
+	uint32_t* dataBufferRGBA8 = (uint32_t *)MEM2_alloc(bufferSize + (bufferSize + 31) % 32);
 	memset(dataBufferRGBA8, 0x00, bufferSize);
 
 	uint8_t *src = (uint8_t *)rgbaBuffer;
@@ -286,7 +286,7 @@ uint16_t Metaphrasis::convertRGBAToRGB565(uint32_t rgba) {
 
 uint32_t* Metaphrasis::convertBufferToRGB565(uint32_t* rgbaBuffer, uint16_t bufferWidth, uint16_t bufferHeight) {
 	uint32_t bufferSize = (bufferWidth * bufferHeight) << 1;
-	uint32_t* dataBufferRGB565 = (uint32_t *)MEM2_alloc(bufferSize);
+	uint32_t* dataBufferRGB565 = (uint32_t *)MEM2_alloc(bufferSize + (bufferSize + 31) % 32);
 	memset(dataBufferRGB565, 0x00, bufferSize);
 
 	uint32_t *src = (uint32_t *)rgbaBuffer;

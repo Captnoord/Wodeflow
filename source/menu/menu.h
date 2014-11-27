@@ -23,9 +23,9 @@ class rect
 public:
 	rect(int x, int y, int width, int height)
 		:x_(x)
-		, y_(y)
-		, width_(width)
-		, height_(height)
+		,y_(y)
+		,width_(width)
+		,height_(height)
 	{
 
 	}
@@ -228,7 +228,6 @@ private:
 	u32 m_gameBtnAdultOn;
 	u32 m_gameBtnAdultOff;
 	u32 m_gameBtnPlay;
-	u32 m_gameBtnDelete;
 	u32 m_gameBtnSettings;
 	u32 m_gameBtnBack;
 	u32 m_gameLblUser[4];

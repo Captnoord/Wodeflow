@@ -250,7 +250,7 @@ void CMenu::_showCheatSettings(void)
 				strncpy(tempcheatname, m_cheatfile.getCheatName((m_cheatSettingsPage-1)*CHEATSPERPAGE + i).c_str(),70);
 				tempcheatname[70] = '\0';
 				
-				// cheat avaiable, show elements and text
+				// cheat available, show elements and text
 				m_btnMgr.setText(m_cheatLblItem[i], tempcheatname);
 				//m_btnMgr.setText(m_cheatLblItem[i], m_cheatfile.getCheseleatName((m_cheatSettingsPage-1)*CHEATSPERPAGE + i));
 				m_btnMgr.setText(m_cheatBtnItem[i], _optBoolToString(m_cheatfile.sCheatSelected[(m_cheatSettingsPage-1)*CHEATSPERPAGE + i]));

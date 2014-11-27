@@ -59,7 +59,7 @@ INCLUDES	:=	source \
 #CFLAGS	 =	-g -std=c99 -Os -Wall -Wextra $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
 
 #WALLFLAGS = -Wall -Wextra
-WALLFLAGS = 
+WALLFLAGS = -fno-strict-aliasing
 
 CFLAGS	 =	-g -std=gnu11 -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H
 CXXFLAGS =	-g -std=c++11 -Os $(WALLFLAGS) $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H

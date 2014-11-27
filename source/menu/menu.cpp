@@ -1126,7 +1126,8 @@ const std::string CMenu::_fmt(const char *key, const char *def)
 
 const std::string CMenu::_t(const char *key, const char *def /*= ""*/)
 {
-	return m_loc.getString(m_curLanguage, key, def);
+	return def;
+	//return m_loc.getString(m_curLanguage, key, def);
 }
 
 

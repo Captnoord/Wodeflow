@@ -90,6 +90,23 @@ CCoverFlow::CItem::CItem(
 	boxTexture_ = false;
 }
 
+CCoverFlow::CItem::CItem()
+	:id_("ERROR")
+	,game_idx_(0)
+	,game_part_(0)
+	,title_("ERROR")
+	,title_compare_cache_("ERROR")
+	,picPath_("")
+	,boxPicPath_("")
+	,discPicPath_("")
+	,playcount_(0)
+	,type_(0)
+	,texture_()
+	,boxTexture_(false)
+	,state_(STATE_NoCover)
+{
+}
+
 
 bool CCoverFlow::CItem::operator<(const CCoverFlow::CItem &i) const
 {

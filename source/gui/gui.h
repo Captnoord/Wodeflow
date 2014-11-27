@@ -138,10 +138,25 @@ private:
 		float click;
 		SSoundEffect clickSound;
 		SSoundEffect hoverSound;
+		mutex_t lock;
 	public:
-		SButton(void) { t = GUIELT_BUTTON; }
+		SButton(void)
+		{
+			text.reserve(64);
+
+			LWP_MutexInit(&lock, 0);
+			t = GUIELT_BUTTON;
+		}
+
+		~SButton()
+		{
+			LWP_MutexDestroy(lock);
+
+		}
+
 		virtual void tick(void);
 	};
+
 	struct SLabel : public SElement
 	{
 		SFont font;

@@ -158,6 +158,7 @@ private:
 		vec3 bottomDeltaAngle;
 	};
 	enum TexState { STATE_Loading, STATE_Ready, STATE_NoCover };
+	
 	struct CItem
 	{
 		std::string			id_;
@@ -177,6 +178,7 @@ private:
 		volatile enum TexState state_;
 		
 		//
+		CItem();
 		CItem(const char *itemId, unsigned long idx, unsigned long part, const char *itemTitle, const char *itemPic, const char *itemBoxPic, int playcount, int type);
 		
 		bool operator<(const CItem &i) const;

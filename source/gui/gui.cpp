@@ -2,6 +2,7 @@
 
 #include <wiiuse/wpad.h>
 #include <algorithm>
+#include "lockMutex.h"
 
 //using namespace std;
 
@@ -31,6 +32,7 @@ u32 CButtonsMgr::addButton(SFont font, const std::string &text, int x, int y, u3
 	CButtonsMgr::SButton *b = new CButtonsMgr::SButton;
 	SmartPtr<CButtonsMgr::SElement> elt(b);
 
+	LockMutex slock(b->lock);
 	b->font = font;
 	b->visible = false;
 	b->text = text;
@@ -364,8 +366,16 @@ void CButtonsMgr::setText(u32 id, const std::string &text, bool unwrap)
 	switch (m_elements[id]->t)
 	{
 		case CButtonsMgr::GUIELT_BUTTON:
-			((CButtonsMgr::SButton *)m_elements[id].get())->text = text;
-			break;
+		{
+			//lock
+			//((CButtonsMgr::SButton *)m_elements[id].get())->text = text;
+			CButtonsMgr::SButton * btn = (CButtonsMgr::SButton *)m_elements[id].get();
+			{
+				LockMutex slock(btn->lock);
+				btn->text.assign(text.begin(), text.end());
+			}		
+
+		}break;
 		case CButtonsMgr::GUIELT_LABEL:
 			lbl = (CButtonsMgr::SLabel *)m_elements[id].get();
 			lbl->text.setText(lbl->font, text);
@@ -402,6 +412,9 @@ void CButtonsMgr::_drawBtn(const CButtonsMgr::SButton &b, bool selected, bool cl
 	u8 alpha = b.alpha;
 	float scaleX = b.scaleX;
 	float scaleY = b.scaleY;
+
+
+	LockMutex slock(b.lock);
 
 	if (click)
 	{

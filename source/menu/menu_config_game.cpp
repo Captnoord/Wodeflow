@@ -67,17 +67,20 @@ std::string CMenu::_optBoolToString(int i)
 void CMenu::_showGameSettings(void)
 {
 	int i;
-	std::string title(_t("cfgg1", "Settings"));
-	title += " [";
-	title += std::string(m_cf.getId());
-	title += "]";
+	std::string title(_t("cfgg1", "SettingsYyYy"));
+	//title += " [";
+	//title += std::string(m_cf.getId());
+	//title += "]";
+
 	m_btnMgr.setText(m_gameSettingsLblTitle, title);
+
 	_setBg(m_gameSettingsBg, m_gameSettingsBg);
 	m_btnMgr.show(m_gameSettingsLblPage);
 	m_btnMgr.show(m_gameSettingsBtnPageM);
 	m_btnMgr.show(m_gameSettingsBtnPageP);
 	m_btnMgr.show(m_gameSettingsBtnBack);
 	m_btnMgr.show(m_gameSettingsLblTitle);
+	
 	if (m_gameSettingsPage == 1)
 	{
 		m_btnMgr.show(m_gameSettingsLblGameLanguage);
@@ -377,6 +380,7 @@ void CMenu::_initGameSettingsMenu(CMenu::SThemeData &theme)
 
 void CMenu::_textGameSettings(void)
 {
+	/*
 	m_btnMgr.setText(m_gameSettingsLblTitle, _t("cfgg1", "Settings"));
 	m_btnMgr.setText(m_gameSettingsLblGameVideo, _t("cfgg2", "Video mode"));
 	m_btnMgr.setText(m_gameSettingsLblGameLanguage, _t("cfgg3", "Language"));
@@ -391,4 +395,20 @@ void CMenu::_textGameSettings(void)
 	m_btnMgr.setText(m_gameSettingsLblCover, _t("cfgg12", "Download cover"));
 	m_btnMgr.setText(m_gameSettingsBtnCover, _t("cfgg13", "Download"));
 	m_btnMgr.setText(m_gameSettingsLblPatchVidModes, _t("cfgg14", "Patch video modes"));
+	*/
+
+	m_btnMgr.setText(m_gameSettingsLblTitle, "Settings");
+	m_btnMgr.setText(m_gameSettingsLblGameVideo, "Video mode");
+	m_btnMgr.setText(m_gameSettingsLblGameLanguage, "Language");
+	m_btnMgr.setText(m_gameSettingsLblCountryPatch, "Patch country strings");
+	m_btnMgr.setText(m_gameSettingsLblOcarina,"Ocarina");
+	m_btnMgr.setText(m_gameSettingsLblCheat, "Cheat Codes");
+	m_btnMgr.setText(m_gameSettingsBtnCheat, "Select");
+	m_btnMgr.setText(m_gameSettingsLblErr2Fix, "Error 002 fix");
+	m_btnMgr.setText(m_gameSettingsLblVipatch, "Vipatch");
+	m_btnMgr.setText(m_gameSettingsBtnBack, "Back");
+	m_btnMgr.setText(m_gameSettingsLblBlockIOSReload, "Block IOS reload");
+	m_btnMgr.setText(m_gameSettingsLblCover, "Download cover");
+	m_btnMgr.setText(m_gameSettingsBtnCover, "Download");
+	m_btnMgr.setText(m_gameSettingsLblPatchVidModes, "Patch video modes");
 }

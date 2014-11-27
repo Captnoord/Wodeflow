@@ -245,7 +245,7 @@ void CText::setText(SFont font, const std::string &t)
 	if (!m_font.font)
 		return;
 	// Don't care about performance
-	lines = stringToVector(t, L'\n');
+	lines = stringToVector(t, '\n');
 	m_lines.reserve(lines.size());
 	// 
 	for (u32 k = 0; k < lines.size(); ++k)

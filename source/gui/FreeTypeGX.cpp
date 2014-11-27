@@ -440,52 +440,67 @@ uint16_t FreeTypeGX::drawText(uint16_t x, uint16_t y, wchar_t const *text, GXCol
 	return this->drawText(x, y, (wchar_t *)text, color, textStyle);
 }
 
-uint16_t FreeTypeGX::drawText(uint16_t x, uint16_t y, const std::string & text, GXColor color /*= ftgxWhite*/, uint16_t textStyle /*= FTGX_NULL*/)
+uint16_t FreeTypeGX::drawText(int x, int y, const std::string text, GXColor color /*= ftgxWhite*/, uint16_t textStyle /*= FTGX_NULL*/)
 {
 	uint16_t strLength = text.size();
-	uint16_t x_pos = x, printed = 0;
-	uint16_t x_offset = 0, y_offset = 0;
+	int x_pos = x, printed = 0;
+	int x_offset = 0, y_offset = 0;
 	GXTexObj glyphTexture;
 	FT_Vector pairDelta;
 
-	if (textStyle & 0x000F) {
+	if (textStyle & 0x000F)
 		x_offset = this->getStyleOffsetWidth(this->getWidth(text), textStyle);
-	}
-	if (textStyle & 0x00F0) {
+	
+	if (textStyle & 0x00F0)
 		y_offset = this->getStyleOffsetHeight(this->getOffset(text), textStyle);
-	}
 
 	GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
 
-	for (uint16_t i = 0; i < strLength; i++) {
+	for (uint16_t i = 0; i < strLength; ++i) {
 
 		ftgxCharData* glyphData = NULL;
-		//if( this->fontData.find(text[i]) != this->fontData.end() ) {
-		if (fontData[text[i]] != nullptr) {
+		if (fontData[text[i]] != nullptr)
 			glyphData = this->fontData[text[i]];
-		}
-		else {
+		else
 			glyphData = this->cacheGlyphData(text[i]);
-		}
 
-		if (glyphData != NULL) {
-
-			if (this->ftKerningEnabled && i) {
-				FT_Get_Kerning(this->ftFace, this->fontData[text[i - 1]]->glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta);
+		if (glyphData != NULL)
+		{
+			if (this->ftKerningEnabled && i > 0)
+			{
+				FT_Get_Kerning(
+					this->ftFace,
+					this->fontData[text[i - 1]]->glyphIndex, glyphData->glyphIndex, FT_KERNING_DEFAULT, &pairDelta);
 				x_pos += pairDelta.x >> 6;
 			}
 
-			GX_InitTexObj(&glyphTexture, glyphData->glyphDataTexture, glyphData->textureWidth, glyphData->textureHeight, this->textureFormat, GX_CLAMP, GX_CLAMP, GX_FALSE);
-			this->copyTextureToFramebuffer(&glyphTexture, this->positionFormat, glyphData->textureWidth, glyphData->textureHeight, x_pos - x_offset, y - glyphData->renderOffsetY - y_offset, color);
+			GX_InitTexObj(
+				&glyphTexture,
+				glyphData->glyphDataTexture,
+				glyphData->textureWidth,
+				glyphData->textureHeight,
+				this->textureFormat,
+				GX_CLAMP,
+				GX_CLAMP,
+				GX_FALSE);
+
+			this->copyTextureToFramebuffer(
+				&glyphTexture,
+				this->positionFormat,
+				glyphData->textureWidth,
+				glyphData->textureHeight,
+				x_pos - x_offset,
+				y - glyphData->renderOffsetY - y_offset,
+				color);
 
 			x_pos += glyphData->glyphAdvanceX;
 			printed++;
 		}
 	}
 
-	if (textStyle & 0x0F00) {
-		this->drawTextFeature(x - x_offset, y, this->getWidth(text), this->getOffset(text), textStyle, color);
-	}
+	//if (textStyle & 0x0F00) {
+	//	this->drawTextFeature(x - x_offset, y, this->getWidth(text), this->getOffset(text), textStyle, color);
+	//}
 
 	return printed;
 
