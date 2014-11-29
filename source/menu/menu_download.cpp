@@ -268,9 +268,9 @@ int CMenu::_coverDownloader(bool missingOnly)
 		m_thrdWorking = false;
 		return 0;
 	}
-	savePNG = m_cfg.getBool("GENERAL", "keep_png", true);
-	fmtURLBox = stringToVector(m_cfg.getString("GENERAL", "url_full_covers", FMT_BPIC_URL), '|');
-	fmtURLFlat = stringToVector(m_cfg.getString("GENERAL", "url_flat_covers", FMT_PIC_URL), '|');
+	savePNG = m_cfg.getInt("GENERAL", "keep_png", true);
+	fmtURLBox = stringToVector(m_cfg.getStr("GENERAL", "url_full_covers", FMT_BPIC_URL), '|');
+	fmtURLFlat = stringToVector(m_cfg.getStr("GENERAL", "url_flat_covers", FMT_PIC_URL), '|');
 	nbSteps = m_gameList.size();
 	step = 0;
 	if (m_coverDLGameId.empty())
@@ -580,7 +580,7 @@ int CMenu::_titleDownloader(bool missingOnly)
 		return 0;
 	}
 	titles.load(sfmt("%s/titles.ini", m_dataDir.c_str()).c_str());
-	langCode = m_loc.getString(m_curLanguage, "wiitdb_code", "EN");
+	langCode = m_loc.getStr(m_curLanguage, "wiitdb_code", "EN");
 	_setThrdMsg(_t("dlmsg1", "Initializing network..."), 0.f);
 	if (!m_networkInit && _initNetwork(ip) < 0)
 	{
@@ -620,9 +620,9 @@ int CMenu::_titleDownloader(bool missingOnly)
 							std::string w;
 							w = l.substr(m, l[l.size() - 1] == '\r' ? l.size() - 1 - m : l.size() - m);
 							if (missingOnly)
-								titles.getString("TITLES", l.substr(0, n), w);
+								titles.getStr("TITLES", l.substr(0, n), w);
 							else
-								titles.setString("TITLES", l.substr(0, n), w);
+								titles.setStr("TITLES", l.substr(0, n), w);
 						}
 					}
 				}

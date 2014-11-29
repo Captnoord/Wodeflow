@@ -170,9 +170,9 @@ void CMenu::_game(bool launch)
 			if (m_btnMgr.selected() == m_mainBtnQuit)
 				break;
 			else if (m_btnMgr.selected() == m_gameBtnFavoriteOn || m_btnMgr.selected() == m_gameBtnFavoriteOff)
-				m_cfg.setBool(id, "favorite", !m_cfg.getBool(id, "favorite", false));
+				m_cfg.setInt(id, "favorite", !m_cfg.getInt(id, "favorite", false));
 			else if (m_btnMgr.selected() == m_gameBtnAdultOn || m_btnMgr.selected() == m_gameBtnAdultOff)
-				m_cfg.setBool(id, "adult_only", !m_cfg.getBool(id, "adult_only", false));
+				m_cfg.setInt(id, "adult_only", !m_cfg.getInt(id, "adult_only", false));
 			else if (m_btnMgr.selected() == m_gameBtnBack)
 				break;
 			else if (m_btnMgr.selected() == m_gameBtnSettings)
@@ -211,13 +211,13 @@ void CMenu::_game(bool launch)
 		// 
 		if (wd->ir.valid)
 		{
-			b = m_cfg.getBool(id, "favorite", false);
+			b = m_cfg.getInt(id, "favorite", false);
 			m_btnMgr.show(b ? m_gameBtnFavoriteOn : m_gameBtnFavoriteOff);
 			m_btnMgr.hide(b ? m_gameBtnFavoriteOff : m_gameBtnFavoriteOn);
 
 			if (!m_locked)
 			{
-				b = m_cfg.getBool(id, "adult_only", false);
+				b = m_cfg.getInt(id, "adult_only", false);
 				m_btnMgr.show(b ? m_gameBtnAdultOn : m_gameBtnAdultOff);
 				m_btnMgr.hide(b ? m_gameBtnAdultOff : m_gameBtnAdultOn);
 				
@@ -245,9 +245,9 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	int ret = WBFS_OpenDisc((u8 *) id.c_str(), idx, part);
 	if (ret != 0) return;
 
-	bool vipatch		= m_cfg.testOptBool(id, "vipatch", m_cfg.getBool("GENERAL", "vipatch", false));
-	bool cheat			= m_cfg.testOptBool(id, "cheat", m_cfg.getBool("GENERAL", "cheat", false));
-	bool countryPatch	= m_cfg.testOptBool(id, "country_patch", m_cfg.getBool("GENERAL", "country_patch", false));
+	bool vipatch		= m_cfg.getInt(id, "vipatch", m_cfg.getInt("GENERAL", "vipatch", false));
+	bool cheat			= m_cfg.getInt(id, "cheat", m_cfg.getInt("GENERAL", "cheat", false));
+	bool countryPatch	= m_cfg.getInt(id, "country_patch", m_cfg.getInt("GENERAL", "country_patch", false));
 	
 	int videoMode		= m_cfg.getInt(id, "video_mode", 0);
 	videoMode			= std::min<int>(videoMode, ARRAY_SIZE(CMenu::_videoModes) - 1);
@@ -257,7 +257,7 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	int patchVidMode		= std::min<int>((u32)m_cfg.getInt(id, "patch_video_modes", 0), ARRAY_SIZE(CMenu::_vidModePatch) - 1u);
 
 	hooktype			= (u32) m_cfg.getInt(id, "hooktype", 1); // hooktype is defined in patchcode.h
-	debuggerselect		= m_cfg.getBool(id, "debugger", false) ? 1 : 0; // debuggerselect is defined in fst.h
+	debuggerselect		= m_cfg.getInt(id, "debugger", false) ? 1 : 0; // debuggerselect is defined in fst.h
 	
 	SmartBuf cheatFile;
 	u32 cheatSize = 0;
@@ -268,7 +268,7 @@ void CMenu::_launchGame(const std::string &id, unsigned long idx, unsigned long 
 	if (language == 0)
 		language = min((u32)m_cfg.getInt("GENERAL", "game_language", 0), ARRAY_SIZE(CMenu::_languages) - 1);
 
-	m_cfg.setString("GENERAL", "current_game", id);
+	m_cfg.setStr("GENERAL", "current_game", id);
 	m_cfg.setInt(id, "playcount", m_cfg.getInt(id, "playcount", 0) + 1);
 	
 	m_cfg.save();
@@ -357,7 +357,7 @@ void CMenu::_initGameMenu(CMenu::SThemeData &theme)
 
 	_addUserLabels(theme, m_gameLblUser, ARRAY_SIZE(m_gameLblUser), "GAME");
 	m_gameBg = _texture(theme.texSet, "GAME/BG", "texture", theme.bg);
-	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("GAME/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
+	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr("GAME/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
 		m_gameBgLQ = bgLQ;
 
 	theme.btnFont.font->cacheGlyphData((wchar_t)'y');

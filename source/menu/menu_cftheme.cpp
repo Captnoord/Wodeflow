@@ -271,7 +271,7 @@ void CMenu::_showCFTheme(u32 curParam, int version, bool wide)
 				break;
 			}
 			case CMenu::SCFParamDesc::PDT_BOOL:
-				m_btnMgr.setText(m_cfThemeLblVal[k], m_theme.getBool(domain, key) ? gOn : gOff);
+				m_btnMgr.setText(m_cfThemeLblVal[k], m_theme.getInt(domain, key) ? gOn : gOff);
 				for (int j = 1; j < 4; ++j)
 				{
 					m_btnMgr.hide(m_cfThemeLblVal[k + j]);
@@ -341,7 +341,7 @@ void CMenu::_cfTheme(void)
 		if ((padsState & WPAD_BUTTON_HOME) != 0)
 		{
 			m_theme.clear();
-			m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "defaut").c_str()).c_str());
+			m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getStr("GENERAL", "theme", "defaut").c_str()).c_str());
 			break;
 		}
 		if (wd->ir.valid)
@@ -437,7 +437,7 @@ void CMenu::_cfTheme(void)
 				else if (m_btnMgr.selected() == m_cfThemeBtnCancel)
 				{
 					m_theme.clear();
-					m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getString("GENERAL", "theme", "defaut").c_str()).c_str());
+					m_theme.load(sfmt("%s/%s.ini", m_themeDir.c_str(), m_cfg.getStr("GENERAL", "theme", "defaut").c_str()).c_str());
 					break;
 				}
 				else if (m_btnMgr.selected() == m_cfThemeBtnAlt)
@@ -571,7 +571,7 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 		}
 		case CMenu::SCFParamDesc::PDT_BOOL:
 		{
-			m_theme.setBool(domain, key, !m_theme.getBool(domain, key));
+			m_theme.setInt(domain, key, !m_theme.getInt(domain, key));
 			break;
 		}
 		case CMenu::SCFParamDesc::PDT_INT:
@@ -584,7 +584,7 @@ void CMenu::_cfParam(bool inc, int i, const CMenu::SCFParamDesc &p, int cfVersio
 		{
 			int i = styleToIdx(_textStyle(domain.c_str(), key.c_str(), m_cf.selected() ? FTGX_JUSTIFY_RIGHT | FTGX_ALIGN_TOP : FTGX_JUSTIFY_CENTER | FTGX_ALIGN_BOTTOM));
 			i = loopNum(i + (int)step, 9);
-			m_theme.setString(domain, key, styleToTxt(g_txtStyles[i]));
+			m_theme.setStr(domain, key, styleToTxt(g_txtStyles[i]));
 			break;
 		}
 	}

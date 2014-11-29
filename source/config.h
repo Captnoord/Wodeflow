@@ -23,18 +23,18 @@ public:
 	bool has(const std::string &domain, const std::string &key) const;
 
 	// Set
-	void setString(const std::string &domain, const std::string &key, const std::string &val);
-	void setBool(const std::string &domain, const std::string &key, bool val);
-	void setOptBool(const std::string &domain, const std::string &key, int val);
+	void setStr(const std::string &domain, const std::string &key, const std::string &val);
+	//void setBool(const std::string &domain, const std::string &key, bool val);
+	//void setOptBool(const std::string &domain, const std::string &key, int val);
 	void setInt(const std::string &domain, const std::string &key, int val);
 	void setFloat(const std::string &domain, const std::string &key, float val);
 	void setVector3D(const std::string &domain, const std::string &key, const vec3 &val);
 	void setColor(const std::string &domain, const std::string &key, const CColor &val);
 	// Get
-	std::string getString(const std::string &domain, const std::string &key, const std::string &defVal = "");
-	bool getBool(const std::string &domain, const std::string &key, bool defVal = false);
-	int getOptBool(const std::string &domain, const std::string &key, int defVal = 2);
-	bool testOptBool(const std::string &domain, const std::string &key, bool defVal);
+	std::string getStr(const std::string &domain, const std::string &key, const std::string &defVal = "");
+	//bool getBool(const std::string &domain, const std::string &key, bool defVal = false);
+	//int getInt(const std::string &domain, const std::string &key, int defVal = 2);
+	//bool testOptBool(const std::string &domain, const std::string &key, bool defVal);
 	int getInt(const std::string &domain, const std::string &key, int defVal = 0);
 	float getFloat(const std::string &domain, const std::string &key, float defVal = 0.f);
 	vec3 getVector3D(const std::string &domain, const std::string &key, const vec3 &defVal = vec3());

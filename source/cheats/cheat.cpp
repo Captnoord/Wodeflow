@@ -145,7 +145,7 @@ void CMenu::_CheatSettings()
 					
 				}
 					
-				m_cfg.setOptBool(m_cf.getId(), "cheat",1);
+				m_cfg.setInt(m_cf.getId(), "cheat", 1);
 				if (operation_ok)
 					break;
 			}
@@ -170,7 +170,8 @@ void CMenu::_CheatSettings()
 				buffer = smartCoverAlloc(bufferSize);
 				cheatfile = downloadfile(buffer.get(), bufferSize, sfmt(GECKOURL, m_cf.getId().c_str()).c_str(),CMenu::_downloadProgress, this);
 
-				if (cheatfile.data != NULL && cheatfile.size > 65 && cheatfile.data[0] != '<') {
+				if (cheatfile.data != NULL && cheatfile.size > 65 && cheatfile.data[0] != '<')
+				{
 					// cheat file was downloaded and presumably no 404
 					file = fopen(fmt("%s/%s.txt", m_txtCheatDir.c_str(), m_cf.getId().c_str()), "wb");
 							

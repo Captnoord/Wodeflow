@@ -83,10 +83,10 @@ void CMenu::_textAbout(void)
 	m_btnMgr.setText(m_aboutLblOrigAuthor, wfmt(_fmt("about1", "Loader by %s"), LOADER_AUTHOR), true);
 	m_btnMgr.setText(m_aboutLblAuthor, wfmt(_fmt("about2", "GUI by %s"), GUI_AUTHOR), true);
 	
-	std::string thanksTo(m_cfg.getString("GENERAL", "insertnamehere"));
+	std::string thanksTo(m_cfg.getStr("GENERAL", "insertnamehere"));
 	if (!thanksTo.empty())
 		thanksTo.append(", ");
-	std::string translator(m_loc.getString(m_curLanguage, "translation_author"));
+	std::string translator(m_loc.getStr(m_curLanguage, "translation_author"));
 	if (!translator.empty())
 		translator.append(", ");
 	m_btnMgr.setText(m_aboutLblInfo, wfmt(_fmt("about3", "Thanks to :\n\n%s%s%s\n\n%s\n%s"), thanksTo.c_str(), translator.c_str(), THANKS, THANKS_SITES, THANKS_CODE), true);

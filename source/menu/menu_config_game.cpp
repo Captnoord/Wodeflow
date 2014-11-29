@@ -67,7 +67,7 @@ std::string CMenu::_optBoolToString(int i)
 void CMenu::_showGameSettings(void)
 {
 	int i;
-	std::string title(_t("cfgg1", "SettingsYyYy"));
+	std::string title(_t("cfgg1", "Settings"));
 	//title += " [";
 	//title += std::string(m_cf.getId());
 	//title += "]";
@@ -156,13 +156,13 @@ void CMenu::_showGameSettings(void)
 		if (m_gameSettingsLblUser[i] != -1u)
 			m_btnMgr.show(m_gameSettingsLblUser[i]);
 
-	string id(m_cf.getId());
+	std::string id(m_cf.getId());
 	m_btnMgr.setText(m_gameSettingsLblPage, wfmt("%i / %i", m_gameSettingsPage, 3));
-	m_btnMgr.setText(m_gameSettingsBtnOcarina, _optBoolToString(m_cfg.getOptBool(id, "cheat")));
-	m_btnMgr.setText(m_gameSettingsBtnVipatch, _optBoolToString(m_cfg.getOptBool(id, "vipatch", 0)));
-	m_btnMgr.setText(m_gameSettingsBtnCountryPatch, _optBoolToString(m_cfg.getOptBool(id, "country_patch", 0)));
-	m_btnMgr.setText(m_gameSettingsBtnErr2Fix, _optBoolToString(m_cfg.getOptBool(id, "error_002_fix")));
-	m_btnMgr.setText(m_gameSettingsBtnBlockIOSReload, m_cfg.getBool(id, "block_ios_reload", false) ? gOn : gOff);
+	m_btnMgr.setText(m_gameSettingsBtnOcarina, _optBoolToString(m_cfg.getInt(id, "cheat")));
+	m_btnMgr.setText(m_gameSettingsBtnVipatch, _optBoolToString(m_cfg.getInt(id, "vipatch", 0)));
+	m_btnMgr.setText(m_gameSettingsBtnCountryPatch, _optBoolToString(m_cfg.getInt(id, "country_patch", 0)));
+	m_btnMgr.setText(m_gameSettingsBtnErr2Fix, _optBoolToString(m_cfg.getInt(id, "error_002_fix")));
+	m_btnMgr.setText(m_gameSettingsBtnBlockIOSReload, m_cfg.getInt(id, "block_ios_reload", false) ? gOn : gOff);
 	i = min((u32)m_cfg.getInt(id, "video_mode", 0), ARRAY_SIZE(CMenu::_videoModes) - 1u);
 	m_btnMgr.setText(m_gameSettingsLblVideo, _t(CMenu::_videoModes[i].id, CMenu::_videoModes[i].text));
 	i = min((u32)m_cfg.getInt(id, "language", 0), ARRAY_SIZE(CMenu::_languages) - 1u);
@@ -227,29 +227,29 @@ void CMenu::_gameSettings(void)
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnOcarina)
 			{
-				m_cfg.setOptBool(id, "cheat", loopNum(m_cfg.getOptBool(id, "cheat") + 1, 3));
+				m_cfg.setInt(id, "cheat", loopNum(m_cfg.getInt(id, "cheat") + 1, 3));
 				_showGameSettings();
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnVipatch)
 			{
-//				m_cfg.setOptBool(id, "vipatch", loopNum(m_cfg.getOptBool(id, "vipatch") + 1, 3));
-				m_cfg.setBool(id, "vipatch", !m_cfg.getBool(id, "vipatch"));
+//				m_cfg.setOptBool(id, "vipatch", loopNum(m_cfg.getInt(id, "vipatch") + 1, 3));
+				m_cfg.setInt(id, "vipatch", !m_cfg.getInt(id, "vipatch"));
 				_showGameSettings();
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnCountryPatch)
 			{
-//				m_cfg.setOptBool(id, "country_patch", loopNum(m_cfg.getOptBool(id, "country_patch") + 1, 3));
-				m_cfg.setBool(id, "country_patch", !m_cfg.getBool(id, "country_patch"));
+//				m_cfg.setOptBool(id, "country_patch", loopNum(m_cfg.getInt(id, "country_patch") + 1, 3));
+				m_cfg.setInt(id, "country_patch", !m_cfg.getInt(id, "country_patch"));
 				_showGameSettings();
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnErr2Fix)
 			{
-				m_cfg.setOptBool(id, "error_002_fix", loopNum(m_cfg.getOptBool(id, "error_002_fix") + 1, 3));
+				m_cfg.setInt(id, "error_002_fix", loopNum(m_cfg.getInt(id, "error_002_fix") + 1, 3));
 				_showGameSettings();
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnBlockIOSReload)
 			{
-				m_cfg.setBool(id, "block_ios_reload", !m_cfg.getBool(id, "block_ios_reload", false));
+				m_cfg.setInt(id, "block_ios_reload", !m_cfg.getInt(id, "block_ios_reload", false));
 				_showGameSettings();
 			}
 			else if (m_btnMgr.selected() == m_gameSettingsBtnLanguageP)

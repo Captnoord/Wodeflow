@@ -72,7 +72,7 @@ int CMenu::main(void)
 	std::string curLetter;
 	int repeatButton = 0;
 	u32 buttonHeld = (u32)-1;
-	string prevTheme = m_cfg.getString("GENERAL", "theme", "default");
+	string prevTheme = m_cfg.getStr("GENERAL", "theme", "default");
 	bool reload = false;
 	float angle = 0;
 	float mag = 0;
@@ -180,7 +180,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(2);
-				if (prevTheme != m_cfg.getString("GENERAL", "theme"))
+				if (prevTheme != m_cfg.getStr("GENERAL", "theme"))
 				{
 					reload = true;
 					break;
@@ -191,7 +191,7 @@ int CMenu::main(void)
 			{
 				_hideMain();
 				_config(1);
-				if (prevTheme != m_cfg.getString("GENERAL", "theme"))
+				if (prevTheme != m_cfg.getStr("GENERAL", "theme"))
 				{
 					reload = true;
 					break;
@@ -316,7 +316,7 @@ void CMenu::_initMainMenu(CMenu::SThemeData &theme)
 	STexture emptyTex;
 
 	m_mainBg = _texture(theme.texSet, "MAIN/BG", "texture", theme.bg);
-	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("MAIN/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
+	if (m_theme.loaded() && STexture::TE_OK == bgLQ.fromPNGFile(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr("MAIN/BG", "texture").c_str()).c_str(), GX_TF_CMPR, ALLOC_MEM2, 64, 64))
 		m_mainBgLQ = bgLQ;
 	texQuit.fromPNG(btnquit_png);
 	texQuitS.fromPNG(btnquits_png);

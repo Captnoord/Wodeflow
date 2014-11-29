@@ -263,7 +263,7 @@ void Config::__set(const std::string &domain, const std::string & key, const std
 	m_domains[temp_domain][temp_key] = value;
 }
 
-void Config::setString(const string &domain, const string &key, const std::string &val)
+void Config::setStr(const string &domain, const string &key, const std::string &val)
 {
 	if (domain.empty() || key.empty())
 		return;
@@ -271,6 +271,7 @@ void Config::setString(const string &domain, const string &key, const std::strin
 	__set(domain, key, val);
 }
 
+/*
 void Config::setBool(const string &domain, const string &key, bool val)
 {
 	if (domain.empty() || key.empty())
@@ -298,8 +299,8 @@ void Config::setOptBool(const string &domain, const string &key, int val)
 	}
 
 	__set(domain, key, value);
-	
 }
+*/
 
 void Config::setInt(const string &domain, const string &key, int val)
 {
@@ -344,7 +345,7 @@ std::string &Config::__get(const std::string &domain, const std::string & key)
 	return m_domains[temp_domain][temp_key];
 }
 
-std::string Config::getString(const string &domain, const string &key, const std::string &defVal)
+std::string Config::getStr(const string &domain, const string &key, const std::string &defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
@@ -358,6 +359,7 @@ std::string Config::getString(const string &domain, const string &key, const std
 	return data;
 }
 
+/*
 bool Config::getBool(const string &domain, const string &key, bool defVal)
 {
 	if (domain.empty() || key.empty())
@@ -404,7 +406,7 @@ bool Config::testOptBool(const string &domain, const string &key, bool defVal)
 	return defVal;
 }
 
-int Config::getOptBool(const string &domain, const string &key, int defVal)
+int Config::getInt(const string &domain, const string &key, int defVal)
 {
 	if (domain.empty() || key.empty())
 		return defVal;
@@ -440,6 +442,7 @@ int Config::getOptBool(const string &domain, const string &key, int defVal)
 		return 0;
 	return 2;
 }
+*/
 
 int Config::getInt(const string &domain, const string &key, int defVal)
 {

@@ -74,8 +74,8 @@ void CMenu::_showConfig2(void)
 	m_btnMgr.setText(m_config2LblVideo, _t(CMenu::_videoModes[i].id, CMenu::_videoModes[i].text));
 	i = std::min(std::max(0, m_cfg.getInt("GENERAL", "game_language", 0)), (int)ARRAY_SIZE(CMenu::_languages) - 1);
 	m_btnMgr.setText(m_config2LblLanguage, _t(CMenu::_languages[i].id, CMenu::_languages[i].text));
-	m_btnMgr.setText(m_config2BtnErr2Fix, m_cfg.getBool("GENERAL", "error_002_fix", true) ? gOn : gOff);
-	m_btnMgr.setText(m_config2BtnOcarina, m_cfg.getBool("GENERAL", "cheat") ? gOn : gOff);
+	m_btnMgr.setText(m_config2BtnErr2Fix, m_cfg.getInt("GENERAL", "error_002_fix", true) ? gOn : gOff);
+	m_btnMgr.setText(m_config2BtnOcarina, m_cfg.getInt("GENERAL", "cheat") ? gOn : gOff);
 }
 
 int CMenu::_config2(void)
@@ -138,12 +138,12 @@ int CMenu::_config2(void)
 			}
 			else if (m_btnMgr.selected() == m_config2BtnErr2Fix)
 			{
-				m_cfg.setBool("GENERAL", "error_002_fix", !m_cfg.getBool("GENERAL", "error_002_fix", true));
+				m_cfg.setInt("GENERAL", "error_002_fix", !m_cfg.getInt("GENERAL", "error_002_fix", true));
 				_showConfig2();
 			}
 			else if (m_btnMgr.selected() == m_config2BtnOcarina)
 			{
-				m_cfg.setBool("GENERAL", "cheat", !m_cfg.getBool("GENERAL", "cheat"));
+				m_cfg.setInt("GENERAL", "cheat", !m_cfg.getInt("GENERAL", "cheat"));
 				_showConfig2();
 			}
 		}

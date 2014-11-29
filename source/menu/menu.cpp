@@ -83,7 +83,7 @@ CMenu::CMenu(CVideo &vid) :
 
 void CMenu::init(bool fromHBC)
 {
-	string themeName;
+	std::string themeName;
 	const char *drive = "sd";
 
 	std::string defaultLanguage;
@@ -95,13 +95,13 @@ void CMenu::init(bool fromHBC)
 	if (Fat_USBAvailable() && m_cfg.load(sfmt("sd:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
 	{
 		gprintf("Config on sd found\n");
-		bool dataOnUSB = m_cfg.getBool("GENERAL", "data_on_usb", false);
+		BOOL dataOnUSB = m_cfg.getInt("GENERAL", "data_on_usb", FALSE);
 		drive = dataOnUSB ? "usb" : "sd";
 	}
 	else if (Fat_SDAvailable() && m_cfg.load(sfmt("usb:/%s/%s", appdir.c_str(),CFG_FILENAME).c_str()))
 	{
 		gprintf("Config on usb found\n");
-		bool dataOnUSB = m_cfg.getBool("GENERAL", "data_on_usb", true);
+		BOOL dataOnUSB = m_cfg.getInt("GENERAL", "data_on_usb", TRUE);
 		drive = dataOnUSB ? "usb" : "sd";
 	}
 	else
@@ -114,14 +114,14 @@ void CMenu::init(bool fromHBC)
 	m_dataDir = sfmt("%s:/%s", drive, appdir.c_str());
 	m_cfg.load(sfmt("%s/" CFG_FILENAME, m_dataDir.c_str()).c_str());
 
-	m_picDir = m_cfg.getString("GENERAL", "dir_flat_covers", sfmt("%s:/%s/covers", drive, appdir.c_str()));
-	m_boxPicDir = m_cfg.getString("GENERAL", "dir_box_covers", sfmt("%s:/%s/boxcovers", drive, appdir.c_str()));
-	m_cacheDir = m_cfg.getString("GENERAL", "dir_cache", sfmt("%s:/%s/cache", drive, appdir.c_str()));
-	m_themeDir = m_cfg.getString("GENERAL", "dir_themes", sfmt("%s:/%s/themes", drive, appdir.c_str()));
-	m_musicDir = m_cfg.getString("GENERAL", "dir_music", sfmt("%s:/%s/music", drive, appdir.c_str())); 
-	m_wipDir = m_cfg.getString("GENERAL", "dir_wip", sfmt("%s:/%s/codes", drive, appdir.c_str())); ;
-	m_cheatDir = m_cfg.getString("GENERAL", "dir_cheat", sfmt("%s:/%s/codes", drive, appdir.c_str())); ;
-	m_txtCheatDir = m_cfg.getString("GENERAL", "dir_txtcheat", sfmt("%s:/%s/txtcodes", drive, appdir.c_str())); ;
+	m_picDir = m_cfg.getStr("GENERAL", "dir_flat_covers", sfmt("%s:/%s/covers", drive, appdir.c_str()));
+	m_boxPicDir = m_cfg.getStr("GENERAL", "dir_box_covers", sfmt("%s:/%s/boxcovers", drive, appdir.c_str()));
+	m_cacheDir = m_cfg.getStr("GENERAL", "dir_cache", sfmt("%s:/%s/cache", drive, appdir.c_str()));
+	m_themeDir = m_cfg.getStr("GENERAL", "dir_themes", sfmt("%s:/%s/themes", drive, appdir.c_str()));
+	m_musicDir = m_cfg.getStr("GENERAL", "dir_music", sfmt("%s:/%s/music", drive, appdir.c_str())); 
+	m_wipDir = m_cfg.getStr("GENERAL", "dir_wip", sfmt("%s:/%s/codes", drive, appdir.c_str())); ;
+	m_cheatDir = m_cfg.getStr("GENERAL", "dir_cheat", sfmt("%s:/%s/codes", drive, appdir.c_str())); ;
+	m_txtCheatDir = m_cfg.getStr("GENERAL", "dir_txtcheat", sfmt("%s:/%s/txtcodes", drive, appdir.c_str())); ;
 
 	m_cf.init();
 	// 
@@ -139,7 +139,7 @@ void CMenu::init(bool fromHBC)
 	}
 	// INI files
 	m_loc.load(sfmt("%s/" LANG_FILENAME, m_dataDir.c_str()).c_str());
-	themeName = m_cfg.getString("GENERAL", "theme", "DEFAULT");
+	themeName = m_cfg.getStr("GENERAL", "theme", "DEFAULT");
 	m_themeDataDir = sfmt("%s/%s", m_themeDir.c_str(), themeName.c_str());
 	m_theme.load(sfmt("%s/%s.INI", m_themeDir.c_str(), themeName.c_str()).c_str());
 	// 
@@ -177,36 +177,36 @@ void CMenu::init(bool fromHBC)
 	if (CONF_GetArea() == CONF_AREA_BRA)
 		defaultLanguage = "BRAZILIAN";
 
-	m_curLanguage = m_cfg.getString("GENERAL", "language", defaultLanguage);
+	m_curLanguage = m_cfg.getStr("GENERAL", "language", defaultLanguage);
 	// 
 	m_aa = 3;
-	m_cur.init(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString("GENERAL", "pointer").c_str()).c_str(),
+	m_cur.init(sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr("GENERAL", "pointer").c_str()).c_str(),
 		m_vid.wide(),
 		m_theme.getColor("GENERAL", "pointer_shadow_color", CColor(0x3F000000)),
 		m_theme.getFloat("GENERAL", "pointer_shadow_x", 3.f),
 		m_theme.getFloat("GENERAL", "pointer_shadow_y", 3.f),
-		m_theme.getBool("GENERAL", "pointer_shadow_blur", false));
+		m_theme.getInt("GENERAL", "pointer_shadow_blur", false));
 	m_btnMgr.init();
 	_buildMenus();
 	_loadCFCfg();
 	WPAD_SetVRes(0, m_vid.width() + m_cur.width(), m_vid.height() + m_cur.height());
-	m_locked = m_cfg.getString("GENERAL", "parent_code", "").size() >= 4;
+	m_locked = m_cfg.getStr("GENERAL", "parent_code", "").size() >= 4;
 	
-	m_btnMgr.setRumble(m_cfg.getBool("GENERAL", "rumble", true));
+	m_btnMgr.setRumble(m_cfg.getInt("GENERAL", "rumble", true));
 	
 	m_vid.set2DViewport(m_cfg.getInt("GENERAL", "tv_width", 640), m_cfg.getInt("GENERAL", "tv_height", 480),
 		m_cfg.getInt("GENERAL", "tv_x", 0), m_cfg.getInt("GENERAL", "tv_y", 0));
-	Sys_ExitToWiiMenu(m_noHBC || m_cfg.getBool("GENERAL", "exit_to_wii_menu", false));
+	Sys_ExitToWiiMenu(m_noHBC || m_cfg.getInt("GENERAL", "exit_to_wii_menu", false));
 	LWP_MutexInit(&m_mutex, 0);
 	LWP_MutexInit(&m_gameSndMutex, 0);
 	soundInit();
 	m_cf.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_coverflow", 255));
 	m_btnMgr.setSoundVolume(m_cfg.getInt("GENERAL", "sound_volume_gui", 255));
 	m_bnrSndVol = m_cfg.getInt("GENERAL", "sound_volume_bnr", 255);
-	m_alphaSearch = m_cfg.getBool("GENERAL", "alphabetic_search_on_plus_minus", false);
-	if (m_cfg.getBool("GENERAL", "favorites_on_startup", false))
-		m_favorites = m_cfg.getBool("GENERAL", "favorites", false);
-	if (m_cfg.getBool("GENERAL", "fbi", false))
+	m_alphaSearch = m_cfg.getInt("GENERAL", "alphabetic_search_on_plus_minus", false);
+	if (m_cfg.getInt("GENERAL", "favorites_on_startup", false))
+		m_favorites = m_cfg.getInt("GENERAL", "favorites", false);
+	if (m_cfg.getInt("GENERAL", "fbi", false))
 		m_waitMessage.fromPNG(fbi_png);
 }
 
@@ -254,25 +254,25 @@ void CMenu::_loadCFCfg()
 	SSoundEffect cfSelectSnd;
 	SSoundEffect cfCancelSnd;
 
-	m_cf.setCachePath(m_cacheDir.c_str(), !m_cfg.getBool("GENERAL", "keep_png", true), m_cfg.getBool("GENERAL", "compress_cache", false));
+	m_cf.setCachePath(m_cacheDir.c_str(), !m_cfg.getInt("GENERAL", "keep_png", true), m_cfg.getInt("GENERAL", "compress_cache", false));
 	m_cf.setBufferSize(m_cfg.getInt("GENERAL", "cover_buffer", 120));
-	filename = m_theme.getString(domain, "sound_flip");
+	filename = m_theme.getStr(domain, "sound_flip");
 	cfFlipSnd.fromWAVFile(sfmt("%s/%s", m_themeDataDir.c_str(), filename.c_str()).c_str());
-	filename = m_theme.getString(domain, "sound_hover");
+	filename = m_theme.getStr(domain, "sound_hover");
 	cfHoverSnd.fromWAVFile(sfmt("%s/%s", m_themeDataDir.c_str(), filename.c_str()).c_str());
-	filename = m_theme.getString(domain, "sound_select");
+	filename = m_theme.getStr(domain, "sound_select");
 	cfSelectSnd.fromWAVFile(sfmt("%s/%s", m_themeDataDir.c_str(), filename.c_str()).c_str());
-	filename = m_theme.getString(domain, "sound_cance");
+	filename = m_theme.getStr(domain, "sound_cance");
 	cfCancelSnd.fromWAVFile(sfmt("%s/%s", m_themeDataDir.c_str(), filename.c_str()).c_str());
 	m_cf.setSounds(cfFlipSnd, cfHoverSnd, cfSelectSnd, cfCancelSnd);
 	// Textures
-	texLoading = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(domain, "loading_cover_box").c_str());
-	texNoCover = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(domain, "missing_cover_box").c_str());
-	texLoadingFlat = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(domain, "loading_cover_flat").c_str());
-	texNoCoverFlat = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getString(domain, "missing_cover_flat").c_str());
+	texLoading = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr(domain, "loading_cover_box").c_str());
+	texNoCover = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr(domain, "missing_cover_box").c_str());
+	texLoadingFlat = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr(domain, "loading_cover_flat").c_str());
+	texNoCoverFlat = sfmt("%s/%s", m_themeDataDir.c_str(), m_theme.getStr(domain, "missing_cover_flat").c_str());
 	m_cf.setTextures(texLoading, texLoadingFlat, texNoCover, texNoCoverFlat);
 	// Font
-	filename = m_theme.getString(domain, "font");
+	filename = m_theme.getStr(domain, "font");
 	if (!filename.empty())
 		font.fromFile(sfmt("%s/%s", m_themeDataDir.c_str(), filename.c_str()).c_str(),
 			m_theme.getInt(domain, "font_size", 32),
@@ -349,7 +349,7 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 	m_cf.setTextureQuality(
 		m_theme.getFloat(domain, "tex_lod_bias", -0.3f),
 		m_theme.getInt(domain, "tex_aniso", 0),
-		m_theme.getBool(domain, "tex_edge_lod", false));
+		m_theme.getInt(domain, "tex_edge_lod", false));
 	m_cf.setRange(_getCFInt(domain, "rows", 1, sf), _getCFInt(domain, "columns", 9, sf));
 	m_cf.setCameraPos(false,
 		_getCFV3D(domain, "camera_pos", vec3(0.f, 1.5f, 5.f), sf),
@@ -444,7 +444,7 @@ void CMenu::_loadCFLayout(int version, bool forceAA, bool otherScrnFmt)
 		m_theme.getColor(domainSel, "color_end", 0x1FFFFFFF),
 		m_theme.getColor(domain, "color_off", 0x7FFFFFFF));	// Mouse not used once a selection has been made
 	m_cf.setMirrorAlpha(m_theme.getFloat(domain, "mirror_alpha", 0.25f), m_theme.getFloat(domain, "title_mirror_alpha", 0.2f));	// Doesn't depend on selection
-	m_cf.setMirrorBlur(m_theme.getBool(domain, "mirror_blur", true));	// Doesn't depend on selection
+	m_cf.setMirrorBlur(m_theme.getInt(domain, "mirror_blur", true));	// Doesn't depend on selection
 	m_cf.setShadowColors(false,
 		m_theme.getColor(domain, "color_shadow_center", 0x00000000),
 		m_theme.getColor(domain, "color_shadow_beg", 0x00000000),
@@ -586,7 +586,7 @@ SFont CMenu::_font(CMenu::FontSet &fontSet, const char *domain, const char *key,
 
 	if (m_theme.loaded())
 	{
-		filename = m_theme.getString(domain, key);
+		filename = m_theme.getStr(domain, key);
 		for (u32 c = 0; c < filename.size(); ++c)
 			if (filename[c] >= 'A' && filename[c] <= 'Z')
 				filename[c] |= 0x20;
@@ -638,7 +638,7 @@ STexture CMenu::_texture(CMenu::TexSet &texSet, const char *domain, const char *
 
 	if (m_theme.loaded())
 	{
-		filename = m_theme.getString(domain, key);
+		filename = m_theme.getStr(domain, key);
 		if (!filename.empty())
 		{
 			i = texSet.find(filename);
@@ -661,7 +661,7 @@ SSoundEffect CMenu::_sound(CMenu::SoundSet &soundSet, const char *domain, const 
 	string filename;
 	SSoundEffect sound;
 
-	filename = m_theme.getString(domain, key);
+	filename = m_theme.getStr(domain, key);
 	if (filename.empty())
 		return def;
 	for (u32 c = 0; c < filename.size(); ++c)
@@ -680,7 +680,7 @@ SSoundEffect CMenu::_sound(CMenu::SoundSet &soundSet, const char *domain, const 
 u16 CMenu::_textStyle(const char *domain, const char *key, u16 def)
 {
 	u16 textStyle = 0;
-	string style(m_theme.getString(domain, key));
+	string style(m_theme.getStr(domain, key));
 	if (style.empty())
 		return def;
 	if (style.find_first_of("Cc") != string::npos)
@@ -855,9 +855,9 @@ void CMenu::_initCF(void)
 	{
 		id = string((const char *)m_gameList[i].id, sizeof m_gameList[0].id);
 
-		if ((!m_favorites || m_cfg.getBool(id, "favorite", false)) && (!m_locked || !m_cfg.getBool(id, "adult_only", false)))
+		if ((!m_favorites || m_cfg.getInt(id, "favorite", false)) && (!m_locked || !m_cfg.getInt(id, "adult_only", false)))
 		{
-			std::string title_id(titles.getString("TITLES", id));
+			std::string title_id(titles.getStr("TITLES", id));
 
 			if (title_id.empty())
 			{
@@ -867,7 +867,7 @@ void CMenu::_initCF(void)
 
 				std::string my_title(m_gameList[i].title, title_len);
 
-				title_id = titles.getString("TITLES", id.substr(0, 4), my_title);
+				title_id = titles.getStr("TITLES", id.substr(0, 4), my_title);
 			}
 
 			int playcount = m_cfg.getInt(id, "playcount", 0);
@@ -882,13 +882,13 @@ void CMenu::_initCF(void)
 				m_gameList[i].magic == GC_MAGIC ? TYPE_GC : TYPE_WII);
 		}
 	}
-	m_cf.setBoxMode(m_cfg.getBool("GENERAL", "box_mode", true));
-	cmpr = m_cfg.getBool("GENERAL", "allow_texture_compression", true);
+	m_cf.setBoxMode(m_cfg.getInt("GENERAL", "box_mode", true));
+	cmpr = m_cfg.getInt("GENERAL", "allow_texture_compression", true);
 	m_cf.setCompression(cmpr);
 	m_cf.setBufferSize(m_cfg.getInt("GENERAL", "cover_buffer", 120));
 	if (m_cf.start())
 		if (m_curGameId.empty() || !m_cf.findId(m_curGameId.c_str(), true))
-			m_cf.findId(m_cfg.getString("GENERAL", "current_game").c_str(), true);
+			m_cf.findId(m_cfg.getStr("GENERAL", "current_game").c_str(), true);
 }
 
 void CMenu::_mainLoopCommon(const WPADData *wd, bool withCF, bool blockReboot, bool adjusting)
@@ -1118,7 +1118,7 @@ void CMenu::_updateText(void)
 
 const std::string CMenu::_fmt(const char *key, const char *def)
 {
-	std::string ws = m_loc.getString(m_curLanguage, key, def);
+	std::string ws = m_loc.getStr(m_curLanguage, key, def);
 	if (checkFmt(def, ws))
 		return ws;
 	return def;
@@ -1139,7 +1139,7 @@ bool CMenu::_loadGameList(void)
 	u32 defaultPartitionNr = WBFS_GetDefaultPartition();
 	WBFS_GetPartitionName(defaultPartitionNr, (char *) defaultPartition, &defaultPartitionLen);
 
-	ret = WBFS_OpenNamed((char *) m_cfg.getString("GENERAL", "partition", defaultPartition).c_str());
+	ret = WBFS_OpenNamed((char *) m_cfg.getStr("GENERAL", "partition", defaultPartition).c_str());
 	ret = 1;
 	if (ret < 0)
 	{
